@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Ekonomis</string>
+    <string name="transaction_history_label">Riwayat Transaksi</string>
+    <string name="product_stock_label">Stock Barang</string>
 </resources>

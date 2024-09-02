@@ -30,6 +30,7 @@ fun <T , E : MyBasicError> ResponseLoader(
     response : ResponseWrapper<T , E>,
     onRetry : () -> Unit,
     modifier: Modifier = Modifier,
+    errorToMessage : ((MyBasicError?) -> String)? = null,
     body : @Composable (T) -> Unit,
 ){
     Box(
@@ -48,7 +49,10 @@ fun <T , E : MyBasicError> ResponseLoader(
                         modifier = Modifier.size(72.dp)
                     )
                     Text(
-                        "Terjadi kesalahan tidak diketahui",
+                        if (errorToMessage != null)
+                            errorToMessage(response.error)
+                        else
+                            "Terjadi kesalahan tidak diketahui",
                         textAlign = TextAlign.Center
                     )
 

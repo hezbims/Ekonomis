@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding),
                     ){
                         composable<MyRoutes.TransactionHistory> {
-                            TransactionHistoryScreen()
+                            TransactionHistoryScreen(navController)
                         }
                         composable<MyRoutes.ProductPreview> {
                             ProductPreviewScreen()

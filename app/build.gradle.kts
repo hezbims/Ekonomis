@@ -6,6 +6,12 @@ plugins {
     alias(libs.plugins.serialization)
 }
 
+kotlin {
+    sourceSets.all {
+        languageSettings.enableLanguageFeature("ExplicitBackingFields")
+    }
+}
+
 android {
     namespace = "com.hezapp.ekonomis"
     compileSdk = 34

@@ -31,10 +31,11 @@ fun <T , E : MyBasicError> ResponseLoader(
     onRetry : () -> Unit,
     modifier: Modifier = Modifier,
     errorToMessage : ((MyBasicError?) -> String)? = null,
+    contentAlignment: Alignment = Alignment.Center,
     body : @Composable (T) -> Unit,
 ){
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = contentAlignment,
         modifier = modifier,
     ) {
         when (response) {

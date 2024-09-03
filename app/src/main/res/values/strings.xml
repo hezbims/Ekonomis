@@ -3,9 +3,11 @@
     <string name="transaction_history_label">Riwayat Transaksi</string>
     <string name="product_stock_label">Stock Barang</string>
     <string name="retry_label">Coba Lagi</string>
-    <string name="purchase_label">Pembelian Barang</string>
-    <string name="sale_label">Penjualan Barang</string>
+    <string name="purchase_product_label">Pembelian Barang</string>
+    <string name="sale_product_label">Penjualan Barang</string>
     <string name="add_new_transaction_content_description">Tambah transaksi baru</string>
     <string name="choose_transaction_type_label">Pilih Tipe Transaksi</string>
+    <string name="seller_label">Penjual</string>
+    <string name="customer_label">Pembeli</string>
 
 </resources>

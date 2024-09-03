@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionScreen
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
@@ -23,8 +24,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             EkonomisTheme {
                 val navController = rememberNavController()
+
                 Scaffold(
                     bottomBar = { MyBottomNavBar(navController) },
+                    floatingActionButton = { MyFloatingActionButton(navController) },
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
                     NavHost(
@@ -35,8 +38,13 @@ class MainActivity : ComponentActivity() {
                         composable<MyRoutes.TransactionHistory> {
                             TransactionHistoryScreen(navController)
                         }
+
                         composable<MyRoutes.ProductPreview> {
                             ProductPreviewScreen()
+                        }
+
+                        composable<MyRoutes.AddOrUpdateNewTransaction> {
+                            AddNewTransactionScreen(navController)
                         }
                     }
                 }

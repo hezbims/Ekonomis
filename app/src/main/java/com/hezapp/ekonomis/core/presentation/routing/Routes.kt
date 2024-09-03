@@ -7,6 +7,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.hezapp.ekonomis.R
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed class MyRoutes {
     @Serializable
     data object TransactionHistory : MyRoutes(), MyBottomNavItem {
@@ -22,6 +23,9 @@ sealed class MyRoutes {
         override val labelStringId: Int
             get() = R.string.product_stock_label
     }
+
+    @Serializable
+    class AddOrUpdateNewTransaction(val transactionId: Int?) : MyRoutes()
 
     companion object {
         val navigationBarRoutes = listOf<MyBottomNavItem>(TransactionHistory, ProductPreview)

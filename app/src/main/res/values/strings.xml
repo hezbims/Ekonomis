@@ -5,7 +5,7 @@
     <string name="retry_label">Coba Lagi</string>
     <string name="purchase_product_label">Pembelian Barang</string>
     <string name="sale_product_label">Penjualan Barang</string>
-    <string name="add_new_transaction_content_description">Tambah transaksi baru</string>
+    <string name="add_new_transaction_content_description">Catat Transaksi Baru</string>
     <string name="choose_transaction_type_label">Pilih Tipe Transaksi</string>
     <string name="seller_label">Penjual</string>
     <string name="customer_label">Pembeli</string>
@@ -14,5 +14,9 @@
     <string name="save_profile_label">Simpan Profil</string>
     <string name="failed_create_new_profile">Gagal membuat profil baru</string>
     <string name="success_create_new_profile">Berhasil membuat profil baru</string>
+    <string name="back_icon_content_description">Icon Kembali</string>
+    <string name="transaction_history_title">Riwayat Transaksi</string>
+    <string name="product_preview_title">Stock Barang</string>
+    <string name="edit_transaction_title">Edit Transaksi</string>
 
 </resources>

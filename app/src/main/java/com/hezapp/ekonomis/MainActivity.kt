@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -26,6 +28,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 Scaffold(
+                    topBar = { MyTopAppBar(navController) },
                     bottomBar = { MyBottomNavBar(navController) },
                     floatingActionButton = { MyFloatingActionButton(navController) },
                     modifier = Modifier.fillMaxSize(),
@@ -34,6 +37,8 @@ class MainActivity : ComponentActivity() {
                         navController,
                         startDestination = MyRoutes.TransactionHistory,
                         modifier = Modifier.padding(innerPadding),
+                        exitTransition = { ExitTransition.None },
+                        enterTransition = { EnterTransition.None }
                     ){
                         composable<MyRoutes.TransactionHistory> {
                             TransactionHistoryScreen(navController)

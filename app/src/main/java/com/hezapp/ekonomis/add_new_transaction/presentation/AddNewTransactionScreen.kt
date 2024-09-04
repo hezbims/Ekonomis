@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -29,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,6 +38,7 @@ import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChoosePersonBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
+import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.model.TransactionType
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import java.util.Calendar
@@ -84,6 +87,13 @@ private fun AddNewTransactionScreen(
             ChoosePersonField(
                 state = state,
                 onEvent = onEvent,
+            )
+
+            PpnField(
+                value = state.ppn,
+                onValueChange = {
+                    onEvent(AddNewTransactionEvent.ChangePpn(it))
+                }
             )
         }
     }
@@ -246,4 +256,19 @@ private fun ChooseDateField(
             DatePicker(state = datePickerState)
         }
     }
+}
+
+@Composable
+private fun PpnField(
+    value : Int?,
+    onValueChange : (String) -> Unit,
+){
+    TextField(
+        value = value?.toString() ?: "",
+        onValueChange = onValueChange,
+        label = { Text(stringResource(R.string.ppn_label)) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        visualTransformation = PercentageVisualTransformation(),
+        modifier = Modifier.fillMaxWidth()
+    )
 }

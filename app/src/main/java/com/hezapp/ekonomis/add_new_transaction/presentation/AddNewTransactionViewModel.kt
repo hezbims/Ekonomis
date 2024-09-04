@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_new_transaction.data.person.FakePersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
+import com.hezapp.ekonomis.add_new_transaction.domain.person.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
 import com.hezapp.ekonomis.core.domain.model.PersonType
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
@@ -19,6 +20,7 @@ import kotlinx.coroutines.launch
 
 class AddNewTransactionViewModel : ViewModel() {
     private val repo : IPersonRepo = FakePersonRepo()
+    private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
 
     private val _state = MutableStateFlow(AddNewTransactionUiState.init())
     val state : StateFlow<AddNewTransactionUiState>
@@ -38,6 +40,8 @@ class AddNewTransactionViewModel : ViewModel() {
                 doneHandlingSuccessCreateNewProfile()
             is AddNewTransactionEvent.ChangeTransactionDate ->
                 changeTransactionDate(event.newDate)
+            is AddNewTransactionEvent.ChangePpn ->
+                changePpn(event.newPpn)
         }
     }
 
@@ -80,6 +84,15 @@ class AddNewTransactionViewModel : ViewModel() {
     private fun changeTransactionDate(newDate: Long){
         _state.update { it.copy(transactionDateMillis = newDate) }
     }
+
+    private fun changePpn(inputPpn : String){
+        try {
+            if (inputPpn.isEmpty())
+                _state.update { it.copy(ppn = null) }
+            else
+                _state.update { it.copy(ppn = getValidPpnFromInput(inputPpn)) }
+        } catch (_ : IllegalArgumentException){ }
+    }
 }
 
 sealed class AddNewTransactionEvent {
@@ -89,6 +102,7 @@ sealed class AddNewTransactionEvent {
     class CreateNewProfile(val profileName : String) : AddNewTransactionEvent()
     object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
+    class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
@@ -97,6 +111,7 @@ data class AddNewTransactionUiState(
     val availablePerson: ResponseWrapper<List<PersonEntity> , MyBasicError>,
     val createNewPersonResponse: ResponseWrapper<Object? , MyBasicError>?,
     val transactionDateMillis : Long?,
+    val ppn : Int?,
 ){
     companion object {
         fun init() = AddNewTransactionUiState(
@@ -105,6 +120,7 @@ data class AddNewTransactionUiState(
             availablePerson = ResponseWrapper.Loading(),
             createNewPersonResponse = null,
             transactionDateMillis = null,
+            ppn = null,
         )
     }
 }

@@ -22,5 +22,6 @@
     <string name="choose_transaction_date_label">Pilih Tanggal Transaksi</string>
     <string name="choose_label">Pilih</string>
     <string name="transaction_date_label">Tanggal Transaksi</string>
+    <string name="ppn_label">PPN</string>
 
 </resources>

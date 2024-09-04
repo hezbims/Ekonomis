@@ -36,6 +36,8 @@ class AddNewTransactionViewModel : ViewModel() {
                 createNewProfile(event.profileName)
             AddNewTransactionEvent.DoneHandlingSuccessCreateNewProfile ->
                 doneHandlingSuccessCreateNewProfile()
+            is AddNewTransactionEvent.ChangeTransactionDate ->
+                changeTransactionDate(event.newDate)
         }
     }
 
@@ -74,6 +76,10 @@ class AddNewTransactionViewModel : ViewModel() {
     private fun doneHandlingSuccessCreateNewProfile(){
         _state.update { it.copy(createNewPersonResponse = null) }
     }
+
+    private fun changeTransactionDate(newDate: Long){
+        _state.update { it.copy(transactionDateMillis = newDate) }
+    }
 }
 
 sealed class AddNewTransactionEvent {
@@ -82,13 +88,15 @@ sealed class AddNewTransactionEvent {
     class ChangeSearchQuery(val searchQuery : String) : AddNewTransactionEvent()
     class CreateNewProfile(val profileName : String) : AddNewTransactionEvent()
     object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
+    class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
     val transactionType: TransactionType?,
     val person: PersonEntity?,
     val availablePerson: ResponseWrapper<List<PersonEntity> , MyBasicError>,
-    val createNewPersonResponse: ResponseWrapper<Object? , MyBasicError>?
+    val createNewPersonResponse: ResponseWrapper<Object? , MyBasicError>?,
+    val transactionDateMillis : Long?,
 ){
     companion object {
         fun init() = AddNewTransactionUiState(
@@ -96,6 +104,7 @@ data class AddNewTransactionUiState(
             person = null,
             availablePerson = ResponseWrapper.Loading(),
             createNewPersonResponse = null,
+            transactionDateMillis = null,
         )
     }
 }

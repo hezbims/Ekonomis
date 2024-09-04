@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.component
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -46,9 +48,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
+import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
@@ -84,12 +88,13 @@ fun SearchAndChoosePersonBottomSheet(
         }
 
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        var searchText by rememberSaveable { mutableStateOf("") }
 
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = onDismissBottomSheet,
         ) {
-            var searchText by rememberSaveable { mutableStateOf("") }
+            
             LaunchedEffect(searchText) {
                 onEvent(AddNewTransactionEvent.ChangeSearchQuery(searchText))
             }
@@ -108,7 +113,11 @@ fun SearchAndChoosePersonBottomSheet(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Spacer(Modifier.width(32.dp))
+                    IconButton(
+                        onClick = onDismissBottomSheet,
+                    ) {
+                        Icon(Icons.Rounded.Close, contentDescription = "Close")
+                    }
 
                     Text(
                         "Pilih $personTypeString",
@@ -117,13 +126,7 @@ fun SearchAndChoosePersonBottomSheet(
                         modifier = Modifier.weight(1f),
                     )
 
-                    Spacer(Modifier.width(12.dp))
-
-                    IconButton(
-                        onClick = onDismissBottomSheet,
-                    ) {
-                        Icon(Icons.Rounded.Close, contentDescription = "Close")
-                    }
+                    Spacer(Modifier.width(32.dp))
                 }
 
                 Spacer(Modifier.height(24.dp))
@@ -190,5 +193,32 @@ fun SearchAndChoosePersonBottomSheet(
                 }
             }
         }
+
+        val createNewPersonResponse = state.createNewPersonResponse
+        val context = LocalContext.current
+        LaunchedEffect(createNewPersonResponse) { 
+            if (createNewPersonResponse is ResponseWrapper.Succeed){
+                onEvent(AddNewTransactionEvent.DoneHandlingSuccessCreateNewProfile)
+                onEvent(AddNewTransactionEvent.ChangeSearchQuery(searchQuery = searchText))
+                showCreateNewPersonBottomSheet = false
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.success_create_new_profile),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (createNewPersonResponse is ResponseWrapper.Failed) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.failed_create_new_profile),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        CreateNewProfileBottomSheet(
+            isShowing = showCreateNewPersonBottomSheet,
+            onDismiss = { showCreateNewPersonBottomSheet = false },
+            onEvent = onEvent,
+            state = state,
+        )
     }
 }

@@ -9,5 +9,10 @@
     <string name="choose_transaction_type_label">Pilih Tipe Transaksi</string>
     <string name="seller_label">Penjual</string>
     <string name="customer_label">Pembeli</string>
+    <string name="profile_type_label">Tipe Profil</string>
+    <string name="back_label">Kembali</string>
+    <string name="save_profile_label">Simpan Profil</string>
+    <string name="failed_create_new_profile">Gagal membuat profil baru</string>
+    <string name="success_create_new_profile">Berhasil membuat profil baru</string>
 
 </resources>

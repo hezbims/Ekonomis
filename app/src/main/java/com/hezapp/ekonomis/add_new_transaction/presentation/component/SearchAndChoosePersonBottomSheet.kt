@@ -144,7 +144,7 @@ fun SearchAndChoosePersonBottomSheet(
                 ResponseLoader(
                     response = state.availablePerson,
                     onRetry = { onEvent(AddNewTransactionEvent.ChangeSearchQuery(searchText)) },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(1f).fillMaxWidth(),
                 ) { listPerson ->
                     if (listPerson.isEmpty())
                         Text(
@@ -219,6 +219,7 @@ fun SearchAndChoosePersonBottomSheet(
             onDismiss = { showCreateNewPersonBottomSheet = false },
             onEvent = onEvent,
             state = state,
+            initialProfileName = searchText,
         )
     }
 }

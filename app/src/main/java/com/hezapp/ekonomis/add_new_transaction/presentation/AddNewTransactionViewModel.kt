@@ -7,9 +7,9 @@ import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
 import com.hezapp.ekonomis.add_new_transaction.domain.person.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
-import com.hezapp.ekonomis.core.domain.model.PersonType
+import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.model.TransactionType
+import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,8 +67,8 @@ class AddNewTransactionViewModel : ViewModel() {
                 name = profileName,
                 type =
                 if (state.value.transactionType == TransactionType.PEMBELIAN)
-                    PersonType.SUPPLIER
-                else PersonType.CUSTOMER
+                    ProfileType.SUPPLIER
+                else ProfileType.CUSTOMER
             )
 
             repo.addNewPerson(personEntity).collect { response ->

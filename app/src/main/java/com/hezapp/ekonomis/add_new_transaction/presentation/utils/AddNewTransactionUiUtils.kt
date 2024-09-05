@@ -1,7 +1,7 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.utils
 
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.model.TransactionType
+import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 
 class AddNewTransactionUiUtils {
     companion object {

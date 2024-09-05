@@ -39,7 +39,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChoosePersonBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
-import com.hezapp.ekonomis.core.domain.model.TransactionType
+import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import java.util.Calendar
 

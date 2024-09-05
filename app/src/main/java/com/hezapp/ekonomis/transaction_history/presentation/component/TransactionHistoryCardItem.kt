@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.hezapp.ekonomis.core.domain.model.PersonType
+import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
@@ -42,7 +42,7 @@ fun TransactionHistoryCardItem(
                     .height(12.dp)
                     .fillMaxWidth()
                     .background(
-                        if (data.personType == PersonType.SUPPLIER)
+                        if (data.personType == ProfileType.SUPPLIER)
                             Color(0xFFFB8C00)
                         else
                             Color(0xFF7CB342)
@@ -82,7 +82,7 @@ fun PreviewTransactionHistoryCardItem(){
                 data = PreviewTransactionHistory(
                     personName = "Cik Feni",
                     date = "1-Jan-2023",
-                    personType = PersonType.CUSTOMER,
+                    personType = ProfileType.CUSTOMER,
                     id = 1,
                 ),
                 onClick = {},

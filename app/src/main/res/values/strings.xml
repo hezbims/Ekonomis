@@ -23,5 +23,8 @@
     <string name="choose_label">Pilih</string>
     <string name="transaction_date_label">Tanggal Transaksi</string>
     <string name="ppn_label">PPN</string>
+    <string name="select_product_label">Pilih Barang</string>
+    <string name="carton_label">Carton</string>
+    <string name="piece_label">Piece</string>
 
 </resources>

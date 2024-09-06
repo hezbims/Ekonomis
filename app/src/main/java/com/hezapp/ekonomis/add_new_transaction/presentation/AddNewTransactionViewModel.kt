@@ -6,10 +6,11 @@ import com.hezapp.ekonomis.add_new_transaction.data.person.FakePersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
 import com.hezapp.ekonomis.add_new_transaction.domain.person.use_case.GetValidatedPpnFromInputStringUseCase
-import com.hezapp.ekonomis.core.domain.model.MyBasicError
+import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.model.MyBasicError
+import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -100,7 +101,7 @@ sealed class AddNewTransactionEvent {
     class ChooseNewPerson(val newPerson : PersonEntity) : AddNewTransactionEvent()
     class ChangeSearchQuery(val searchQuery : String) : AddNewTransactionEvent()
     class CreateNewProfile(val profileName : String) : AddNewTransactionEvent()
-    object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
+    data object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
     class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
 }
@@ -109,9 +110,10 @@ data class AddNewTransactionUiState(
     val transactionType: TransactionType?,
     val person: PersonEntity?,
     val availablePerson: ResponseWrapper<List<PersonEntity> , MyBasicError>,
-    val createNewPersonResponse: ResponseWrapper<Object? , MyBasicError>?,
+    val createNewPersonResponse: ResponseWrapper<Any? , MyBasicError>?,
     val transactionDateMillis : Long?,
     val ppn : Int?,
+    val invoiceItems : List<InvoiceItemWithProduct>,
 ){
     companion object {
         fun init() = AddNewTransactionUiState(
@@ -121,6 +123,7 @@ data class AddNewTransactionUiState(
             createNewPersonResponse = null,
             transactionDateMillis = null,
             ppn = null,
+            invoiceItems = emptyList(),
         )
     }
 }

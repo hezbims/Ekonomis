@@ -1,5 +1,7 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -36,6 +39,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_new_transaction.presentation.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChoosePersonBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
@@ -56,7 +60,6 @@ fun AddNewTransactionScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AddNewTransactionScreen(
     navController: NavHostController,
@@ -68,6 +71,7 @@ private fun AddNewTransactionScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp)
+            .scrollable(state = rememberScrollState(), orientation = Orientation.Vertical)
     ) {
         TransactionTypeDropdown(
             value = state.transactionType,
@@ -94,6 +98,12 @@ private fun AddNewTransactionScreen(
                 onValueChange = {
                     onEvent(AddNewTransactionEvent.ChangePpn(it))
                 }
+            )
+
+            ListSelectedProductField(
+                state = state,
+                onEvent = onEvent,
+                modifier = Modifier.padding(top = 12.dp)
             )
         }
     }
@@ -153,7 +163,6 @@ private fun TransactionTypeDropdown(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun ChoosePersonField(
     state: AddNewTransactionUiState,
     onEvent: (AddNewTransactionEvent) -> Unit,

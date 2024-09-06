@@ -24,7 +24,7 @@ class FakePersonRepo : IPersonRepo {
         }
     }
 
-    override fun addNewPerson(person: PersonEntity): Flow<ResponseWrapper<Object?, MyBasicError>> = flow {
+    override fun addNewPerson(person: PersonEntity): Flow<ResponseWrapper<Any?, MyBasicError>> = flow {
         emit(ResponseWrapper.Loading())
         delay(100L)
         listPerson.add(person.copy(id = listPerson.size + 1))

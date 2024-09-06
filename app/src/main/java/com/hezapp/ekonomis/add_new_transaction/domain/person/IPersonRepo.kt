@@ -12,6 +12,6 @@ interface IPersonRepo {
         personType: ProfileType? = null,
     ) : Flow<ResponseWrapper<List<PersonEntity>, MyBasicError>>
 
-    fun addNewPerson(person : PersonEntity) : Flow<ResponseWrapper<Object?, MyBasicError>>
+    fun addNewPerson(person : PersonEntity) : Flow<ResponseWrapper<Any?, MyBasicError>>
 
 }

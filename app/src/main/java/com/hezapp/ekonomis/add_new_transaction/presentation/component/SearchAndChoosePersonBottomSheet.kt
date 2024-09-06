@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
@@ -68,6 +68,7 @@ fun SearchAndChoosePersonBottomSheet(
             AddNewTransactionUiUtils.getPersonIdFromTransactionType(state.transactionType!!)
         )
         var showCreateNewPersonBottomSheet by rememberSaveable { mutableStateOf(false) }
+        val secondaryColor = MaterialTheme.colorScheme.secondary
 
         val createNewPersonLabel = remember {
             buildAnnotatedString {
@@ -76,7 +77,10 @@ fun SearchAndChoosePersonBottomSheet(
                     link = LinkAnnotation.Clickable(
                         tag = "create-new-person",
                         styles = TextLinkStyles(
-                            style = SpanStyle(color = Color.Blue)
+                            style = SpanStyle(
+                                color = secondaryColor,
+                                fontWeight = FontWeight.SemiBold
+                            )
                         )
                     ) { link ->
                         showCreateNewPersonBottomSheet = true
@@ -96,7 +100,7 @@ fun SearchAndChoosePersonBottomSheet(
         ) {
             
             LaunchedEffect(searchText) {
-                onEvent(AddNewTransactionEvent.ChangeSearchQuery(searchText))
+                onEvent(AddNewTransactionEvent.LoadAvailableProfilesWithSearchQuery(searchText))
             }
 
             val textFieldFocus = remember { FocusRequester() }
@@ -122,7 +126,7 @@ fun SearchAndChoosePersonBottomSheet(
                     Text(
                         "Pilih $personTypeString",
                         textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.weight(1f),
                     )
 
@@ -143,7 +147,7 @@ fun SearchAndChoosePersonBottomSheet(
 
                 ResponseLoader(
                     response = state.availablePerson,
-                    onRetry = { onEvent(AddNewTransactionEvent.ChangeSearchQuery(searchText)) },
+                    onRetry = { onEvent(AddNewTransactionEvent.LoadAvailableProfilesWithSearchQuery(searchText)) },
                     modifier = Modifier.weight(1f).fillMaxWidth(),
                 ) { listPerson ->
                     if (listPerson.isEmpty())
@@ -199,7 +203,7 @@ fun SearchAndChoosePersonBottomSheet(
         LaunchedEffect(createNewPersonResponse) { 
             if (createNewPersonResponse is ResponseWrapper.Succeed){
                 onEvent(AddNewTransactionEvent.DoneHandlingSuccessCreateNewProfile)
-                onEvent(AddNewTransactionEvent.ChangeSearchQuery(searchQuery = searchText))
+                onEvent(AddNewTransactionEvent.LoadAvailableProfilesWithSearchQuery(searchQuery = searchText))
                 showCreateNewPersonBottomSheet = false
                 Toast.makeText(
                     context,

@@ -6,11 +6,14 @@ import com.hezapp.ekonomis.add_new_transaction.data.person.FakePersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
 import com.hezapp.ekonomis.add_new_transaction.domain.person.use_case.GetValidatedPpnFromInputStringUseCase
+import com.hezapp.ekonomis.core.data.repo.FakeProductRepo
+import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.repo.IProductRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +23,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class AddNewTransactionViewModel : ViewModel() {
-    private val repo : IPersonRepo = FakePersonRepo()
+    private val profileRepo : IPersonRepo = FakePersonRepo()
+    private val productRepo : IProductRepo = FakeProductRepo()
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
 
     private val _state = MutableStateFlow(AddNewTransactionUiState.init())
@@ -31,8 +35,8 @@ class AddNewTransactionViewModel : ViewModel() {
         when(event){
             is AddNewTransactionEvent.ChangeTransactionType ->
                 changeTransactionType(event.newTransactionType)
-            is AddNewTransactionEvent.ChangeSearchQuery ->
-                changeSearchQuery(event.searchQuery)
+            is AddNewTransactionEvent.LoadAvailableProfilesWithSearchQuery ->
+                loadAvailableProfilesWithSearchQuery(event.searchQuery)
             is AddNewTransactionEvent.ChooseNewPerson ->
                 chooseNewPerson(event.newPerson)
             is AddNewTransactionEvent.CreateNewProfile ->
@@ -43,6 +47,8 @@ class AddNewTransactionViewModel : ViewModel() {
                 changeTransactionDate(event.newDate)
             is AddNewTransactionEvent.ChangePpn ->
                 changePpn(event.newPpn)
+            is AddNewTransactionEvent.LoadAvailableProductsWithSearchQuery ->
+                loadAvailableProductsWithSearchQuery(event.searchQuery)
         }
     }
 
@@ -50,9 +56,9 @@ class AddNewTransactionViewModel : ViewModel() {
         _state.update { it.copy(transactionType = newTransactionType) }
     }
 
-    private fun changeSearchQuery(newSearchQuery : String){
+    private fun loadAvailableProfilesWithSearchQuery(newSearchQuery : String){
         viewModelScope.launch(Dispatchers.IO){
-            repo.getPersonFiltered(newSearchQuery).collectLatest { response ->
+            profileRepo.getPersonFiltered(newSearchQuery).collectLatest { response ->
                 _state.update { it.copy(availablePerson = response) }
             }
         }
@@ -72,7 +78,7 @@ class AddNewTransactionViewModel : ViewModel() {
                 else ProfileType.CUSTOMER
             )
 
-            repo.addNewPerson(personEntity).collect { response ->
+            profileRepo.addNewPerson(personEntity).collect { response ->
                 _state.update { it.copy(createNewPersonResponse = response) }
             }
         }
@@ -94,12 +100,21 @@ class AddNewTransactionViewModel : ViewModel() {
                 _state.update { it.copy(ppn = getValidPpnFromInput(inputPpn)) }
         } catch (_ : IllegalArgumentException){ }
     }
+
+    private fun loadAvailableProductsWithSearchQuery(newSearchQuery: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            productRepo.getAllProduct(newSearchQuery).collect { response ->
+                _state.update { it.copy(availableProducts = response) }
+            }
+        }
+    }
 }
 
 sealed class AddNewTransactionEvent {
     class ChangeTransactionType(val newTransactionType: TransactionType) : AddNewTransactionEvent()
     class ChooseNewPerson(val newPerson : PersonEntity) : AddNewTransactionEvent()
-    class ChangeSearchQuery(val searchQuery : String) : AddNewTransactionEvent()
+    class LoadAvailableProfilesWithSearchQuery(val searchQuery : String) : AddNewTransactionEvent()
+    class LoadAvailableProductsWithSearchQuery(val searchQuery: String) : AddNewTransactionEvent()
     class CreateNewProfile(val profileName : String) : AddNewTransactionEvent()
     data object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
@@ -110,6 +125,7 @@ data class AddNewTransactionUiState(
     val transactionType: TransactionType?,
     val person: PersonEntity?,
     val availablePerson: ResponseWrapper<List<PersonEntity> , MyBasicError>,
+    val availableProducts: ResponseWrapper<List<ProductEntity>, MyBasicError>,
     val createNewPersonResponse: ResponseWrapper<Any? , MyBasicError>?,
     val transactionDateMillis : Long?,
     val ppn : Int?,
@@ -120,6 +136,7 @@ data class AddNewTransactionUiState(
             transactionType = null,
             person = null,
             availablePerson = ResponseWrapper.Loading(),
+            availableProducts = ResponseWrapper.Loading(),
             createNewPersonResponse = null,
             transactionDateMillis = null,
             ppn = null,
@@ -127,4 +144,3 @@ data class AddNewTransactionUiState(
         )
     }
 }
-

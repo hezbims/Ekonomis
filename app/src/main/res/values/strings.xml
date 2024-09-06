@@ -26,5 +26,6 @@
     <string name="select_product_label">Pilih Barang</string>
     <string name="carton_label">Carton</string>
     <string name="piece_label">Piece</string>
+    <string name="search_product_name_label">Cari Nama Barang</string>
 
 </resources>

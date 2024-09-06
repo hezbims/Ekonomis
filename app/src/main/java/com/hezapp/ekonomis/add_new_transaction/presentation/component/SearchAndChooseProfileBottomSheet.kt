@@ -47,7 +47,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
@@ -57,7 +56,7 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SearchAndChoosePersonBottomSheet(
+fun SearchAndChooseProfileBottomSheet(
     isShowing : Boolean,
     onDismissBottomSheet : () -> Unit,
     state: AddNewTransactionUiState,
@@ -158,7 +157,7 @@ fun SearchAndChoosePersonBottomSheet(
                         )
                     else
                         LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(12.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
                             contentPadding = PaddingValues(
                                 top = 24.dp, bottom = 64.dp,
                             ),
@@ -182,11 +181,11 @@ fun SearchAndChoosePersonBottomSheet(
                                         }
                                 ) {
                                     Column(
-                                        modifier = Modifier.padding(vertical = 12.dp)
+                                        modifier = Modifier.padding(12.dp)
                                     ) {
                                         Text(
                                             it.name,
-                                            fontSize = 20.sp,
+                                            style = MaterialTheme.typography.labelLarge,
                                             modifier = Modifier.fillMaxWidth(),
                                             textAlign = TextAlign.Center
                                         )

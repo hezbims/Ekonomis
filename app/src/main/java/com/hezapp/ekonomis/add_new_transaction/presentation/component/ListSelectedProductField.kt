@@ -111,7 +111,7 @@ fun ListSelectedProductField(
                         .padding(horizontal = 12.dp)
                         .align(Alignment.Center),
                     color = Color.Gray,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodySmall
                 )
             else
                 Column(
@@ -307,7 +307,7 @@ private fun SelectProductBottomSheet(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         items(data){
-                            ProductCardItem(
+                            ListAvailableProductCardItem(
                                 it,
                                 onClick = {
 
@@ -323,7 +323,7 @@ private fun SelectProductBottomSheet(
 }
 
 @Composable
-private fun ProductCardItem(
+private fun ListAvailableProductCardItem(
     item : ProductEntity,
     onClick: () -> Unit,
 ){

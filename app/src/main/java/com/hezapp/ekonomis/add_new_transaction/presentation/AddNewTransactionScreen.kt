@@ -40,7 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.ListSelectedProductField
-import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChoosePersonBottomSheet
+import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChooseProfileBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
@@ -199,7 +199,7 @@ private fun ChoosePersonField(
             .fillMaxWidth(),
     )
 
-    SearchAndChoosePersonBottomSheet(
+    SearchAndChooseProfileBottomSheet(
         isShowing = showSearchAndChoosePersonBottomSheet,
         state = state,
         onEvent = onEvent,

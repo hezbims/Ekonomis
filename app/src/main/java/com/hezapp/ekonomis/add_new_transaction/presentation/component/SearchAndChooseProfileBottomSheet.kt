@@ -81,7 +81,7 @@ fun SearchAndChooseProfileBottomSheet(
                                 fontWeight = FontWeight.SemiBold
                             )
                         )
-                    ) { link ->
+                    ) {
                         showCreateNewPersonBottomSheet = true
                     },
                 ) {

@@ -1,9 +1,9 @@
 package com.hezapp.ekonomis.core.domain.model
 
 sealed class ResponseWrapper<T , E : MyBasicError> {
-    class Succeed<T>(val data : T) : ResponseWrapper<T , MyBasicError>()
-    class Failed<T>(val error : MyBasicError? = null) : ResponseWrapper<T , MyBasicError>()
-    class Loading<T> : ResponseWrapper<T, MyBasicError>()
+    class Succeed<T , E : MyBasicError>(val data : T) : ResponseWrapper<T , E>()
+    class Failed<T , E : MyBasicError>(val error : E? = null) : ResponseWrapper<T , E>()
+    class Loading<T , E : MyBasicError> : ResponseWrapper<T, E>()
 }
 
 interface MyBasicError

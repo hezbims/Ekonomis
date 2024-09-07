@@ -13,7 +13,8 @@ import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.product.IProductRepo
+import com.hezapp.ekonomis.core.domain.product.InsertProductError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,6 +50,10 @@ class AddNewTransactionViewModel : ViewModel() {
                 changePpn(event.newPpn)
             is AddNewTransactionEvent.LoadAvailableProductsWithSearchQuery ->
                 loadAvailableProductsWithSearchQuery(event.searchQuery)
+            is AddNewTransactionEvent.RegisterNewProduct ->
+                registerNewProduct(event.productName)
+            AddNewTransactionEvent.DoneHandlingRegisterNewProductResponse ->
+                doneHandlingRegisterNewProduct()
         }
     }
 
@@ -108,6 +113,18 @@ class AddNewTransactionViewModel : ViewModel() {
             }
         }
     }
+
+    private fun registerNewProduct(productName: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            productRepo.insertProduct(ProductEntity(name = productName)).collect { response ->
+                _state.update { it.copy(registerNewProductResponse = response) }
+            }
+        }
+    }
+
+    private fun doneHandlingRegisterNewProduct(){
+        _state.update { it.copy(registerNewProductResponse = null) }
+    }
 }
 
 sealed class AddNewTransactionEvent {
@@ -119,6 +136,8 @@ sealed class AddNewTransactionEvent {
     data object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
     class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
+    class RegisterNewProduct(val productName : String) : AddNewTransactionEvent()
+    data object DoneHandlingRegisterNewProductResponse : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
@@ -127,6 +146,7 @@ data class AddNewTransactionUiState(
     val availablePerson: ResponseWrapper<List<PersonEntity> , MyBasicError>,
     val availableProducts: ResponseWrapper<List<ProductEntity>, MyBasicError>,
     val createNewPersonResponse: ResponseWrapper<Any? , MyBasicError>?,
+    val registerNewProductResponse: ResponseWrapper<Any? , InsertProductError>?,
     val transactionDateMillis : Long?,
     val ppn : Int?,
     val invoiceItems : List<InvoiceItemWithProduct>,
@@ -141,6 +161,7 @@ data class AddNewTransactionUiState(
             transactionDateMillis = null,
             ppn = null,
             invoiceItems = emptyList(),
+            registerNewProductResponse = null,
         )
     }
 }

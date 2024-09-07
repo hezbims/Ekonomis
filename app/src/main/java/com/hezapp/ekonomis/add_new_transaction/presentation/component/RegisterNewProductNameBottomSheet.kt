@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.component
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,16 +30,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
+import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
+import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.product.InsertProductError
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterNewProductNameBottomSheet(
     onDismiss: () -> Unit,
+    state: AddNewTransactionUiState,
     onEvent: (AddNewTransactionEvent) -> Unit,
     isShowing: Boolean,
 ){
@@ -52,6 +58,26 @@ fun RegisterNewProductNameBottomSheet(
             val focusRequester = remember { FocusRequester() }
             LaunchedEffect(Unit) {
                 focusRequester.requestFocus()
+            }
+            val context = LocalContext.current
+            val registerNewProductResponse = state.registerNewProductResponse
+            var textFieldError by rememberSaveable { mutableStateOf<String?>(null) }
+            LaunchedEffect(registerNewProductResponse) {
+                if (registerNewProductResponse is ResponseWrapper.Failed){
+                    onEvent(AddNewTransactionEvent.DoneHandlingRegisterNewProductResponse)
+                    when (registerNewProductResponse.error){
+                        InsertProductError.AlreadyUsed ->
+                            textFieldError = context.getString(R.string.name_already_registered)
+                        InsertProductError.EmptyInputName ->
+                            textFieldError = context.getString(R.string.name_cant_be_empty)
+                        null ->
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.unknown_error_occured),
+                                Toast.LENGTH_LONG
+                            ).show()
+                    }
+                }
             }
 
             Column(
@@ -81,17 +107,26 @@ fun RegisterNewProductNameBottomSheet(
 
                 TextField(
                     value = productName,
-                    onValueChange = { newProductName -> productName = newProductName },
+                    onValueChange = { newProductName ->
+                        productName = newProductName
+                        textFieldError = null
+                    },
                     label = { Text(stringResource(R.string.new_product_name_label)) },
+                    isError = textFieldError != null,
+                    supportingText = {
+                        textFieldError?.let { Text(it) }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(focusRequester)
                 )
 
-                Spacer(Modifier.height(12.dp))
-
                 OutlinedButton(
-                    onClick = {},
+                    onClick = {
+                        onEvent(AddNewTransactionEvent.RegisterNewProduct(
+                            productName = productName
+                        ))
+                    },
                     modifier = Modifier.align(Alignment.End)
                 ) {
                     Text("Simpan")

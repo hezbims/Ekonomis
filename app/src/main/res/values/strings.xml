@@ -29,5 +29,8 @@
     <string name="search_product_name_label">Cari Nama Barang</string>
     <string name="new_product_registration_label">Pendaftaran Nama Barang Baru</string>
     <string name="new_product_name_label">Nama Barang Baru</string>
+    <string name="name_already_registered">Nama ini sudah didaftarkan</string>
+    <string name="name_cant_be_empty">Nama tidak boleh kosong</string>
+    <string name="unknown_error_occured">Terjadi kesalahan yang tidak diketahui</string>
 
 </resources>

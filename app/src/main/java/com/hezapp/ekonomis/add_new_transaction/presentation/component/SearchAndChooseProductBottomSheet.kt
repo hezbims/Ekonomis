@@ -50,6 +50,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -116,6 +117,7 @@ fun SearchAndChooseProductBottomSheet(
                 }
 
                 var searchText by rememberSaveable { mutableStateOf("") }
+
                 val focusRequester = remember { FocusRequester() }
                 LaunchedEffect(searchText) {
                     onEvent(AddNewTransactionEvent.LoadAvailableProductsWithSearchQuery(searchText))
@@ -149,7 +151,7 @@ fun SearchAndChooseProductBottomSheet(
                 ) { data ->
                     LazyColumn(
                         contentPadding = PaddingValues(
-                            bottom = 48.dp, top = 24.dp,
+                            bottom = 48.dp, top = 12.dp
                         ),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxSize(),
@@ -172,13 +174,24 @@ fun SearchAndChooseProductBottomSheet(
                     }
                 }
 
+                val registerNewProductResponse = state.registerNewProductResponse
+                LaunchedEffect(registerNewProductResponse) {
+                    if (registerNewProductResponse is ResponseWrapper.Succeed){
+                        onEvent(AddNewTransactionEvent.DoneHandlingRegisterNewProductResponse)
+                        onEvent(AddNewTransactionEvent.LoadAvailableProductsWithSearchQuery(searchText))
+                        showRegisterNewProductNameBottomSheet = false
+                    }
+                }
             }
         }
+
+
 
         RegisterNewProductNameBottomSheet(
             onDismiss = { showRegisterNewProductNameBottomSheet = false },
             isShowing = showRegisterNewProductNameBottomSheet,
             onEvent = onEvent,
+            state = state,
         )
     }
 }

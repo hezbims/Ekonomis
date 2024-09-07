@@ -27,5 +27,7 @@
     <string name="carton_label">Carton</string>
     <string name="piece_label">Piece</string>
     <string name="search_product_name_label">Cari Nama Barang</string>
+    <string name="new_product_registration_label">Pendaftaran Nama Barang Baru</string>
+    <string name="new_product_name_label">Nama Barang Baru</string>
 
 </resources>

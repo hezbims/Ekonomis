@@ -38,7 +38,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
@@ -56,6 +62,29 @@ fun SearchAndChooseProductBottomSheet(
 ){
     if (isShowing) {
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        val secondaryColor = MaterialTheme.colorScheme.secondary
+        var showRegisterNewProductNameBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+        val createNewProductLabel = remember {
+            buildAnnotatedString {
+                append("Nama barang tidak ketemu?\n")
+                withLink(
+                    link = LinkAnnotation.Clickable(
+                        tag = "create-new-person",
+                        styles = TextLinkStyles(
+                            style = SpanStyle(
+                                color = secondaryColor,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        )
+                    ) {
+                        showRegisterNewProductNameBottomSheet = true
+                    },
+                ) {
+                    append("Daftarkan nama baru disini")
+                }
+            }
+        }
 
         ModalBottomSheet(
             sheetState = sheetState,
@@ -125,6 +154,13 @@ fun SearchAndChooseProductBottomSheet(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.fillMaxSize(),
                     ) {
+                        item {
+                            Text(
+                                createNewProductLabel,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                        }
+
                         items(data){
                             ListAvailableProductCardItem(
                                 it,
@@ -138,6 +174,12 @@ fun SearchAndChooseProductBottomSheet(
 
             }
         }
+
+        RegisterNewProductNameBottomSheet(
+            onDismiss = { showRegisterNewProductNameBottomSheet = false },
+            isShowing = showRegisterNewProductNameBottomSheet,
+            onEvent = onEvent,
+        )
     }
 }
 

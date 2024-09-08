@@ -12,8 +12,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionScreen
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionScreen
+import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SearchAndChooseProductScreen
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
@@ -40,6 +42,18 @@ class MainActivity : ComponentActivity() {
                         exitTransition = { ExitTransition.None },
                         enterTransition = { EnterTransition.None }
                     ){
+                        navigation<MyRoutes.NavGraph.AddOrUpdateTransaction>(
+                            startDestination = MyRoutes.AddOrUpdateTransactionForm(id = null),
+                        ){
+                            composable<MyRoutes.AddOrUpdateTransactionForm> {
+                                AddNewTransactionScreen(navController)
+                            }
+
+                            composable<MyRoutes.SearchAndChooseProduct> {
+                                SearchAndChooseProductScreen(navController)
+                            }
+                        }
+
                         composable<MyRoutes.TransactionHistory> {
                             TransactionHistoryScreen(navController)
                         }
@@ -48,9 +62,7 @@ class MainActivity : ComponentActivity() {
                             ProductPreviewScreen()
                         }
 
-                        composable<MyRoutes.AddOrUpdateNewTransaction> {
-                            AddNewTransactionScreen(navController)
-                        }
+
                     }
                 }
             }

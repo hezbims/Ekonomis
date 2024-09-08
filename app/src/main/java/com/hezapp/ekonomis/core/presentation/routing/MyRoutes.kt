@@ -29,7 +29,16 @@ sealed class MyRoutes {
     }
 
     @Serializable
-    class AddOrUpdateNewTransaction(val id : Int?) : MyRoutes()
+    class AddOrUpdateTransactionForm(val id : Int?) : MyRoutes()
+
+    @Serializable
+    data object SearchAndChooseProduct : MyRoutes()
+
+    object NavGraph {
+        @Serializable
+        data object AddOrUpdateTransaction
+    }
+
 
     companion object {
         val navigationBarRoutes = listOf<MyBottomNavItem>(TransactionHistory, ProductPreview)
@@ -40,13 +49,15 @@ sealed class MyRoutes {
                 return R.string.transaction_history_title
             else if (destination.hasRoute<ProductPreview>())
                 return R.string.product_preview_title
-            else if (destination.hasRoute<AddOrUpdateNewTransaction>()){
-                val id = backStackEntry.toRoute<AddOrUpdateNewTransaction>().id
+            else if (destination.hasRoute<AddOrUpdateTransactionForm>()){
+                val id = backStackEntry.toRoute<AddOrUpdateTransactionForm>().id
                 return if (id == null)
                     R.string.add_new_transaction_content_description
                 else
                     R.string.edit_transaction_title
             }
+            else if (destination.hasRoute<SearchAndChooseProduct>())
+                return R.string.select_product_label
             else throw RuntimeException("Unknown Route Type")
         }
     }

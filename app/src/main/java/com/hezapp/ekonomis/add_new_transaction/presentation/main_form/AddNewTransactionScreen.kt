@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.add_new_transaction.presentation
+package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -102,9 +102,10 @@ private fun AddNewTransactionScreen(
             )
 
             ListSelectedProductField(
+                navController = navController,
                 state = state,
                 onEvent = onEvent,
-                modifier = Modifier.padding(top = 12.dp)
+                modifier = Modifier.padding(top = 12.dp),
             )
         }
     }

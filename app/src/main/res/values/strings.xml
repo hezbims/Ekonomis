@@ -32,5 +32,7 @@
     <string name="name_already_registered">Nama ini sudah didaftarkan</string>
     <string name="name_cant_be_empty">Nama tidak boleh kosong</string>
     <string name="unknown_error_occured">Terjadi kesalahan yang tidak diketahui</string>
+    <string name="unit_label">Satuan</string>
+    <string name="register_new_product_succeed_label">Berhasil mendaftarkan nama barang baru</string>
 
 </resources>

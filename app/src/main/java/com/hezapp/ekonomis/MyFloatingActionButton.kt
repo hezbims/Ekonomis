@@ -22,7 +22,7 @@ fun MyFloatingActionButton(
         FloatingActionButton(
             onClick = {
                 navController.navigate(
-                    MyRoutes.AddOrUpdateNewTransaction(null)
+                    MyRoutes.AddOrUpdateTransactionForm(null)
                 ){
                     launchSingleTop = true
                 }

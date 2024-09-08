@@ -23,11 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -39,19 +35,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionUiState
 import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
+import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toShortRupiah
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
+/**
+ * Menampilkan field untuk barang-barang yang udah dipilih dan tombol untuk menambahkan
+ * barang-barang pilihan
+ */
 @Composable
 fun ListSelectedProductField(
+    navController: NavHostController,
     state : AddNewTransactionUiState,
     onEvent : (AddNewTransactionEvent) -> Unit,
     modifier : Modifier = Modifier,
@@ -69,10 +74,7 @@ fun ListSelectedProductField(
                 style = MaterialTheme.typography.titleSmall
             )
 
-            SelectProductButton(
-                state = state,
-                onEvent = onEvent
-            )
+            SelectProductButton(navController = navController)
         }
 
         Spacer(Modifier.height(12.dp))
@@ -152,8 +154,7 @@ fun SelectedProductCardItem(
 
 @Composable
 private fun SelectProductButton(
-    state: AddNewTransactionUiState,
-    onEvent: (AddNewTransactionEvent) -> Unit,
+    navController : NavHostController
 ){
     val primaryColor =  MaterialTheme.colorScheme.primary
     
@@ -163,7 +164,6 @@ private fun SelectProductButton(
             pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 10f), 2f)
         )
     }
-    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     Box(
         modifier = Modifier
@@ -174,7 +174,7 @@ private fun SelectProductButton(
                     cornerRadius = CornerRadius(12f, 12f)
                 )
             }
-            .clickable { showBottomSheet = true }
+            .clickable { navController.navigateOnce(MyRoutes.SearchAndChooseProduct) }
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),
@@ -202,13 +202,6 @@ private fun SelectProductButton(
             )
         }
     }
-
-    SearchAndChooseProductBottomSheet(
-        state = state,
-        onEvent = onEvent,
-        isShowing = showBottomSheet,
-        onDismiss = { showBottomSheet = false }
-    )
 }
 
 @Preview
@@ -220,6 +213,7 @@ private fun PreviewListSelectedProductFieldEmpty(){
                 modifier = Modifier.padding(24.dp)
             ) {
                 ListSelectedProductField(
+                    navController = rememberNavController(),
                     state = AddNewTransactionUiState.init(),
                     onEvent = {},
                     modifier = Modifier.fillMaxWidth()
@@ -238,6 +232,7 @@ private fun PreviewListSelectedProductFieldWithItem(){
                 modifier = Modifier.padding(24.dp)
             ) {
                 ListSelectedProductField(
+                    navController = rememberNavController(),
                     state = AddNewTransactionUiState
                         .init().copy(
                             invoiceItems = listOf(

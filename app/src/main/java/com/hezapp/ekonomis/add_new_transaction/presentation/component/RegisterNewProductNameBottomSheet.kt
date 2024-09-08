@@ -35,8 +35,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
+import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SearchAndChooseProductEvent
+import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SearchAndChooseProductUiState
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.InsertProductError
 
@@ -44,8 +44,8 @@ import com.hezapp.ekonomis.core.domain.product.InsertProductError
 @Composable
 fun RegisterNewProductNameBottomSheet(
     onDismiss: () -> Unit,
-    state: AddNewTransactionUiState,
-    onEvent: (AddNewTransactionEvent) -> Unit,
+    state: SearchAndChooseProductUiState,
+    onEvent: (SearchAndChooseProductEvent) -> Unit,
     isShowing: Boolean,
 ){
     if (isShowing){
@@ -63,20 +63,35 @@ fun RegisterNewProductNameBottomSheet(
             val registerNewProductResponse = state.registerNewProductResponse
             var textFieldError by rememberSaveable { mutableStateOf<String?>(null) }
             LaunchedEffect(registerNewProductResponse) {
-                if (registerNewProductResponse is ResponseWrapper.Failed){
-                    onEvent(AddNewTransactionEvent.DoneHandlingRegisterNewProductResponse)
-                    when (registerNewProductResponse.error){
-                        InsertProductError.AlreadyUsed ->
-                            textFieldError = context.getString(R.string.name_already_registered)
-                        InsertProductError.EmptyInputName ->
-                            textFieldError = context.getString(R.string.name_cant_be_empty)
-                        null ->
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.unknown_error_occured),
-                                Toast.LENGTH_LONG
-                            ).show()
+                when(registerNewProductResponse){
+                    is ResponseWrapper.Failed -> {
+                        onEvent(SearchAndChooseProductEvent.DoneHandlingRegisterProductResponse)
+                        when (registerNewProductResponse.error) {
+                            InsertProductError.AlreadyUsed ->
+                                textFieldError = context.getString(R.string.name_already_registered)
+
+                            InsertProductError.EmptyInputName ->
+                                textFieldError = context.getString(R.string.name_cant_be_empty)
+
+                            null ->
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.unknown_error_occured),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                        }
                     }
+                    is ResponseWrapper.Loading -> Unit
+                    is ResponseWrapper.Succeed -> {
+                        onEvent(SearchAndChooseProductEvent.DoneHandlingRegisterProductResponse)
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.register_new_product_succeed_label),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        onDismiss()
+                    }
+                    null -> Unit
                 }
             }
 
@@ -123,9 +138,11 @@ fun RegisterNewProductNameBottomSheet(
 
                 OutlinedButton(
                     onClick = {
-                        onEvent(AddNewTransactionEvent.RegisterNewProduct(
-                            productName = productName
-                        ))
+                        onEvent(
+                            SearchAndChooseProductEvent.RegisterNewProduct(
+                                productName = productName
+                            )
+                        )
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {

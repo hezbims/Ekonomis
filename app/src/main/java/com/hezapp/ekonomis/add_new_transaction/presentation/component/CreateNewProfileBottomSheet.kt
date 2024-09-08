@@ -36,8 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionUiState
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @OptIn(ExperimentalMaterial3Api::class)

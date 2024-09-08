@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.add_new_transaction.presentation
+package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,14 +7,12 @@ import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
 import com.hezapp.ekonomis.add_new_transaction.domain.person.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.core.data.repo.FakeProductRepo
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.IProductRepo
-import com.hezapp.ekonomis.core.domain.product.InsertProductError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,12 +46,6 @@ class AddNewTransactionViewModel : ViewModel() {
                 changeTransactionDate(event.newDate)
             is AddNewTransactionEvent.ChangePpn ->
                 changePpn(event.newPpn)
-            is AddNewTransactionEvent.LoadAvailableProductsWithSearchQuery ->
-                loadAvailableProductsWithSearchQuery(event.searchQuery)
-            is AddNewTransactionEvent.RegisterNewProduct ->
-                registerNewProduct(event.productName)
-            AddNewTransactionEvent.DoneHandlingRegisterNewProductResponse ->
-                doneHandlingRegisterNewProduct()
         }
     }
 
@@ -105,48 +97,23 @@ class AddNewTransactionViewModel : ViewModel() {
                 _state.update { it.copy(ppn = getValidPpnFromInput(inputPpn)) }
         } catch (_ : IllegalArgumentException){ }
     }
-
-    private fun loadAvailableProductsWithSearchQuery(newSearchQuery: String){
-        viewModelScope.launch(Dispatchers.IO) {
-            productRepo.getAllProduct(newSearchQuery).collect { response ->
-                _state.update { it.copy(availableProducts = response) }
-            }
-        }
-    }
-
-    private fun registerNewProduct(productName: String){
-        viewModelScope.launch(Dispatchers.IO) {
-            productRepo.insertProduct(ProductEntity(name = productName)).collect { response ->
-                _state.update { it.copy(registerNewProductResponse = response) }
-            }
-        }
-    }
-
-    private fun doneHandlingRegisterNewProduct(){
-        _state.update { it.copy(registerNewProductResponse = null) }
-    }
 }
 
 sealed class AddNewTransactionEvent {
     class ChangeTransactionType(val newTransactionType: TransactionType) : AddNewTransactionEvent()
     class ChooseNewPerson(val newPerson : PersonEntity) : AddNewTransactionEvent()
     class LoadAvailableProfilesWithSearchQuery(val searchQuery : String) : AddNewTransactionEvent()
-    class LoadAvailableProductsWithSearchQuery(val searchQuery: String) : AddNewTransactionEvent()
     class CreateNewProfile(val profileName : String) : AddNewTransactionEvent()
     data object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
     class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
-    class RegisterNewProduct(val productName : String) : AddNewTransactionEvent()
-    data object DoneHandlingRegisterNewProductResponse : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
     val transactionType: TransactionType?,
     val person: PersonEntity?,
     val availablePerson: ResponseWrapper<List<PersonEntity> , MyBasicError>,
-    val availableProducts: ResponseWrapper<List<ProductEntity>, MyBasicError>,
     val createNewPersonResponse: ResponseWrapper<Any? , MyBasicError>?,
-    val registerNewProductResponse: ResponseWrapper<Any? , InsertProductError>?,
     val transactionDateMillis : Long?,
     val ppn : Int?,
     val invoiceItems : List<InvoiceItemWithProduct>,
@@ -156,12 +123,10 @@ data class AddNewTransactionUiState(
             transactionType = null,
             person = null,
             availablePerson = ResponseWrapper.Loading(),
-            availableProducts = ResponseWrapper.Loading(),
             createNewPersonResponse = null,
             transactionDateMillis = null,
             ppn = null,
             invoiceItems = emptyList(),
-            registerNewProductResponse = null,
         )
     }
 }

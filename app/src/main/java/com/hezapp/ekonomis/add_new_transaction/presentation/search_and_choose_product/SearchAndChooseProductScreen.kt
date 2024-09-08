@@ -46,18 +46,12 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.component.RegisterNe
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionViewModel
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
-import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 
 @Composable
 fun SearchAndChooseProductScreen(
     navController : NavHostController,
+    addNewTransactionViewModel: AddNewTransactionViewModel,
 ){
-    val navGraphBackStackEntry = remember {
-        navController.getBackStackEntry(MyRoutes.NavGraph.AddOrUpdateTransaction)
-    }
-
-    val addNewTransactionViewModel = viewModel<AddNewTransactionViewModel>(navGraphBackStackEntry)
-
     val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
 

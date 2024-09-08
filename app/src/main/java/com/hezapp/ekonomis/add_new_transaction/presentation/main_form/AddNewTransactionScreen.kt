@@ -36,7 +36,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.ListSelectedProductField
@@ -51,7 +50,7 @@ import java.util.Calendar
 @Composable
 fun AddNewTransactionScreen(
     navController : NavHostController,
-    viewModel : AddNewTransactionViewModel = viewModel(),
+    viewModel : AddNewTransactionViewModel,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     AddNewTransactionScreen(

@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
-import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
+import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,9 +50,7 @@ fun CreateNewProfileBottomSheet(
     initialProfileName : String = "",
 ){
     if (isShowing){
-        val userTypeString = stringResource(
-            AddNewTransactionUiUtils.getPersonIdFromTransactionType(state.transactionType!!)
-        )
+        val userTypeString = stringResource(state.transactionType!!.getProfileStringId())
 
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 

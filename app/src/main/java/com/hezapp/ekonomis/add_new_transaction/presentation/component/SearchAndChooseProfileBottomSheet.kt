@@ -50,9 +50,9 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.AddNewTransactionUiState
-import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -63,9 +63,7 @@ fun SearchAndChooseProfileBottomSheet(
     onEvent : (AddNewTransactionEvent) -> Unit,
 ){
     if (isShowing) {
-        val personTypeString = stringResource(
-            AddNewTransactionUiUtils.getPersonIdFromTransactionType(state.transactionType!!)
-        )
+        val personTypeString = stringResource(state.transactionType!!.getProfileStringId())
         var showCreateNewPersonBottomSheet by rememberSaveable { mutableStateOf(false) }
         val secondaryColor = MaterialTheme.colorScheme.secondary
 

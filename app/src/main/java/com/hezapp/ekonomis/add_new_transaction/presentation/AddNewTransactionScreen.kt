@@ -41,9 +41,10 @@ import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChooseProfileBottomSheet
-import com.hezapp.ekonomis.add_new_transaction.presentation.utils.AddNewTransactionUiUtils
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
+import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import java.util.Calendar
 
@@ -123,10 +124,7 @@ private fun TransactionTypeDropdown(
         TextField(
             value =
             if (value == null) ""
-            else stringResource(
-                AddNewTransactionUiUtils
-                    .getProductTransactionTypeIdFromTransactionType(value)
-            ),
+            else stringResource(value.getTransactionStringId()),
             onValueChange = { },
             readOnly = true,
             label = { Text(stringResource(R.string.choose_transaction_type_label)) },
@@ -145,12 +143,7 @@ private fun TransactionTypeDropdown(
             transactionTypes.forEach { transactionType ->
                 DropdownMenuItem(
                     text = {
-                        Text(
-                            stringResource(
-                                AddNewTransactionUiUtils
-                                    .getProductTransactionTypeIdFromTransactionType(transactionType)
-                            )
-                        )
+                        Text(stringResource(transactionType.getTransactionStringId()))
                     },
                     onClick = {
                         onValueChange(transactionType)
@@ -167,9 +160,7 @@ private fun ChoosePersonField(
     state: AddNewTransactionUiState,
     onEvent: (AddNewTransactionEvent) -> Unit,
 ){
-    val personTypeString = stringResource(
-        AddNewTransactionUiUtils.getPersonIdFromTransactionType(state.transactionType!!)
-    )
+    val personTypeString = stringResource(state.transactionType!!.getProfileStringId())
     var showSearchAndChoosePersonBottomSheet by rememberSaveable {
         mutableStateOf(false)
     }

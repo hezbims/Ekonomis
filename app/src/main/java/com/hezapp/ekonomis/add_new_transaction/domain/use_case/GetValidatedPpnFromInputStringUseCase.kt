@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.add_new_transaction.domain.person.use_case
+package com.hezapp.ekonomis.add_new_transaction.domain.use_case
 
 class GetValidatedPpnFromInputStringUseCase {
     operator fun invoke(input : String) : Int {

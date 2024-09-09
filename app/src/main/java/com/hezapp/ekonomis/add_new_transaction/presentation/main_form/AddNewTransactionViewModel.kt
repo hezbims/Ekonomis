@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_new_transaction.data.person.FakePersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
-import com.hezapp.ekonomis.add_new_transaction.domain.person.use_case.GetValidatedPpnFromInputStringUseCase
+import com.hezapp.ekonomis.add_new_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.core.data.repo.FakeProductRepo
 import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
@@ -95,7 +95,7 @@ class AddNewTransactionViewModel : ViewModel() {
                 _state.update { it.copy(ppn = null) }
             else
                 _state.update { it.copy(ppn = getValidPpnFromInput(inputPpn)) }
-        } catch (_ : IllegalArgumentException){ }
+        } catch (_ : Exception){ }
     }
 }
 

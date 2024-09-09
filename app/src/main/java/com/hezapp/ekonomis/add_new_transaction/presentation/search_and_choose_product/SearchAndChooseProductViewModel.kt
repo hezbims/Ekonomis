@@ -34,6 +34,10 @@ class SearchAndChooseProductViewModel : ViewModel() {
                 doneHandlingRegisterProductResponse()
             is SearchAndChooseProductEvent.RegisterNewProduct ->
                 registerNewProduct(event.productName)
+            is SearchAndChooseProductEvent.SelectProductForSpecification ->
+                selectProductForSpecification(event.product)
+            SearchAndChooseProductEvent.DoneSelectProductSpecification ->
+                doneSelectProductSpecification()
         }
     }
 
@@ -63,12 +67,21 @@ class SearchAndChooseProductViewModel : ViewModel() {
     private fun doneHandlingRegisterProductResponse(){
         _state.update { it.copy(registerNewProductResponse = null) }
     }
+
+    private fun selectProductForSpecification(product: ProductEntity){
+        _state.update { it.copy(currentChoosenProduct = product) }
+    }
+
+    private fun doneSelectProductSpecification(){
+        _state.update { it.copy(currentChoosenProduct = null) }
+    }
 }
 
 data class SearchAndChooseProductUiState(
     val searchQuery: String,
     val availableProductsResponse : ResponseWrapper<List<ProductEntity> , MyBasicError>,
     val registerNewProductResponse : ResponseWrapper<Any?, InsertProductError>?,
+    val currentChoosenProduct : ProductEntity?,
 ){
     companion object {
         fun init() : SearchAndChooseProductUiState =
@@ -76,6 +89,7 @@ data class SearchAndChooseProductUiState(
                 searchQuery = "",
                 availableProductsResponse = ResponseWrapper.Loading(),
                 registerNewProductResponse = null,
+                currentChoosenProduct = null,
             )
     }
 }
@@ -85,5 +99,7 @@ sealed class SearchAndChooseProductEvent {
     data object LoadAvailableProducts : SearchAndChooseProductEvent()
     class RegisterNewProduct(val productName: String) : SearchAndChooseProductEvent()
     data object DoneHandlingRegisterProductResponse : SearchAndChooseProductEvent()
+    class SelectProductForSpecification(val product: ProductEntity) : SearchAndChooseProductEvent()
+    data object DoneSelectProductSpecification : SearchAndChooseProductEvent()
 
 }

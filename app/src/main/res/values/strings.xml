@@ -34,5 +34,9 @@
     <string name="unknown_error_occured">Terjadi kesalahan yang tidak diketahui</string>
     <string name="unit_label">Satuan</string>
     <string name="register_new_product_succeed_label">Berhasil mendaftarkan nama barang baru</string>
+    <string name="quantity_label">Jumlah</string>
+    <string name="total_price_label">Total Harga</string>
+    <string name="product_label">Barang</string>
+    <string name="transaction_spesification_label">Spesifikasi Transaksi</string>
 
 </resources>

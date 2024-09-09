@@ -13,12 +13,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -44,6 +42,7 @@ import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.RegisterNewProductNameBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionViewModel
+import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.component.SpecifyProductQuantityAndPriceBottomSheet
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 
@@ -61,13 +60,11 @@ fun SearchAndChooseProductScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchAndChooseProductScreen(
     state: SearchAndChooseProductUiState,
     onEvent: (SearchAndChooseProductEvent) -> Unit,
 ){
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val secondaryColor = MaterialTheme.colorScheme.secondary
     var showRegisterNewProductNameBottomSheet by rememberSaveable { mutableStateOf(false) }
 
@@ -143,7 +140,7 @@ private fun SearchAndChooseProductScreen(
                     ListAvailableProductCardItem(
                         it,
                         onClick = {
-
+                            onEvent(SearchAndChooseProductEvent.SelectProductForSpecification(it))
                         }
                     )
                 }
@@ -151,6 +148,12 @@ private fun SearchAndChooseProductScreen(
         }
     }
 
+    SpecifyProductQuantityAndPriceBottomSheet(
+        product = state.currentChoosenProduct,
+        onDismissRequest = {
+            onEvent(SearchAndChooseProductEvent.DoneSelectProductSpecification)
+        }
+    )
 
     RegisterNewProductNameBottomSheet(
         onDismiss = { showRegisterNewProductNameBottomSheet = false },

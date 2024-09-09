@@ -6,8 +6,8 @@ import com.hezapp.ekonomis.add_new_transaction.data.person.FakePersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
 import com.hezapp.ekonomis.add_new_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
+import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.data.repo.FakeProductRepo
-import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
@@ -46,6 +46,11 @@ class AddNewTransactionViewModel : ViewModel() {
                 changeTransactionDate(event.newDate)
             is AddNewTransactionEvent.ChangePpn ->
                 changePpn(event.newPpn)
+            is AddNewTransactionEvent.AddOrEditInvoiceItem ->
+                addOrInsertInvoiceItem(
+                    item = event.item,
+                    prevItemIndex = event.prevItemIndex,
+                )
         }
     }
 
@@ -97,6 +102,26 @@ class AddNewTransactionViewModel : ViewModel() {
                 _state.update { it.copy(ppn = getValidPpnFromInput(inputPpn)) }
         } catch (_ : Exception){ }
     }
+
+    private fun addOrInsertInvoiceItem(
+        item: InvoiceItemUiModel,
+        prevItemIndex: Int?,
+    ){
+        val prevInvoiceItems = _state.value.invoiceItems
+        if (prevItemIndex == null)
+            _state.update { it.copy(invoiceItems = prevInvoiceItems.plus(item)) }
+        else
+            _state.update {
+                it.copy(
+                    invoiceItems = prevInvoiceItems.mapIndexed { index, curItem ->
+                        if (index == prevItemIndex)
+                            curItem
+                        else
+                            item
+                    }
+                )
+            }
+    }
 }
 
 sealed class AddNewTransactionEvent {
@@ -107,6 +132,7 @@ sealed class AddNewTransactionEvent {
     data object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
     class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
+    class AddOrEditInvoiceItem(val item: InvoiceItemUiModel, val prevItemIndex : Int? = null) : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
@@ -116,7 +142,7 @@ data class AddNewTransactionUiState(
     val createNewPersonResponse: ResponseWrapper<Any? , MyBasicError>?,
     val transactionDateMillis : Long?,
     val ppn : Int?,
-    val invoiceItems : List<InvoiceItemWithProduct>,
+    val invoiceItems : List<InvoiceItemUiModel>,
 ){
     companion object {
         fun init() = AddNewTransactionUiState(

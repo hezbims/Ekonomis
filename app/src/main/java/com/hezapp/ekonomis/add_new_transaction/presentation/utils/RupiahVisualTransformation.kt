@@ -4,10 +4,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 
 class RupiahVisualTransformation : VisualTransformation {
     override fun filter(text: AnnotatedString): TransformedText {
-        val transformedAnnotatedString = text.asRupiah()
+        val transformedAnnotatedString = AnnotatedString(text.toRupiah())
         return TransformedText(
             text = transformedAnnotatedString,
             offsetMapping = RupiahOffsetMapping(
@@ -16,23 +17,6 @@ class RupiahVisualTransformation : VisualTransformation {
             )
         )
     }
-
-    private fun AnnotatedString.asRupiah() : AnnotatedString {
-        if (isEmpty())
-            return AnnotatedString("")
-        val result = buildString {
-            append("Rp")
-            this@asRupiah.forEachIndexed { i, c ->
-                append(c)
-                if (i + 1 != this@asRupiah.length && ((this@asRupiah.length - i - 1) % 3 == 0))
-                    append(".")
-
-            }
-        }
-        return AnnotatedString(result)
-    }
-
-
 }
 
 private class RupiahOffsetMapping(

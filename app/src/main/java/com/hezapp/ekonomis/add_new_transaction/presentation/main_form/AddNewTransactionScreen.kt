@@ -1,16 +1,17 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
@@ -70,9 +71,11 @@ private fun AddNewTransactionScreen(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
-            .scrollable(state = rememberScrollState(), orientation = Orientation.Vertical)
+            .padding(horizontal = 24.dp)
+            .verticalScroll(state = rememberScrollState())
     ) {
+        Spacer(Modifier.height(24.dp))
+
         TransactionTypeDropdown(
             value = state.transactionType,
             onValueChange = { newTransactionType ->
@@ -107,6 +110,8 @@ private fun AddNewTransactionScreen(
                 modifier = Modifier.padding(top = 12.dp),
             )
         }
+
+        Spacer(Modifier.height(24.dp))
     }
 }
 

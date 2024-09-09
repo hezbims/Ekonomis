@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
@@ -25,8 +24,7 @@ fun MyTopAppBar(
 
     TopAppBar(
         navigationIcon = {
-            if (currentDestination?.hasRoute<MyRoutes.ProductPreview>() == false &&
-                currentDestination.hasRoute<MyRoutes.TransactionHistory>() == false)
+            navController.previousBackStackEntry?.let {
                 IconButton(
                     onClick = {
                         navController.goBackSafely()
@@ -37,6 +35,7 @@ fun MyTopAppBar(
                         contentDescription = stringResource(R.string.back_icon_content_description)
                     )
                 }
+            }
         },
         title = {
             if (navBackStackEntry != null) {

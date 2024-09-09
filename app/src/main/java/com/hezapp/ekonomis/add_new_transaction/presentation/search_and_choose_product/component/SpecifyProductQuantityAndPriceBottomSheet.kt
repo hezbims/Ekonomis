@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SpecifyProductQuantityEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SpecifyProductQuantityUiState
 import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SpecifyProductQuantityViewModel
@@ -51,20 +53,37 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.utils.RupiahVisualTr
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 @Composable
 fun SpecifyProductQuantityAndPriceBottomSheet(
     product: ProductEntity?,
     onDismissRequest: () -> Unit,
+    onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
 ){
     product?.let {
         val viewModel = remember { SpecifyProductQuantityViewModel(it) }
+        val state = viewModel.state.collectAsState().value
+        val isDataValid = state.isDataValid
+        LaunchedEffect(isDataValid) {
+            if (isDataValid){
+                viewModel.onEvent(SpecifyProductQuantityEvent.DoneHandlingValidData)
+                onProductSpecificationConfirmed(InvoiceItemUiModel(
+                    id = 0,
+                    price = state.price!!,
+                    productId = it.id,
+                    productName = it.name,
+                    quantity = state.quantity!!,
+                    unitType = state.unitType!!,
+                ))
+                onDismissRequest()
+            }
+        }
+
         SpecifyProductQuantityAndPriceBottomSheet(
             onDismissRequest = onDismissRequest,
-            state = viewModel.state.collectAsState().value,
-            onEvent = viewModel::onEvent
+            state = state,
+            onEvent = viewModel::onEvent,
         )
     }
 }
@@ -124,7 +143,7 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                     onValueChange = {
                         onEvent(SpecifyProductQuantityEvent.ChangeUnitType(it))
                     },
-                    error = state.unitTypeError,
+                    hasError = state.unitTypeHasError,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -133,7 +152,7 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                     onValueChange = {
                         onEvent(SpecifyProductQuantityEvent.ChangeQuantity(it))
                     },
-                    error = state.quantityError,
+                    hasError = state.quantityHasError,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -143,27 +162,22 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                 onValueChange = {
                     onEvent(SpecifyProductQuantityEvent.ChangePrice(it))
                 },
-                error = state.priceError,
+                hasError = state.priceHasError,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Row(
-                horizontalArrangement = Arrangement.End,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    contentPadding = PaddingValues(
-                        vertical = 16.dp
-                    ),
-                    modifier = Modifier
-                        .padding(bottom = 36.dp)
-                        .fillMaxWidth(),
-                    onClick = {
-                        onDismissRequest()
-                    }
-                ) {
-                    Text(stringResource(R.string.choose_label))
+            Button(
+                contentPadding = PaddingValues(
+                    vertical = 16.dp
+                ),
+                modifier = Modifier
+                    .padding(bottom = 36.dp, top = 24.dp)
+                    .fillMaxWidth(),
+                onClick = {
+                    onEvent(SpecifyProductQuantityEvent.VerifyProductData)
                 }
+            ) {
+                Text(stringResource(R.string.choose_label))
             }
         }
     }
@@ -174,7 +188,7 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
 private fun DropdownUnitType(
     value: UnitType?,
     onValueChange: (UnitType) -> Unit,
-    error: String?,
+    hasError: Boolean,
     modifier: Modifier = Modifier,
 ){
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -196,8 +210,14 @@ private fun DropdownUnitType(
                     contentDescription = "Dropdown Symbol"
                 )
             },
-            isError = error != null,
-            supportingText = { error?.let { Text(it) } },
+            isError = hasError,
+            supportingText = {
+                if (hasError)
+                    Text(stringResource(
+                        R.string.cant_be_empty,
+                        stringResource(R.string.unit_label)
+                    ))
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .menuAnchor()
@@ -227,15 +247,21 @@ private fun DropdownUnitType(
 private fun PriceField(
     value : Int?,
     onValueChange: (String) -> Unit,
-    error: String?,
+    hasError: Boolean,
     modifier: Modifier,
 ){
     TextField(
-        value = value?.toRupiah() ?: "",
+        value = value?.toString() ?: "",
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-        supportingText = { error?.let { Text(it) } },
-        isError = error != null,
+        supportingText = {
+            if (hasError)
+                Text(stringResource(
+                    R.string.cant_be_empty,
+                    stringResource(R.string.total_price_label)
+                ))
+        },
+        isError = hasError,
         visualTransformation = RupiahVisualTransformation(),
         label = { Text(stringResource(R.string.total_price_label)) },
         modifier = modifier,
@@ -260,15 +286,20 @@ private fun ProductField(
 private fun QuantityField(
     value: Int?,
     onValueChange: (String) -> Unit,
-    error: String?,
+    hasError: Boolean,
     modifier: Modifier = Modifier,
 ){
     TextField(
         value = value?.toString() ?: "",
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        isError = hasError,
         supportingText = {
-            error?.let { Text(it) }
+            if (hasError)
+                Text(stringResource(
+                    R.string.cant_be_empty,
+                    stringResource(R.string.quantity_label)
+                ))
         },
         label = { Text(stringResource(R.string.quantity_label)) },
         modifier = modifier,
@@ -288,7 +319,7 @@ private fun PreviewSpecifyProductQuantityAndPriceDialog(){
                             id = 0, name = "Extra Virgin Olive Oil"
                         )
                     ),
-                    onEvent = {}
+                    onEvent = {},
                 )
             }
         }

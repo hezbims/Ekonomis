@@ -40,14 +40,12 @@ import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionUiState
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
+import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
-import com.hezapp.ekonomis.core.presentation.utils.toShortRupiah
+import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 /**
@@ -115,7 +113,7 @@ fun ListSelectedProductField(
 
 @Composable
 fun SelectedProductCardItem(
-    item : InvoiceItemWithProduct,
+    item : InvoiceItemUiModel,
 ){
     Card(
         modifier = Modifier.fillMaxWidth()
@@ -127,7 +125,7 @@ fun SelectedProductCardItem(
         ){
             Box(Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
                 Text(
-                    item.product.name,
+                    item.productName,
                     color = MaterialTheme.colorScheme.onSecondary,
                     style = MaterialTheme.typography.labelLarge
                 )
@@ -141,11 +139,11 @@ fun SelectedProductCardItem(
                 .padding(horizontal = 12.dp, vertical = 8.dp)
         ) {
             Text(
-                "${item.invoiceItem.quantity} ${stringResource(item.invoiceItem.unitType.getStringId())}",
+                "${item.quantity} ${stringResource(item.unitType.getStringId())}",
                 style = MaterialTheme.typography.labelMedium
             )
             Text(
-                item.invoiceItem.price.toShortRupiah(),
+                item.price.toRupiah(),
                 style = MaterialTheme.typography.labelMedium
             )
         }
@@ -236,33 +234,22 @@ private fun PreviewListSelectedProductFieldWithItem(){
                     state = AddNewTransactionUiState
                         .init().copy(
                             invoiceItems = listOf(
-                                InvoiceItemWithProduct(
-                                    invoiceItem = InvoiceItemEntity(
-                                        productId = 0,
-                                        price = (14_000_000_000).toInt(),
-                                        quantity = 5,
-                                        invoiceId = 1,
-                                        unitType = UnitType.PIECE,
-                                    ),
-                                    product = ProductEntity(
-                                        id = 0,
-                                        name = "White Vinegar"
-                                    ),
+                                InvoiceItemUiModel(
+                                    productId = 0,
+                                    productName = "White Vinegar",
+                                    quantity = 5,
+                                    unitType = UnitType.PIECE,
+                                    id = 0,
+                                    price = (14_000_000_000).toInt(),
                                 ),
-                                InvoiceItemWithProduct(
-                                    invoiceItem = InvoiceItemEntity(
-                                        productId = 0,
-                                        price = (54_000).toInt(),
-                                        quantity = 10,
-                                        invoiceId = 1,
-                                        unitType = UnitType.CARTON,
-                                    ),
-                                    product = ProductEntity(
-                                        id = 0,
-                                        name = "Extra Virgin Olive Oil"
-                                    ),
+                                InvoiceItemUiModel(
+                                    productId = 0,
+                                    productName = "Extra Virgin Olive Oil",
+                                    quantity = 10,
+                                    unitType = UnitType.CARTON,
+                                    id = 1,
+                                    price = (54_000).toInt(),
                                 ),
-
                             )
                         ),
                     onEvent = {},

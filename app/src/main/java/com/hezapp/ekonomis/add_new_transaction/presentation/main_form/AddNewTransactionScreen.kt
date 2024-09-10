@@ -4,6 +4,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
@@ -68,50 +70,68 @@ private fun AddNewTransactionScreen(
     onEvent : (AddNewTransactionEvent) -> Unit,
 ){
     Column(
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp)
-            .verticalScroll(state = rememberScrollState())
+        modifier = Modifier.fillMaxSize()
     ) {
-        Spacer(Modifier.height(24.dp))
-
-        TransactionTypeDropdown(
-            value = state.transactionType,
-            onValueChange = { newTransactionType ->
-                onEvent(AddNewTransactionEvent.ChangeTransactionType(newTransactionType))
-            },
-        )
-
-        if (state.transactionType != null) {
-            ChooseDateField(
-                value = state.transactionDateMillis,
-                onValueChange = { selectedDate ->
-                    onEvent(AddNewTransactionEvent.ChangeTransactionDate(selectedDate))
-                }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .verticalScroll(state = rememberScrollState())
+        ) {
+            TransactionTypeDropdown(
+                value = state.transactionType,
+                onValueChange = { newTransactionType ->
+                    onEvent(AddNewTransactionEvent.ChangeTransactionType(newTransactionType))
+                },
             )
 
-            ChoosePersonField(
-                state = state,
-                onEvent = onEvent,
-            )
+            state.transactionType?.let { transactionType ->
+                ChooseDateField(
+                    value = state.transactionDateMillis,
+                    onValueChange = { selectedDate ->
+                        onEvent(AddNewTransactionEvent.ChangeTransactionDate(selectedDate))
+                    }
+                )
 
-            PpnField(
-                value = state.ppn,
-                onValueChange = {
-                    onEvent(AddNewTransactionEvent.ChangePpn(it))
-                }
-            )
+                ChoosePersonField(
+                    state = state,
+                    onEvent = onEvent,
+                )
 
-            ListSelectedProductField(
-                navController = navController,
-                state = state,
-                onEvent = onEvent,
-                modifier = Modifier.padding(top = 12.dp),
-            )
+                if (transactionType == TransactionType.PEMBELIAN)
+                    PpnField(
+                        value = state.ppn,
+                        onValueChange = {
+                            onEvent(AddNewTransactionEvent.ChangePpn(it))
+                        }
+                    )
+
+                ListSelectedProductField(
+                    navController = navController,
+                    state = state,
+                    onEvent = onEvent,
+                    modifier = Modifier.padding(top = 12.dp),
+                )
+            }
+
+            Spacer(Modifier.height(24.dp))
         }
 
-        Spacer(Modifier.height(24.dp))
+        state.transactionType?.let {
+            Button(
+                contentPadding = PaddingValues(vertical = 16.dp),
+                onClick = {},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        bottom = 48.dp, start = 24.dp, end = 24.dp
+                    )
+            ) {
+                Text("Simpan")
+            }
+        }
     }
 }
 

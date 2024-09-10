@@ -18,6 +18,6 @@ fun TransactionType.getProfileStringId() : Int =
 
 fun TransactionType.getTransactionStringId() : Int =
     when(this){
-        TransactionType.PEMBELIAN -> R.string.sale_product_label
-        TransactionType.PENJUALAN -> R.string.purchase_product_label
+        TransactionType.PEMBELIAN -> R.string.purchase_product_label
+        TransactionType.PENJUALAN -> R.string.sale_product_label
     }

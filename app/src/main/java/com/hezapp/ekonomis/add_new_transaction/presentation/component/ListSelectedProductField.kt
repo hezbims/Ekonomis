@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,8 +16,11 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -79,7 +81,10 @@ fun ListSelectedProductField(
 
         Box(
             modifier = Modifier
-                .defaultMinSize(minHeight = 120.dp)
+                .defaultMinSize(
+                    minHeight = if (state.invoiceItems.isEmpty()) 120.dp
+                                else 0.dp
+                )
                 .fillMaxWidth()
                 .border(
                     width = 0.25.dp,
@@ -101,10 +106,12 @@ fun ListSelectedProductField(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
-                        .padding(12.dp)
+                        .padding(horizontal = 12.dp)
                 ) {
-                    state.invoiceItems.forEach {
-                        SelectedProductCardItem(it)
+                    state.invoiceItems.forEachIndexed { index , item ->
+                        SelectedProductCardItem(item)
+                        if (index < state.invoiceItems.lastIndex)
+                            HorizontalDivider()
                     }
                 }
         }
@@ -114,40 +121,25 @@ fun ListSelectedProductField(
 @Composable
 fun SelectedProductCardItem(
     item : InvoiceItemUiModel,
+    modifier: Modifier = Modifier,
 ){
-    Card(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row (
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.secondary)
-        ){
-            Box(Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
-                Text(
-                    item.productName,
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    style = MaterialTheme.typography.labelLarge
-                )
+    ListItem(
+        headlineContent = {
+            Text(item.productName)
+        },
+        supportingContent = {
+            Text("${item.quantity} ${stringResource(item.unitType.getStringId())} | ${item.price.toRupiah()}")
+        },
+        
+        trailingContent = {
+            IconButton(
+                onClick = {}
+            ) {
+                Icon(Icons.Outlined.Edit, contentDescription = "Edit")
             }
-        }
-
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-        ) {
-            Text(
-                "${item.quantity} ${stringResource(item.unitType.getStringId())}",
-                style = MaterialTheme.typography.labelMedium
-            )
-            Text(
-                item.price.toRupiah(),
-                style = MaterialTheme.typography.labelMedium
-            )
-        }
-    }
+        },
+        modifier = modifier.fillMaxWidth()
+    )
 }
 
 @Composable
@@ -237,10 +229,10 @@ private fun PreviewListSelectedProductFieldWithItem(){
                                 InvoiceItemUiModel(
                                     productId = 0,
                                     productName = "White Vinegar",
-                                    quantity = 5,
+                                    quantity = 500,
                                     unitType = UnitType.PIECE,
                                     id = 0,
-                                    price = (14_000_000_000).toInt(),
+                                    price = (1_000_000_000).toInt(),
                                 ),
                                 InvoiceItemUiModel(
                                     productId = 0,

@@ -1,6 +1,7 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product
 
 import com.hezapp.ekonomis.add_new_transaction.domain.use_case.GetValidatedProductPriceUseCase
+import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,12 +9,34 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class SpecifyProductQuantityViewModel(
-    product : ProductEntity,
+class SpecifyProductQuantityViewModel private constructor(
+    initialUiState: SpecifyProductQuantityUiState
 ) {
+    constructor(product: ProductEntity) : this(
+        SpecifyProductQuantityUiState(
+            id = 0,
+            unitType = null,
+            listId = null,
+            price = null,
+            quantity = null,
+            product = product,
+        )
+    )
+
+    constructor(invoiceItem: InvoiceItemUiModel) : this(
+        SpecifyProductQuantityUiState(
+            id = invoiceItem.id,
+            unitType = invoiceItem.unitType,
+            listId = invoiceItem.listId,
+            price = invoiceItem.price,
+            product = ProductEntity(id = invoiceItem.productId, name = invoiceItem.productName),
+            quantity = invoiceItem.quantity,
+        )
+    )
+
     private val getValidatedProductPrice = GetValidatedProductPriceUseCase()
 
-    private val _state = MutableStateFlow(SpecifyProductQuantityUiState.init(product))
+    private val _state = MutableStateFlow(initialUiState)
     val state : StateFlow<SpecifyProductQuantityUiState>
         get() = _state.asStateFlow()
 
@@ -82,28 +105,16 @@ class SpecifyProductQuantityViewModel(
 
 data class SpecifyProductQuantityUiState(
     val unitType: UnitType?,
-    val unitTypeHasError: Boolean,
+    val unitTypeHasError: Boolean = false,
     val price: Int?,
-    val priceHasError: Boolean,
+    val priceHasError: Boolean = false,
     val product: ProductEntity,
+    val listId: String?,
     val quantity: Int?,
-    val quantityHasError: Boolean,
-    val isDataValid: Boolean,
-){
-    companion object {
-        fun init(product: ProductEntity) : SpecifyProductQuantityUiState =
-            SpecifyProductQuantityUiState(
-                unitType = null,
-                unitTypeHasError = false,
-                price = null,
-                priceHasError = false,
-                product = product,
-                quantity = null,
-                quantityHasError = false,
-                isDataValid = false,
-            )
-    }
-}
+    val quantityHasError: Boolean = false,
+    val isDataValid: Boolean = false,
+    val id: Int,
+)
 
 sealed class SpecifyProductQuantityEvent {
     class ChangeUnitType(val newUnitType: UnitType) : SpecifyProductQuantityEvent()

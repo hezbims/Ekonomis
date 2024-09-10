@@ -39,4 +39,6 @@
     <string name="product_label">Barang</string>
     <string name="transaction_spesification_label">Spesifikasi Transaksi</string>
     <string name="cant_be_empty">%1$s tidak boleh kosong</string>
+    <string name="delete_label">Hapus</string>
+    <string name="product_list_label">List Barang</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.component
+package com.hezapp.ekonomis.add_new_transaction.presentation.component
 
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -62,30 +63,63 @@ fun SpecifyProductQuantityAndPriceBottomSheet(
     onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
 ){
     product?.let {
-        val viewModel = remember { SpecifyProductQuantityViewModel(it) }
-        val state = viewModel.state.collectAsState().value
-        val isDataValid = state.isDataValid
-        LaunchedEffect(isDataValid) {
-            if (isDataValid){
-                viewModel.onEvent(SpecifyProductQuantityEvent.DoneHandlingValidData)
-                onProductSpecificationConfirmed(InvoiceItemUiModel(
-                    id = 0,
-                    price = state.price!!,
-                    productId = it.id,
-                    productName = it.name,
-                    quantity = state.quantity!!,
-                    unitType = state.unitType!!,
-                ))
-                onDismissRequest()
-            }
-        }
-
+        val viewModel = remember { SpecifyProductQuantityViewModel(product = it) }
         SpecifyProductQuantityAndPriceBottomSheet(
+            viewModel = viewModel,
             onDismissRequest = onDismissRequest,
-            state = state,
-            onEvent = viewModel::onEvent,
+            onProductSpecificationConfirmed = onProductSpecificationConfirmed,
+            onDeleteConfirmed = null,
         )
     }
+}
+
+@Composable
+fun SpecifyProductQuantityAndPriceBottomSheet(
+    invoiceItem: InvoiceItemUiModel,
+    onDismissRequest: () -> Unit,
+    onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
+    onDeleteConfirmed: () -> Unit,
+){
+    val viewModel = remember { SpecifyProductQuantityViewModel(invoiceItem) }
+    SpecifyProductQuantityAndPriceBottomSheet(
+        viewModel = viewModel,
+        onDismissRequest = onDismissRequest,
+        onProductSpecificationConfirmed = onProductSpecificationConfirmed,
+        onDeleteConfirmed = onDeleteConfirmed,
+    )
+}
+
+@Composable
+private fun SpecifyProductQuantityAndPriceBottomSheet(
+    viewModel: SpecifyProductQuantityViewModel,
+    onDismissRequest: () -> Unit,
+    onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
+    onDeleteConfirmed: (() -> Unit)?,
+){
+    val state = viewModel.state.collectAsState().value
+    val isDataValid = state.isDataValid
+    LaunchedEffect(isDataValid) {
+        if (isDataValid){
+            viewModel.onEvent(SpecifyProductQuantityEvent.DoneHandlingValidData)
+            onProductSpecificationConfirmed(InvoiceItemUiModel(
+                id = state.id,
+                price = state.price!!,
+                productId = state.product.id,
+                productName = state.product.name,
+                quantity = state.quantity!!,
+                unitType = state.unitType!!,
+                listId = state.listId,
+            ))
+            onDismissRequest()
+        }
+    }
+
+    SpecifyProductQuantityAndPriceBottomSheet(
+        onDismissRequest = onDismissRequest,
+        state = state,
+        onEvent = viewModel::onEvent,
+        onDeleteConfirmed = onDeleteConfirmed,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,6 +128,7 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
     onDismissRequest: () -> Unit,
     state: SpecifyProductQuantityUiState,
     onEvent: (SpecifyProductQuantityEvent) -> Unit,
+    onDeleteConfirmed: (() -> Unit)?,
 ){
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
@@ -124,7 +159,18 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                     modifier = Modifier.weight(1f),
                 )
 
-                Spacer(Modifier.width(32.dp))
+                if (onDeleteConfirmed == null)
+                    Spacer(Modifier.width(32.dp))
+                else
+                    IconButton(
+                        onClick = onDeleteConfirmed
+                    ) {
+                        Icon(
+                            Icons.Filled.Delete,
+                            contentDescription = stringResource(R.string.delete_label),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                    }
             }
 
             ProductField(
@@ -314,11 +360,17 @@ private fun PreviewSpecifyProductQuantityAndPriceDialog(){
             Box(Modifier.padding(48.dp)) {
                 SpecifyProductQuantityAndPriceBottomSheet(
                     onDismissRequest = {},
-                    state = SpecifyProductQuantityUiState.init(
+                    state = SpecifyProductQuantityUiState(
                         product = ProductEntity(
                             id = 0, name = "Extra Virgin Olive Oil"
-                        )
+                        ),
+                        price = null,
+                        quantity = null,
+                        unitType = null,
+                        listId = null,
+                        id = 0,
                     ),
+                    onDeleteConfirmed = null,
                     onEvent = {},
                 )
             }

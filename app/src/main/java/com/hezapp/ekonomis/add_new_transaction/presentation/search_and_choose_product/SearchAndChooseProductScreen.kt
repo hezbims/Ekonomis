@@ -46,7 +46,7 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.component.RegisterNe
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionViewModel
 import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.component.SpecifyProductQuantityAndPriceBottomSheet
+import com.hezapp.ekonomis.add_new_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 
@@ -64,7 +64,7 @@ fun SearchAndChooseProductScreen(
         onEvent = searchAndChooseProductViewModel::onEvent,
         onProductSpecificationConfirmed = {
             addNewTransactionViewModel.onEvent(
-                AddNewTransactionEvent.AddOrEditInvoiceItem(it)
+                AddNewTransactionEvent.AddNewInvoiceItem(it)
             )
             Toast.makeText(
                 context,

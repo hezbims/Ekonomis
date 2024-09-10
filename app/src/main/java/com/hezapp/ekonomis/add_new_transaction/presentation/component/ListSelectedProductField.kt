@@ -70,7 +70,7 @@ fun ListSelectedProductField(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                "List Barang",
+                stringResource(R.string.product_list_label),
                 style = MaterialTheme.typography.titleSmall
             )
 
@@ -109,12 +109,32 @@ fun ListSelectedProductField(
                         .padding(horizontal = 12.dp)
                 ) {
                     state.invoiceItems.forEachIndexed { index , item ->
-                        SelectedProductCardItem(item)
+                        SelectedProductCardItem(
+                            item = item,
+                            onClickEdit = {
+                                onEvent(AddNewTransactionEvent.ChooseInvoiceItemForEdit(item))
+                            }
+                        )
                         if (index < state.invoiceItems.lastIndex)
                             HorizontalDivider()
                     }
                 }
         }
+    }
+
+    state.editInvoiceItem?.let { editItem ->
+        SpecifyProductQuantityAndPriceBottomSheet(
+            invoiceItem = editItem,
+            onDismissRequest = {
+                onEvent(AddNewTransactionEvent.CancelEditInvoiceItem)
+            },
+            onProductSpecificationConfirmed = { newInvoiceItem ->
+                onEvent(AddNewTransactionEvent.EditInvoiceItem(newInvoiceItem))
+            },
+            onDeleteConfirmed = {
+                onEvent(AddNewTransactionEvent.DeleteInvoiceItem(uuid = editItem.listId))
+            }
+        )
     }
 }
 
@@ -122,6 +142,7 @@ fun ListSelectedProductField(
 fun SelectedProductCardItem(
     item : InvoiceItemUiModel,
     modifier: Modifier = Modifier,
+    onClickEdit: () -> Unit,
 ){
     ListItem(
         headlineContent = {
@@ -133,7 +154,7 @@ fun SelectedProductCardItem(
         
         trailingContent = {
             IconButton(
-                onClick = {}
+                onClick = onClickEdit
             ) {
                 Icon(Icons.Outlined.Edit, contentDescription = "Edit")
             }
@@ -233,6 +254,7 @@ private fun PreviewListSelectedProductFieldWithItem(){
                                     unitType = UnitType.PIECE,
                                     id = 0,
                                     price = (1_000_000_000).toInt(),
+                                    listId = null,
                                 ),
                                 InvoiceItemUiModel(
                                     productId = 0,
@@ -241,6 +263,7 @@ private fun PreviewListSelectedProductFieldWithItem(){
                                     unitType = UnitType.CARTON,
                                     id = 1,
                                     price = (54_000).toInt(),
+                                    listId = null,
                                 ),
                             )
                         ),

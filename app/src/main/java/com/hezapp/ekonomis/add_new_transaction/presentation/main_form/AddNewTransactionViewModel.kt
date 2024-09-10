@@ -7,12 +7,10 @@ import com.hezapp.ekonomis.add_new_transaction.domain.person.IPersonRepo
 import com.hezapp.ekonomis.add_new_transaction.domain.person.PersonEntity
 import com.hezapp.ekonomis.add_new_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.core.data.repo.FakeProductRepo
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.IProductRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +21,6 @@ import kotlinx.coroutines.launch
 
 class AddNewTransactionViewModel : ViewModel() {
     private val profileRepo : IPersonRepo = FakePersonRepo()
-    private val productRepo : IProductRepo = FakeProductRepo()
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
 
     private val _state = MutableStateFlow(AddNewTransactionUiState.init())
@@ -46,11 +43,16 @@ class AddNewTransactionViewModel : ViewModel() {
                 changeTransactionDate(event.newDate)
             is AddNewTransactionEvent.ChangePpn ->
                 changePpn(event.newPpn)
-            is AddNewTransactionEvent.AddOrEditInvoiceItem ->
-                addOrInsertInvoiceItem(
-                    item = event.item,
-                    prevItemIndex = event.prevItemIndex,
-                )
+            is AddNewTransactionEvent.AddNewInvoiceItem ->
+                addOrInsertInvoiceItem(item = event.item)
+            is AddNewTransactionEvent.ChooseInvoiceItemForEdit ->
+                chooseInvoiceItemForEdit(event.item)
+            AddNewTransactionEvent.CancelEditInvoiceItem ->
+                doneEditInvoiceItem()
+            is AddNewTransactionEvent.DeleteInvoiceItem ->
+                deleteInvoiceItem(event.uuid)
+            is AddNewTransactionEvent.EditInvoiceItem ->
+                editInvoiceItem(event.item)
         }
     }
 
@@ -105,22 +107,41 @@ class AddNewTransactionViewModel : ViewModel() {
 
     private fun addOrInsertInvoiceItem(
         item: InvoiceItemUiModel,
-        prevItemIndex: Int?,
     ){
         val prevInvoiceItems = _state.value.invoiceItems
-        if (prevItemIndex == null)
-            _state.update { it.copy(invoiceItems = prevInvoiceItems.plus(item)) }
-        else
-            _state.update {
-                it.copy(
-                    invoiceItems = prevInvoiceItems.mapIndexed { index, curItem ->
-                        if (index == prevItemIndex)
-                            curItem
-                        else
-                            item
-                    }
-                )
-            }
+        _state.update { it.copy(invoiceItems = prevInvoiceItems.plus(item)) }
+    }
+
+    private fun editInvoiceItem(updateItem: InvoiceItemUiModel){
+        val prevInvoiceItems = _state.value.invoiceItems
+        _state.update { it.copy(invoiceItems =
+            prevInvoiceItems.map { prevItem ->
+                if (updateItem.listId == prevItem.listId)
+                    updateItem
+                else
+                    prevItem
+            },
+            editInvoiceItem = null,
+        ) }
+    }
+
+    private fun chooseInvoiceItemForEdit(item: InvoiceItemUiModel){
+        _state.update { it.copy(editInvoiceItem = item) }
+    }
+
+    private fun doneEditInvoiceItem(){
+        _state.update { it.copy(editInvoiceItem = null) }
+    }
+
+    private fun deleteInvoiceItem(uuid: String){
+        val newInvoiceItems = _state.value.invoiceItems.filter { item ->
+            item.listId != uuid
+        }
+
+        _state.update { it.copy(
+            invoiceItems = newInvoiceItems,
+            editInvoiceItem = null,
+        ) }
     }
 }
 
@@ -132,7 +153,11 @@ sealed class AddNewTransactionEvent {
     data object DoneHandlingSuccessCreateNewProfile : AddNewTransactionEvent()
     class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
     class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
-    class AddOrEditInvoiceItem(val item: InvoiceItemUiModel, val prevItemIndex : Int? = null) : AddNewTransactionEvent()
+    class AddNewInvoiceItem(val item: InvoiceItemUiModel) : AddNewTransactionEvent()
+    class EditInvoiceItem(val item: InvoiceItemUiModel) : AddNewTransactionEvent()
+    class ChooseInvoiceItemForEdit(val item: InvoiceItemUiModel) : AddNewTransactionEvent()
+    data object CancelEditInvoiceItem : AddNewTransactionEvent()
+    class DeleteInvoiceItem(val uuid: String) : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
@@ -143,6 +168,7 @@ data class AddNewTransactionUiState(
     val transactionDateMillis : Long?,
     val ppn : Int?,
     val invoiceItems : List<InvoiceItemUiModel>,
+    val editInvoiceItem: InvoiceItemUiModel?,
 ){
     companion object {
         fun init() = AddNewTransactionUiState(
@@ -153,6 +179,7 @@ data class AddNewTransactionUiState(
             transactionDateMillis = null,
             ppn = null,
             invoiceItems = emptyList(),
+            editInvoiceItem = null,
         )
     }
 }

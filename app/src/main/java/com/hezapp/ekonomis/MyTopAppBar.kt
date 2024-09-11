@@ -9,9 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.toRoute
+import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,7 +24,6 @@ fun MyTopAppBar(
     navController : NavHostController
 ){
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
-    val currentDestination = navBackStackEntry?.destination
 
     TopAppBar(
         navigationIcon = {
@@ -38,9 +41,16 @@ fun MyTopAppBar(
             }
         },
         title = {
-            if (navBackStackEntry != null) {
-                val titleId = MyRoutes.getScreenTitleId(navBackStackEntry)
-                Text(stringResource(titleId))
+            navBackStackEntry?.let { backStackEntry ->
+                val titleId = MyRoutes.getScreenTitleId(backStackEntry)
+                var args = arrayOf<Any>()
+                if (backStackEntry.destination.hasRoute<MyRoutes.SearchAndChooseProfile>()){
+                    val transactionType = TransactionType.fromId(
+                        backStackEntry.toRoute<MyRoutes.SearchAndChooseProfile>().transactionTypeId
+                    )
+                    args = arrayOf(stringResource(transactionType.getProfileStringId()))
+                }
+                Text(stringResource(titleId, *args))
             }
         }
     )

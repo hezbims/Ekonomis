@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.data.repo
+package com.hezapp.ekonomis.core.data.product
 
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.model.MyBasicError

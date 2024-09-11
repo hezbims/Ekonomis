@@ -2,7 +2,7 @@ package com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_p
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hezapp.ekonomis.core.data.repo.FakeProductRepo
+import com.hezapp.ekonomis.core.data.product.FakeProductRepo
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.model.MyBasicError
 import com.hezapp.ekonomis.core.domain.model.ResponseWrapper

@@ -34,6 +34,9 @@ sealed class MyRoutes {
     @Serializable
     data object SearchAndChooseProduct : MyRoutes()
 
+    @Serializable
+    class SearchAndChooseProfile(val transactionTypeId : Int) : MyRoutes()
+
     object NavGraph {
         @Serializable
         data object AddOrUpdateTransaction
@@ -58,6 +61,9 @@ sealed class MyRoutes {
             }
             else if (destination.hasRoute<SearchAndChooseProduct>())
                 return R.string.select_product_label
+            else if (destination.hasRoute<SearchAndChooseProfile>()){
+                return R.string.choose_profile_label
+            }
             else throw RuntimeException("Unknown Route Type")
         }
     }

@@ -30,6 +30,7 @@
     <string name="new_product_registration_label">Pendaftaran Nama Barang Baru</string>
     <string name="new_product_name_label">Nama Barang Baru</string>
     <string name="name_already_registered">Nama ini sudah didaftarkan</string>
+    <string name="name_already_used">Nama ini sudah digunakan</string>
     <string name="name_cant_be_empty">Nama tidak boleh kosong</string>
     <string name="unknown_error_occured">Terjadi kesalahan yang tidak diketahui</string>
     <string name="unit_label">Satuan</string>
@@ -41,4 +42,8 @@
     <string name="cant_be_empty">%1$s tidak boleh kosong</string>
     <string name="delete_label">Hapus</string>
     <string name="product_list_label">List Barang</string>
+    <string name="choose_profile_label">Pilih %1$s</string>
+    <string name="search_profile_name_label">Cari Nama %1$s</string>
+    <string name="profile_name_label">Nama %1$s</string>
+    <string name="name_label">Nama</string>
 </resources>

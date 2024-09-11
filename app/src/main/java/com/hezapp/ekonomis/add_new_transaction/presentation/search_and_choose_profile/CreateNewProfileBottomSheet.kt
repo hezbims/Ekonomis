@@ -1,5 +1,6 @@
-package com.hezapp.ekonomis.add_new_transaction.presentation.component
+package com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_profile
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,12 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionUiState
+import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.profile.CreateNewProfileError
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,14 +47,15 @@ import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 fun CreateNewProfileBottomSheet(
     isShowing : Boolean,
     onDismiss : () -> Unit,
-    state: AddNewTransactionUiState,
-    onEvent: (AddNewTransactionEvent) -> Unit,
+    state: SearchAndChooseProfileUiState,
+    onEvent: (SearchAndChooseProfileEvent) -> Unit,
     initialProfileName : String = "",
 ){
     if (isShowing){
-        val userTypeString = stringResource(state.transactionType!!.getProfileStringId())
+        val userTypeString = stringResource(state.transactionType.getProfileStringId())
 
         val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+        var textFieldError by rememberSaveable { mutableStateOf<String?>(null) }
 
         ModalBottomSheet(
             sheetState = sheetState,
@@ -107,15 +110,24 @@ fun CreateNewProfileBottomSheet(
 
                 TextField(
                     value = profileName,
-                    onValueChange = { newValue -> profileName = newValue },
-                    label = { Text("Nama $userTypeString") },
+                    onValueChange = { newValue ->
+                        profileName = newValue
+                        textFieldError = null
+                    },
+                    label = {
+                        Text(stringResource(R.string.profile_name_label, userTypeString))
+                    },
+                    isError = textFieldError != null,
+                    supportingText = {
+                        textFieldError?.let {
+                            Text(it)
+                        }
+                    },
                     trailingIcon = { Icon(Icons.Outlined.Person, contentDescription = "Person Icon") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .focusRequester(textFieldFocus),
                 )
-
-                Spacer(Modifier.height(12.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.End,
@@ -123,7 +135,7 @@ fun CreateNewProfileBottomSheet(
                 ) {
                     OutlinedButton(
                         onClick = {
-                            onEvent(AddNewTransactionEvent.CreateNewProfile(profileName))
+                            onEvent(SearchAndChooseProfileEvent.CreateNewProfile(profileName))
                         }
                     ) {
                         Text(stringResource(R.string.save_profile_label))
@@ -131,6 +143,43 @@ fun CreateNewProfileBottomSheet(
                 }
             }
 
+            val createNewPersonResponse = state.createNewProfileResponse
+            val context = LocalContext.current
+            LaunchedEffect(createNewPersonResponse) {
+                when (createNewPersonResponse) {
+                    is ResponseWrapper.Succeed -> {
+                        onEvent(SearchAndChooseProfileEvent.DoneHandlingCreateNewProfileResponse)
+                        onEvent(SearchAndChooseProfileEvent.LoadAvailableProfiles)
+                        onDismiss()
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.success_create_new_profile),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    is ResponseWrapper.Failed -> {
+                        onEvent(SearchAndChooseProfileEvent.DoneHandlingCreateNewProfileResponse)
+                        when(createNewPersonResponse.error){
+                            CreateNewProfileError.NameCantBeEmpty ->
+                                textFieldError = context.getString(R.string.name_cant_be_empty)
+                            CreateNewProfileError.NameAlreadyExist ->
+                                textFieldError = context.getString(R.string.name_already_used)
+                            null ->
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.unknown_error_occured),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                        }
+                    }
+                    is ResponseWrapper.Loading -> Unit
+                    null -> Unit
+                }
         }
+    }
+
+
     }
 }

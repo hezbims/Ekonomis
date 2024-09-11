@@ -42,11 +42,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.ListSelectedProductField
-import com.hezapp.ekonomis.add_new_transaction.presentation.component.SearchAndChooseProfileBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
+import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import java.util.Calendar
 
@@ -95,9 +96,9 @@ private fun AddNewTransactionScreen(
                     }
                 )
 
-                ChoosePersonField(
+                ChooseProfileField(
+                    navController = navController,
                     state = state,
-                    onEvent = onEvent,
                 )
 
                 if (transactionType == TransactionType.PEMBELIAN)
@@ -181,27 +182,24 @@ private fun TransactionTypeDropdown(
 }
 
 @Composable
-private fun ChoosePersonField(
+private fun ChooseProfileField(
+    navController: NavHostController,
     state: AddNewTransactionUiState,
-    onEvent: (AddNewTransactionEvent) -> Unit,
 ){
     val personTypeString = stringResource(state.transactionType!!.getProfileStringId())
-    var showSearchAndChoosePersonBottomSheet by rememberSaveable {
-        mutableStateOf(false)
-    }
 
     val textFieldInteractionSource =
-        remember { MutableInteractionSource() }.also { interactionSource ->
+        remember(state.transactionType.id) { MutableInteractionSource() }.also { interactionSource ->
             LaunchedEffect(interactionSource) {
                 interactionSource.interactions.collect {
                     if (it is PressInteraction.Release)
-                        showSearchAndChoosePersonBottomSheet = true
+                        navController.navigateOnce(MyRoutes.SearchAndChooseProfile(state.transactionType.id))
                 }
             }
         }
 
     TextField(
-        value = state.person?.name ?: "",
+        value = state.profile?.name ?: "",
         onValueChange = { },
         readOnly = true,
         label = {
@@ -213,13 +211,6 @@ private fun ChoosePersonField(
         trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = "Dropdown Symbol") },
         modifier = Modifier
             .fillMaxWidth(),
-    )
-
-    SearchAndChooseProfileBottomSheet(
-        isShowing = showSearchAndChoosePersonBottomSheet,
-        state = state,
-        onEvent = onEvent,
-        onDismissBottomSheet = { showSearchAndChoosePersonBottomSheet = false }
     )
 }
 

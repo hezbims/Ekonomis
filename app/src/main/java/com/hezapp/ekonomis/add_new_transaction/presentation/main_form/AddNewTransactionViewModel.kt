@@ -43,7 +43,10 @@ class AddNewTransactionViewModel : ViewModel() {
     }
 
     private fun changeTransactionType(newTransactionType: TransactionType){
-        _state.update { it.copy(transactionType = newTransactionType) }
+        if (_state.value.transactionType != newTransactionType)
+            _state.update {
+                AddNewTransactionUiState.init().copy(transactionType = newTransactionType)
+            }
     }
 
     private fun changeProfile(newProfile : ProfileEntity){

@@ -9,9 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
@@ -21,10 +21,9 @@ import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBar(
-    navController : NavHostController
+    navController : NavHostController,
+    navBackStackEntry: NavBackStackEntry?
 ){
-    val navBackStackEntry = navController.currentBackStackEntryAsState().value
-
     TopAppBar(
         navigationIcon = {
             navController.previousBackStackEntry?.let {

@@ -4,8 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -16,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
@@ -38,23 +37,38 @@ class MainActivity : ComponentActivity() {
         setContent {
             EkonomisTheme {
                 val navController = rememberNavController()
+                val backStackEntry = navController.currentBackStackEntryAsState().value
+
 
                 Scaffold(
-                    topBar = { MyTopAppBar(navController) },
-                    bottomBar = { MyBottomNavBar(navController) },
-                    floatingActionButton = { MyFloatingActionButton(navController) },
+                    topBar = {
+                        MyTopAppBar(
+                            navController = navController,
+                            navBackStackEntry = backStackEntry
+                        )
+                    },
+                    bottomBar = {
+                        MyBottomNavBar(
+                            navController = navController,
+                            navBackStackEntry = backStackEntry
+                        )
+                    },
+                    floatingActionButton = {
+                        MyFloatingActionButton(
+                            navController = navController,
+                            navBackStackEntry = backStackEntry
+                        )
+                    },
                     modifier = Modifier.fillMaxSize(),
                 ) { innerPadding ->
                     NavHost(
                         navController,
                         startDestination = MyRoutes.TransactionHistory,
                         modifier = Modifier.padding(innerPadding),
-                        exitTransition = { ExitTransition.None },
-                        enterTransition = { EnterTransition.None }
-                    ){
+                    ) {
                         navigation<MyRoutes.NavGraph.AddOrUpdateTransaction>(
                             startDestination = MyRoutes.AddOrUpdateTransactionForm(id = null),
-                        ){
+                        ) {
                             composable<MyRoutes.AddOrUpdateTransactionForm> {
                                 AddNewTransactionScreen(
                                     navController = navController,
@@ -65,12 +79,15 @@ class MainActivity : ComponentActivity() {
                             composable<MyRoutes.SearchAndChooseProduct> {
                                 SearchAndChooseProductScreen(
                                     navController = navController,
-                                    addNewTransactionViewModel = getAddNewTransactionViewModel(navController),
+                                    addNewTransactionViewModel = getAddNewTransactionViewModel(
+                                        navController
+                                    ),
                                 )
                             }
 
                             composable<MyRoutes.SearchAndChooseProfile> {
-                                val addNewTransactionViewModel = getAddNewTransactionViewModel(navController)
+                                val addNewTransactionViewModel =
+                                    getAddNewTransactionViewModel(navController)
                                 SearchAndChooseProfileScreen(
                                     transactionType = TransactionType.fromId(
                                         it.toRoute<MyRoutes.SearchAndChooseProfile>().transactionTypeId
@@ -96,6 +113,7 @@ class MainActivity : ComponentActivity() {
 
                     }
                 }
+
             }
         }
     }

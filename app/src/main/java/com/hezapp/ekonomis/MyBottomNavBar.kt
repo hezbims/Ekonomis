@@ -11,17 +11,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 
 
 @Composable
 fun MyBottomNavBar(
-    navController: NavHostController
+    navController: NavHostController,
+    navBackStackEntry: NavBackStackEntry?,
 ){
-    val navBackStackEntry = navController.currentBackStackEntryAsState().value
     val currentDestination = navBackStackEntry?.destination
     var selectedItem by rememberSaveable { mutableIntStateOf(0) }
     val navbarRoutes = remember { MyRoutes.navigationBarRoutes }

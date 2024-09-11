@@ -7,8 +7,8 @@ import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
-import com.hezapp.ekonomis.core.domain.model.MyBasicError
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.profile.CreateNewProfileError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

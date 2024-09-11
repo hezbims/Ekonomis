@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.domain.model
+package com.hezapp.ekonomis.core.domain.general_model
 
 sealed class ResponseWrapper<T , E : MyBasicError> {
     class Succeed<T , E : MyBasicError>(val data : T) : ResponseWrapper<T , E>()

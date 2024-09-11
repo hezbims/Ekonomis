@@ -2,8 +2,8 @@ package com.hezapp.ekonomis.core.data.profile
 
 import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
-import com.hezapp.ekonomis.core.domain.model.MyBasicError
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.profile.CreateNewProfileError
 import com.hezapp.ekonomis.core.domain.profile.IProfileRepo
 import kotlinx.coroutines.delay

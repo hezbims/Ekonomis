@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent

@@ -1,8 +1,8 @@
 package com.hezapp.ekonomis.core.data.product
 
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.model.MyBasicError
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.IProductRepo
 import com.hezapp.ekonomis.core.domain.product.InsertProductError
 import kotlinx.coroutines.delay

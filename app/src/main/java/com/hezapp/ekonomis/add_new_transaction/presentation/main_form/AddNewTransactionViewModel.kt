@@ -5,8 +5,8 @@ import com.hezapp.ekonomis.add_new_transaction.domain.use_case.GetValidatedPpnFr
 import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
-import com.hezapp.ekonomis.core.domain.model.MyBasicError
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

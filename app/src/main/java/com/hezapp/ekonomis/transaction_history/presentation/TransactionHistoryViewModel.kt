@@ -2,8 +2,8 @@ package com.hezapp.ekonomis.transaction_history.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hezapp.ekonomis.core.domain.model.MyBasicError
-import com.hezapp.ekonomis.core.domain.model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.transaction_history.data.service.FakePreviewTransactionHistoryRepo
 import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.transaction_history.domain.service.IPreviewTransactionHistoryRepo

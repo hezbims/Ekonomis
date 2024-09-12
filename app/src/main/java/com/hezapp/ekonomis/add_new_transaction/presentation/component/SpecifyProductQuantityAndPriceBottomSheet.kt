@@ -101,14 +101,13 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
     LaunchedEffect(isDataValid) {
         if (isDataValid){
             viewModel.onEvent(SpecifyProductQuantityEvent.DoneHandlingValidData)
-            onProductSpecificationConfirmed(InvoiceItemUiModel(
+            onProductSpecificationConfirmed(InvoiceItemUiModel.Factory(state.listId).create(
                 id = state.id,
                 price = state.price!!,
                 productId = state.product.id,
                 productName = state.product.name,
                 quantity = state.quantity!!,
                 unitType = state.unitType!!,
-                listId = state.listId,
             ))
             onDismissRequest()
         }

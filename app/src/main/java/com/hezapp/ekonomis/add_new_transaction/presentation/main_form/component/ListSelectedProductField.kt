@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.add_new_transaction.presentation.component
+package com.hezapp.ekonomis.add_new_transaction.presentation.main_form.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_new_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionUiState
 import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
@@ -59,9 +60,11 @@ fun ListSelectedProductField(
     navController: NavHostController,
     state : AddNewTransactionUiState,
     onEvent : (AddNewTransactionEvent) -> Unit,
+    error: String?,
     modifier : Modifier = Modifier,
 ){
     Column(
+        horizontalAlignment = Alignment.Start,
         modifier = modifier.wrapContentHeight(),
     ) {
         Row(
@@ -70,7 +73,7 @@ fun ListSelectedProductField(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                stringResource(R.string.product_list_label),
+                stringResource(R.string.product_list_title_label),
                 style = MaterialTheme.typography.titleSmall
             )
 
@@ -87,9 +90,10 @@ fun ListSelectedProductField(
                 )
                 .fillMaxWidth()
                 .border(
-                    width = 0.25.dp,
+                    width =
+                        if (error == null) 0.25.dp else 0.75.dp,
+                    color = if (error == null) Color.Black else MaterialTheme.colorScheme.error,
                     shape = MaterialTheme.shapes.small,
-                    color = Color.Black
                 )
         ) {
             if (state.invoiceItems.isEmpty())
@@ -99,8 +103,8 @@ fun ListSelectedProductField(
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .align(Alignment.Center),
-                    color = Color.Gray,
-                    style = MaterialTheme.typography.bodySmall
+                    color = if (error == null) Color.Gray else MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             else
                 Column(
@@ -119,6 +123,13 @@ fun ListSelectedProductField(
                             HorizontalDivider()
                     }
                 }
+        }
+        error?.let {
+            Text(
+                it,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+            )
         }
     }
 
@@ -227,7 +238,8 @@ private fun PreviewListSelectedProductFieldEmpty(){
                     navController = rememberNavController(),
                     state = AddNewTransactionUiState.init(),
                     onEvent = {},
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    error = "List barang tidak boleh kosong"
                 )
             }
         }
@@ -247,27 +259,26 @@ private fun PreviewListSelectedProductFieldWithItem(){
                     state = AddNewTransactionUiState
                         .init().copy(
                             invoiceItems = listOf(
-                                InvoiceItemUiModel(
+                                InvoiceItemUiModel.new(
                                     productId = 0,
                                     productName = "White Vinegar",
                                     quantity = 500,
                                     unitType = UnitType.PIECE,
                                     id = 0,
                                     price = (1_000_000_000).toInt(),
-                                    listId = null,
                                 ),
-                                InvoiceItemUiModel(
+                                InvoiceItemUiModel.new(
                                     productId = 0,
                                     productName = "Extra Virgin Olive Oil",
                                     quantity = 10,
                                     unitType = UnitType.CARTON,
                                     id = 1,
                                     price = (54_000).toInt(),
-                                    listId = null,
                                 ),
                             )
                         ),
                     onEvent = {},
+                    error = null,
                     modifier = Modifier.fillMaxWidth()
                 )
             }

@@ -25,7 +25,7 @@ data class InvoiceEntity(
     @ColumnInfo(name = "profile_id")
     val profileId : Int,
 
-    val ppn : Int,
+    val ppn : Int?,
 
     @ColumnInfo(name = "transaction_type")
     val transactionType: TransactionType,

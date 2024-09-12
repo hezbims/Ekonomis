@@ -21,7 +21,8 @@
     <string name="calendar_icon_content_description">Icon Kalender</string>
     <string name="choose_transaction_date_label">Pilih Tanggal Transaksi</string>
     <string name="choose_label">Pilih</string>
-    <string name="transaction_date_label">Tanggal Transaksi</string>
+    <string name="transaction_date_title_label">Tanggal Transaksi</string>
+    <string name="transaction_date_label">Tanggal transaksi</string>
     <string name="ppn_label">PPN</string>
     <string name="select_product_label">Pilih Barang</string>
     <string name="carton_label">Carton</string>
@@ -41,7 +42,8 @@
     <string name="transaction_spesification_label">Spesifikasi Transaksi</string>
     <string name="cant_be_empty">%1$s tidak boleh kosong</string>
     <string name="delete_label">Hapus</string>
-    <string name="product_list_label">List Barang</string>
+    <string name="product_list_title_label">List Barang</string>
+    <string name="product_list_label">List barang</string>
     <string name="choose_profile_label">Pilih %1$s</string>
     <string name="search_profile_name_label">Cari Nama %1$s</string>
     <string name="profile_name_label">Nama %1$s</string>

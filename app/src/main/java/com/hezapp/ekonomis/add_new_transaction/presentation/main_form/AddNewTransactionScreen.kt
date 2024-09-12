@@ -1,5 +1,7 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -35,18 +37,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_new_transaction.presentation.component.ListSelectedProductField
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.component.ListSelectedProductField
+import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.utils.toFormErrorUiModel
 import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
+import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import java.util.Calendar
@@ -57,6 +64,34 @@ fun AddNewTransactionScreen(
     viewModel : AddNewTransactionViewModel,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
+    val submitResponse = state.submitResponse
+    val context = LocalContext.current
+    LaunchedEffect(submitResponse) {
+        when(submitResponse){
+            is ResponseWrapper.Failed -> {
+                viewModel.onEvent(AddNewTransactionEvent.DoneHandlingSubmitDataResponse)
+                val validationResult = submitResponse.error
+                if (validationResult != null){
+                    viewModel.onEvent(AddNewTransactionEvent.UpdateFormError(
+                        validationResult.toFormErrorUiModel(context, state.transactionType!!)
+                    ))
+                } else {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.unknown_error_occured),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            is ResponseWrapper.Succeed -> {
+                viewModel.onEvent(AddNewTransactionEvent.DoneHandlingSubmitDataResponse)
+                navController.goBackSafely()
+            }
+            is ResponseWrapper.Loading -> Unit
+            null -> Unit
+        }
+    }
+
     AddNewTransactionScreen(
         navController = navController,
         state = state,
@@ -93,12 +128,14 @@ private fun AddNewTransactionScreen(
                     value = state.transactionDateMillis,
                     onValueChange = { selectedDate ->
                         onEvent(AddNewTransactionEvent.ChangeTransactionDate(selectedDate))
-                    }
+                    },
+                    error = state.formError.transactionDateError,
                 )
 
                 ChooseProfileField(
                     navController = navController,
                     state = state,
+                    error = state.formError.profileError,
                 )
 
                 if (transactionType == TransactionType.PEMBELIAN)
@@ -106,7 +143,8 @@ private fun AddNewTransactionScreen(
                         value = state.ppn,
                         onValueChange = {
                             onEvent(AddNewTransactionEvent.ChangePpn(it))
-                        }
+                        },
+                        error = state.formError.ppnError,
                     )
 
                 ListSelectedProductField(
@@ -114,6 +152,7 @@ private fun AddNewTransactionScreen(
                     state = state,
                     onEvent = onEvent,
                     modifier = Modifier.padding(top = 12.dp),
+                    error = state.formError.invoiceItemsError,
                 )
             }
 
@@ -123,7 +162,11 @@ private fun AddNewTransactionScreen(
         state.transactionType?.let {
             Button(
                 contentPadding = PaddingValues(vertical = 16.dp),
-                onClick = {},
+                enabled = state.submitResponse?.isLoading() != true,
+                onClick = {
+                    Log.e("qqq", "Onclick button")
+                    onEvent(AddNewTransactionEvent.SubmitData)
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
@@ -184,6 +227,7 @@ private fun TransactionTypeDropdown(
 @Composable
 private fun ChooseProfileField(
     navController: NavHostController,
+    error: String?,
     state: AddNewTransactionUiState,
 ){
     val personTypeString = stringResource(state.transactionType!!.getProfileStringId())
@@ -207,6 +251,8 @@ private fun ChooseProfileField(
                 "Nama $personTypeString"
             )
         },
+        isError = error != null,
+        supportingText = MyErrorText(error),
         interactionSource = textFieldInteractionSource,
         trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = "Dropdown Symbol") },
         modifier = Modifier
@@ -219,6 +265,7 @@ private fun ChooseProfileField(
 private fun ChooseDateField(
     value : Long?,
     onValueChange: (Long) -> Unit,
+    error: String?,
 ){
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     val textFieldInteractionSource =
@@ -236,8 +283,10 @@ private fun ChooseDateField(
         onValueChange = {},
         readOnly = true,
         label = {
-            Text(stringResource(R.string.transaction_date_label))
+            Text(stringResource(R.string.transaction_date_title_label))
         },
+        isError = error != null,
+        supportingText = MyErrorText(error),
         interactionSource = textFieldInteractionSource,
         trailingIcon = {
             Icon(
@@ -278,6 +327,7 @@ private fun ChooseDateField(
 private fun PpnField(
     value : Int?,
     onValueChange : (String) -> Unit,
+    error: String?,
 ){
     TextField(
         value = value?.toString() ?: "",
@@ -285,6 +335,8 @@ private fun PpnField(
         label = { Text(stringResource(R.string.ppn_label)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         visualTransformation = PercentageVisualTransformation(),
+        isError = error != null,
+        supportingText = MyErrorText(error),
         modifier = Modifier.fillMaxWidth()
     )
 }

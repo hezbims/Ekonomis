@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -49,13 +49,15 @@ fun TransactionHistoryListView(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxSize(),
         ) {
-            items(data){
+            itemsIndexed(data){ index, item ->
                 TransactionHistoryCardItem(
-                    data = it,
+                    data = item,
                     onClick = {
-                        onEvent(TransactionHistoryEvent.NavigateToTransactionDetail(it.id))
+                        onEvent(TransactionHistoryEvent.NavigateToTransactionDetail(item.id))
                     }
                 )
+
+//                HorizontalDivider()
             }
         }
     }
@@ -66,10 +68,13 @@ fun TransactionHistoryListView(
 fun PreviewTransactionHistoryListView(){
     val listTransaksi = listOf(
         PreviewTransactionHistory(
-            id = 1, date = "12-Jan-2023", personName = "Om Beni", personType = ProfileType.SUPPLIER,
+            id = 1, date = "13-Jan-2023", personName = "Fajar Milenium", personType = ProfileType.SUPPLIER, totalHarga = 10_000_000,
         ),
         PreviewTransactionHistory(
-            id = 2, date = "13-Jan-2023", personName = "Cik Feni", personType = ProfileType.CUSTOMER,
+            id = 2, date = "12-Jan-2023", personName = "Cik Feni", personType = ProfileType.CUSTOMER, totalHarga = 500_000,
+        ),
+        PreviewTransactionHistory(
+            id = 3, date = "11-Jan-2023", personName = "Wiranata", personType = ProfileType.CUSTOMER, totalHarga = 779_000,
         ),
     )
     EkonomisTheme {

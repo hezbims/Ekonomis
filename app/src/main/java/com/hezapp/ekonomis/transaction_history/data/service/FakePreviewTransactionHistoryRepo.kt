@@ -1,7 +1,7 @@
 package com.hezapp.ekonomis.transaction_history.data.service
 
-import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.transaction_history.domain.service.IPreviewTransactionHistoryRepo
@@ -20,13 +20,15 @@ class FakePreviewTransactionHistoryRepo : IPreviewTransactionHistoryRepo {
                     id = 1,
                     personName = "Cik. Feni",
                     date = "Minggu, 11-Jan-2023",
-                    personType = ProfileType.CUSTOMER
+                    personType = ProfileType.CUSTOMER,
+                    totalHarga = 50_000_000
                 ),
                 PreviewTransactionHistory(
                     id = 1,
                     personName = "Om Beni",
                     date = "Senin, 1-Jan-2023",
-                    personType = ProfileType.SUPPLIER
+                    personType = ProfileType.SUPPLIER,
+                    totalHarga = 100_000_000
                 ),
             )
 

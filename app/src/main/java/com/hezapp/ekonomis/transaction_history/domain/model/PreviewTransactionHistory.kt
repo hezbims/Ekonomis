@@ -7,4 +7,5 @@ data class PreviewTransactionHistory(
     val personName : String,
     val personType: ProfileType,
     val date : String,
+    val totalHarga: Long,
 )

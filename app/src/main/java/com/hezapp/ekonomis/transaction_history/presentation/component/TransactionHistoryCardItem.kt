@@ -2,22 +2,19 @@ package com.hezapp.ekonomis.transaction_history.presentation.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
+import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
@@ -27,50 +24,37 @@ fun TransactionHistoryCardItem(
     onClick : () -> Unit,
     modifier : Modifier = Modifier,
 ){
-    Card(
-        modifier = modifier.clickable {
-            onClick()
-        },
-    ) {
-        Column(
-            modifier = Modifier.padding(
-                bottom = 12.dp
-            )
-        ) {
-            Spacer(
+    ListItem(
+        leadingContent = {
+            Box(
                 modifier = Modifier
-                    .height(12.dp)
-                    .fillMaxWidth()
-                    .background(
-                        if (data.personType == ProfileType.SUPPLIER)
-                            Color(0xFFFB8C00)
-                        else
-                            Color(0xFF7CB342)
-                    )
+                    .size(12.dp)
+                    .background( color =
+                        when(data.personType){
+                            ProfileType.SUPPLIER -> Color(0xFFFB8C00)
+                            ProfileType.CUSTOMER -> Color(0xFF7CB342)
+                        },
+                        shape = CircleShape
+                    ),
             )
-
-            Column(
-                modifier = Modifier.padding(
-                start = 24.dp, top = 4.dp
-                )
-            ) {
-                Text(
-                    data.personName,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Text(
-                    data.date,
-                )
-            }
-
-
-        }
-    }
+        },
+        tonalElevation = 0.75.dp,
+        trailingContent = {
+            val symbol =
+                if (data.personType == ProfileType.SUPPLIER) "-"
+                else "+"
+            Text(
+                "$symbol${data.totalHarga.toString().toRupiah()}"
+            )
+        },
+        overlineContent = {
+            Text(data.date)
+        },
+        headlineContent = {
+            Text(data.personName)
+        },
+        modifier = modifier.clickable { onClick() },
+    )
 }
 
 @Preview
@@ -84,6 +68,7 @@ fun PreviewTransactionHistoryCardItem(){
                     date = "1-Jan-2023",
                     personType = ProfileType.CUSTOMER,
                     id = 1,
+                    totalHarga = 1_000_000_000
                 ),
                 onClick = {},
 

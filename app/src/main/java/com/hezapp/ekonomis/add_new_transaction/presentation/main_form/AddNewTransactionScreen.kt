@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -53,7 +52,6 @@ import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
-import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import java.util.Calendar
@@ -62,6 +60,7 @@ import java.util.Calendar
 fun AddNewTransactionScreen(
     navController : NavHostController,
     viewModel : AddNewTransactionViewModel,
+    onSubmitSucceed: () -> Unit,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val submitResponse = state.submitResponse
@@ -85,7 +84,7 @@ fun AddNewTransactionScreen(
             }
             is ResponseWrapper.Succeed -> {
                 viewModel.onEvent(AddNewTransactionEvent.DoneHandlingSubmitDataResponse)
-                navController.goBackSafely()
+                onSubmitSucceed()
             }
             is ResponseWrapper.Loading -> Unit
             null -> Unit
@@ -164,7 +163,6 @@ private fun AddNewTransactionScreen(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 enabled = state.submitResponse?.isLoading() != true,
                 onClick = {
-                    Log.e("qqq", "Onclick button")
                     onEvent(AddNewTransactionEvent.SubmitData)
                 },
                 modifier = Modifier

@@ -44,7 +44,7 @@ class FakeProfileRepo : IProfileRepo {
         emit(ResponseWrapper.Succeed(null))
     }
 
-    private companion object {
+    companion object {
         val listPerson = mutableListOf(
             ProfileEntity(
                 id = 1,

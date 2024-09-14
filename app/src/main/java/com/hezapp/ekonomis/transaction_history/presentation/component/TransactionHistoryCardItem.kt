@@ -14,9 +14,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
+import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
+import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
-import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import java.util.Calendar
 
 @Composable
 fun TransactionHistoryCardItem(
@@ -30,7 +32,7 @@ fun TransactionHistoryCardItem(
                 modifier = Modifier
                     .size(12.dp)
                     .background( color =
-                        when(data.personType){
+                        when(data.profileType){
                             ProfileType.SUPPLIER -> Color(0xFFFB8C00)
                             ProfileType.CUSTOMER -> Color(0xFF7CB342)
                         },
@@ -41,17 +43,17 @@ fun TransactionHistoryCardItem(
         tonalElevation = 0.75.dp,
         trailingContent = {
             val symbol =
-                if (data.personType == ProfileType.SUPPLIER) "-"
+                if (data.profileType == ProfileType.SUPPLIER) "-"
                 else "+"
             Text(
-                "$symbol${data.totalHarga.toString().toRupiah()}"
+                "$symbol${data.totalPrice.toString().toRupiah()}"
             )
         },
         overlineContent = {
-            Text(data.date)
+            Text(data.date.toMyDateString())
         },
         headlineContent = {
-            Text(data.personName)
+            Text(data.profileName)
         },
         modifier = modifier.clickable { onClick() },
     )
@@ -62,13 +64,18 @@ fun TransactionHistoryCardItem(
 fun PreviewTransactionHistoryCardItem(){
     EkonomisTheme {
         Surface {
+            val date = Calendar.getInstance().apply {
+                set(Calendar.MONTH, 1)
+                set(Calendar.YEAR, 2023)
+                set(Calendar.DAY_OF_MONTH, 5)
+            }
             TransactionHistoryCardItem(
                 data = PreviewTransactionHistory(
-                    personName = "Cik Feni",
-                    date = "1-Jan-2023",
-                    personType = ProfileType.CUSTOMER,
+                    profileName = "Cik Feni",
+                    date = date.timeInMillis,
+                    profileType = ProfileType.CUSTOMER,
                     id = 1,
-                    totalHarga = 1_000_000_000
+                    totalPrice = 1_000_000_000
                 ),
                 onClick = {},
 

@@ -27,7 +27,9 @@ import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
+import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
+import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 class MainActivity : ComponentActivity() {
@@ -63,53 +65,65 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
                     NavHost(
                         navController,
-                        startDestination = MyRoutes.TransactionHistory,
+                        startDestination = MyRoutes.NavGraph.Transaction,
                         modifier = Modifier.padding(innerPadding),
                     ) {
-                        navigation<MyRoutes.NavGraph.AddOrUpdateTransaction>(
-                            startDestination = MyRoutes.AddOrUpdateTransactionForm(id = null),
-                        ) {
-                            composable<MyRoutes.AddOrUpdateTransactionForm> {
-                                AddNewTransactionScreen(
-                                    navController = navController,
-                                    viewModel = getAddNewTransactionViewModel(navController),
-                                )
+                        navigation<MyRoutes.NavGraph.Transaction>(
+                            startDestination = MyRoutes.TransactionHistory
+                        ){
+                            composable<MyRoutes.TransactionHistory> {
+                                TransactionHistoryScreen(navController)
                             }
 
-                            composable<MyRoutes.SearchAndChooseProduct> {
-                                SearchAndChooseProductScreen(
-                                    navController = navController,
-                                    addNewTransactionViewModel = getAddNewTransactionViewModel(
-                                        navController
-                                    ),
-                                )
-                            }
+                            navigation<MyRoutes.NavGraph.AddOrUpdateTransaction>(
+                                startDestination = MyRoutes.AddOrUpdateTransactionForm(id = null),
+                            ) {
+                                composable<MyRoutes.AddOrUpdateTransactionForm> {
+                                    val transactionHistoryViewModel = viewModel<TransactionHistoryViewModel>(
+                                        navController.getBackStackEntry(MyRoutes.NavGraph.Transaction)
+                                    )
+                                    AddNewTransactionScreen(
+                                        navController = navController,
+                                        viewModel = getAddNewTransactionViewModel(navController),
+                                        onSubmitSucceed = {
+                                            navController.goBackSafely()
+                                            transactionHistoryViewModel.onEvent(
+                                                TransactionHistoryEvent.LoadListPreviewTransactionHistory
+                                            )
+                                        }
+                                    )
+                                }
 
-                            composable<MyRoutes.SearchAndChooseProfile> {
-                                val addNewTransactionViewModel =
-                                    getAddNewTransactionViewModel(navController)
-                                SearchAndChooseProfileScreen(
-                                    transactionType = TransactionType.fromId(
-                                        it.toRoute<MyRoutes.SearchAndChooseProfile>().transactionTypeId
-                                    ),
-                                    onSelectProfile = { selectedProfile ->
-                                        addNewTransactionViewModel.onEvent(
-                                            AddNewTransactionEvent.ChangeProfile(selectedProfile)
-                                        )
-                                        navController.goBackSafely()
-                                    }
-                                )
-                            }
-                        }
+                                composable<MyRoutes.SearchAndChooseProduct> {
+                                    SearchAndChooseProductScreen(
+                                        navController = navController,
+                                        addNewTransactionViewModel = getAddNewTransactionViewModel(
+                                            navController
+                                        ),
+                                    )
+                                }
 
-                        composable<MyRoutes.TransactionHistory> {
-                            TransactionHistoryScreen(navController)
+                                composable<MyRoutes.SearchAndChooseProfile> {
+                                    val addNewTransactionViewModel =
+                                        getAddNewTransactionViewModel(navController)
+                                    SearchAndChooseProfileScreen(
+                                        transactionType = TransactionType.fromId(
+                                            it.toRoute<MyRoutes.SearchAndChooseProfile>().transactionTypeId
+                                        ),
+                                        onSelectProfile = { selectedProfile ->
+                                            addNewTransactionViewModel.onEvent(
+                                                AddNewTransactionEvent.ChangeProfile(selectedProfile)
+                                            )
+                                            navController.goBackSafely()
+                                        }
+                                    )
+                                }
+                            }
                         }
 
                         composable<MyRoutes.ProductPreview> {
                             ProductPreviewScreen()
                         }
-
 
                     }
                 }

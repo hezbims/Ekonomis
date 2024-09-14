@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_new_transaction.domain.model.InvoiceFormModel
@@ -134,9 +133,7 @@ class AddNewTransactionViewModel : ViewModel() {
 
     private fun submitData(){
         viewModelScope.launch(Dispatchers.IO) {
-            Log.e("qqq", "launch")
             createOrUpdateInvoiceUseCase(invoiceForm = _state.value.toInvoiceFormModel()).collect { response ->
-                Log.e("qqq", "Dapet response : ${response::class.simpleName}")
                 _state.update { it.copy(submitResponse = response) }
             }
         }

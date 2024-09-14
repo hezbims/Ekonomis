@@ -11,5 +11,5 @@ fun Long.toMyDateString() : String {
 
 @SuppressLint("SimpleDateFormat")
 private val myDateFormatter = SimpleDateFormat().apply {
-    applyPattern("dd-MMMM-yyyy")
+    applyPattern("E, dd-MMM-yyyy")
 }

@@ -40,6 +40,8 @@ sealed class MyRoutes {
     object NavGraph {
         @Serializable
         data object AddOrUpdateTransaction
+        @Serializable
+        data object Transaction
     }
 
 

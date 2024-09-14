@@ -4,9 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.transaction_history.data.service.FakePreviewTransactionHistoryRepo
-import com.hezapp.ekonomis.transaction_history.domain.model.PreviewTransactionHistory
-import com.hezapp.ekonomis.transaction_history.domain.service.IPreviewTransactionHistoryRepo
+import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
+import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransactionHistoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +14,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class TransactionHistoryViewModel : ViewModel() {
-    private val repo : IPreviewTransactionHistoryRepo = FakePreviewTransactionHistoryRepo()
+    private val getPreviewTransactionHistory = GetPreviewTransactionHistoryUseCase()
 
     private val _state = MutableStateFlow(TransactionHistoryUiState.init())
     val state : StateFlow<TransactionHistoryUiState>
@@ -39,7 +38,7 @@ class TransactionHistoryViewModel : ViewModel() {
 
     private fun loadListPreviewTransactionHistory(){
         viewModelScope.launch(Dispatchers.IO){
-            repo.getListPreviewTransactionHistory().collect { response ->
+            getPreviewTransactionHistory().collect { response ->
                 _state.update {
                     it.copy(transactionHistoryResponse = response)
                 }

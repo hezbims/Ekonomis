@@ -7,11 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,6 +22,7 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_pr
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
+import com.hezapp.ekonomis.core.presentation.utils.navGraphViewModel
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
@@ -72,51 +69,78 @@ class MainActivity : ComponentActivity() {
                             startDestination = MyRoutes.TransactionHistory
                         ){
                             composable<MyRoutes.TransactionHistory> {
-                                TransactionHistoryScreen(navController)
+                                val transHistoryViewModel : TransactionHistoryViewModel? =
+                                    it.navGraphViewModel(
+                                        navController = navController,
+                                        countParent = 1
+                                    )
+
+                                transHistoryViewModel?.let { viewModel ->
+                                    TransactionHistoryScreen(
+                                        navController = navController,
+                                        viewModel = viewModel
+                                    )
+                                }
                             }
 
                             navigation<MyRoutes.NavGraph.AddOrUpdateTransaction>(
                                 startDestination = MyRoutes.AddOrUpdateTransactionForm(id = null),
                             ) {
                                 composable<MyRoutes.AddOrUpdateTransactionForm> {
-                                    val transactionHistoryViewModel = viewModel<TransactionHistoryViewModel>(
-                                        navController.getBackStackEntry(MyRoutes.NavGraph.Transaction)
-                                    )
-                                    AddNewTransactionScreen(
-                                        navController = navController,
-                                        viewModel = getAddNewTransactionViewModel(navController),
-                                        onSubmitSucceed = {
-                                            navController.goBackSafely()
-                                            transactionHistoryViewModel.onEvent(
-                                                TransactionHistoryEvent.LoadListPreviewTransactionHistory
+                                    val transactionHistoryViewModel : TransactionHistoryViewModel? =
+                                        it.navGraphViewModel(navController, 2)
+                                    val addNewTransactionViewModel : AddNewTransactionViewModel? =
+                                        it.navGraphViewModel(navController, 1)
+
+                                    transactionHistoryViewModel?.let { transHisViewModel ->
+                                        addNewTransactionViewModel?.let { addTransViewModel ->
+                                            AddNewTransactionScreen(
+                                                navController = navController,
+                                                viewModel = addTransViewModel,
+                                                onSubmitSucceed = {
+                                                    navController.goBackSafely()
+                                                    transHisViewModel.onEvent(
+                                                        TransactionHistoryEvent
+                                                            .LoadListPreviewTransactionHistory
+                                                    )
+                                                }
                                             )
                                         }
-                                    )
+                                    }
+
                                 }
 
                                 composable<MyRoutes.SearchAndChooseProduct> {
-                                    SearchAndChooseProductScreen(
-                                        navController = navController,
-                                        addNewTransactionViewModel = getAddNewTransactionViewModel(
-                                            navController
-                                        ),
-                                    )
+                                    val addOrUpdateTransViewModel : AddNewTransactionViewModel? =
+                                        it.navGraphViewModel(navController, 1)
+
+                                    addOrUpdateTransViewModel?.let { viewModel ->
+                                        SearchAndChooseProductScreen(
+                                            navController = navController,
+                                            addNewTransactionViewModel = viewModel,
+                                        )
+                                    }
                                 }
 
                                 composable<MyRoutes.SearchAndChooseProfile> {
-                                    val addNewTransactionViewModel =
-                                        getAddNewTransactionViewModel(navController)
-                                    SearchAndChooseProfileScreen(
-                                        transactionType = TransactionType.fromId(
-                                            it.toRoute<MyRoutes.SearchAndChooseProfile>().transactionTypeId
-                                        ),
-                                        onSelectProfile = { selectedProfile ->
-                                            addNewTransactionViewModel.onEvent(
-                                                AddNewTransactionEvent.ChangeProfile(selectedProfile)
-                                            )
-                                            navController.goBackSafely()
-                                        }
-                                    )
+                                    val addOrUpdateTransactionViewModel : AddNewTransactionViewModel? =
+                                        it.navGraphViewModel(navController, 1)
+
+                                    addOrUpdateTransactionViewModel?.let { viewModel ->
+                                        SearchAndChooseProfileScreen(
+                                            transactionType = TransactionType.fromId(
+                                                it.toRoute<MyRoutes.SearchAndChooseProfile>().transactionTypeId
+                                            ),
+                                            onSelectProfile = { selectedProfile ->
+                                                viewModel.onEvent(
+                                                    AddNewTransactionEvent.ChangeProfile(
+                                                        selectedProfile
+                                                    )
+                                                )
+                                                navController.goBackSafely()
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -130,15 +154,5 @@ class MainActivity : ComponentActivity() {
 
             }
         }
-    }
-
-    @Composable
-    private fun getAddNewTransactionViewModel(
-        navController : NavHostController
-    ) : AddNewTransactionViewModel {
-        val navGraphBackStackEntry = remember {
-            navController.getBackStackEntry(MyRoutes.NavGraph.AddOrUpdateTransaction)
-        }
-        return viewModel(navGraphBackStackEntry)
     }
 }

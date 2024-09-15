@@ -40,7 +40,7 @@ class FakeProfileRepo : IProfileRepo {
             emit(ResponseWrapper.Failed(CreateNewProfileError.NameAlreadyExist))
             return@flow
         }
-        listPerson.add(profile.copy(id = listPerson.size + 1))
+        listPerson.add(profile.copy(id = id++))
         emit(ResponseWrapper.Succeed(null))
     }
 
@@ -62,5 +62,6 @@ class FakeProfileRepo : IProfileRepo {
                 type = ProfileType.SUPPLIER
             ),
         )
+        var id = listPerson.size + 1
     }
 }

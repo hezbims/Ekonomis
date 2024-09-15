@@ -11,7 +11,7 @@ import kotlinx.coroutines.delay
 class FakeInvoiceRepo : IInvoiceRepo {
     override suspend fun createNewInvoice(newInvoice: InvoiceFormModel) : Int {
         delay(500L)
-        listData.add(newInvoice.toEntity().copy(id = listData.size))
+        listData.add(newInvoice.toEntity().copy(id = id++))
         return listData.last().id
     }
 
@@ -48,5 +48,6 @@ class FakeInvoiceRepo : IInvoiceRepo {
 
     companion object {
         val listData = mutableListOf<InvoiceEntity>()
+        var id = listData.size + 1
     }
 }

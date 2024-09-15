@@ -13,7 +13,7 @@ class FakeInvoiceItemRepo : IInvoiceItemRepo {
             }
 
             if (oldItem == null)
-                listItem.add(newInvoiceItem)
+                listItem.add(newInvoiceItem.copy(id = id++))
             else
                 listItem.replaceAll {
                     if (it.id == oldItem.id)
@@ -35,5 +35,6 @@ class FakeInvoiceItemRepo : IInvoiceItemRepo {
 
     companion object {
         val listItem = mutableListOf<InvoiceItemEntity>()
+        var id = listItem.size + 1
     }
 }

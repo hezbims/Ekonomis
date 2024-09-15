@@ -1,6 +1,11 @@
 package com.hezapp.ekonomis.core.presentation.utils
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 
@@ -14,4 +19,20 @@ fun NavHostController.navigateOnce(routes: MyRoutes){
     navigate(routes){
         launchSingleTop = true
     }
+}
+
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
+    navController: NavHostController,
+    countParent: Int,
+) : T? {
+    var graph = destination.parent
+
+    for (i in 2..countParent)
+        graph = graph?.parent
+
+    graph?.route?.let {
+        val backStackEntry = remember(this) { navController.getBackStackEntry(it) }
+        return viewModel(backStackEntry)
+    } ?: return null
 }

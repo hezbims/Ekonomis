@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.core.data.product
 
-import androidx.compose.ui.util.fastRoundToInt
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.domain.entity.InvoiceEntity
@@ -12,9 +11,13 @@ import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.IProductRepo
 import com.hezapp.ekonomis.core.domain.product.InsertProductError
 import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
+import com.hezapp.ekonomis.core.domain.product.ProductDetail
+import com.hezapp.ekonomis.core.domain.product.ProductTransaction
+import com.hezapp.ekonomis.core.domain.utils.PriceUtils
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlin.math.roundToInt
 
 class FakeProductRepo : IProductRepo {
     override fun getAllProduct(searchQuery: String): Flow<ResponseWrapper<List<ProductEntity>, MyBasicError>> =
@@ -70,10 +73,65 @@ class FakeProductRepo : IProductRepo {
             PreviewProductSummary(
                 id = product.id,
                 name = product.name,
-                costOfGoodsSold = hargaPokokItem?.let { (it.invoiceItem.price / 100 * (it.invoice.ppn!! + 100).toDouble()).fastRoundToInt() },
+                costOfGoodsSold = hargaPokokItem?.let {
+                    PriceUtils.getCostOfGoodsSoldUseCase(
+                        totalPrice = it.invoiceItem.price,
+                        quantity = it.invoiceItem.quantity,
+                        ppn = it.invoice.ppn,
+                    ).roundToInt()
+                },
                 unitType = hargaPokokItem?.invoiceItem?.unitType,
             )
         }
+    }
+
+    override suspend fun getProductDetail(productId : Int): ProductDetail {
+        val product = listProduct.single { it.id == productId }
+        val inProductTransactions = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
+            val invoice = FakeInvoiceRepo.listData.single { invoice ->
+                invoiceItem.invoiceId == invoice.id
+            }
+
+            // kalau pembelian, atau product id nya bukan ini,
+            if (invoiceItem.productId != invoiceItem.id ||
+                invoice.transactionType != TransactionType.PEMBELIAN)
+                null
+            else
+                ProductTransaction(
+                    date = invoice.date,
+                    ppn = invoice.ppn,
+                    quantity = invoiceItem.quantity,
+                    totalPrice = invoiceItem.price,
+                    unitType = invoiceItem.unitType,
+                    id = invoiceItem.id,
+                )
+        }
+
+        val outProductTransactions = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
+            val invoice = FakeInvoiceRepo.listData.single { invoice ->
+                invoiceItem.invoiceId == invoice.id
+            }
+
+            // kalau pembelian, atau product id nya bukan ini,
+            if (invoiceItem.productId != invoiceItem.id ||
+                invoice.transactionType != TransactionType.PENJUALAN)
+                null
+            else
+                ProductTransaction(
+                    date = invoice.date,
+                    ppn = invoice.ppn,
+                    quantity = invoiceItem.quantity,
+                    totalPrice = invoiceItem.price,
+                    unitType = invoiceItem.unitType,
+                    id = invoiceItem.id,
+                )
+        }
+        return ProductDetail(
+            id = productId,
+            name = product.name,
+            inProductTransactions = inProductTransactions,
+            outProductTransactions = outProductTransactions,
+        )
     }
 
     private data class InvoiceItemWithInvoice(

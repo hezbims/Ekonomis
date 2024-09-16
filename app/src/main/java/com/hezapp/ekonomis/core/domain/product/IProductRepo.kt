@@ -9,4 +9,5 @@ interface IProductRepo {
     fun getAllProduct(searchQuery : String) : Flow<ResponseWrapper<List<ProductEntity>, MyBasicError>>
     fun insertProduct(newProduct: ProductEntity) : Flow<ResponseWrapper<Any?, InsertProductError>>
     suspend fun getPreviewProductSummaries() : List<PreviewProductSummary>
+    suspend fun getProductDetail(productId: Int) : ProductDetail
 }

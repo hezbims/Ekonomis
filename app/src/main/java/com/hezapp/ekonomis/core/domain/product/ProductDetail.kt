@@ -6,7 +6,7 @@ import kotlin.math.roundToInt
 
 data class ProductDetail(
     val id: Int,
-    val name: String,
+    val productName: String,
     val outProductTransactions : List<ProductTransaction>,
     val inProductTransactions : List<ProductTransaction>,
 )
@@ -18,6 +18,7 @@ data class ProductTransaction(
     val unitType: UnitType,
     val date: Long,
     val ppn: Int?,
+    val profileName : String,
 ){
     val costOfGoodsSold : Int
         get () = PriceUtils.getCostOfGoodsSoldUseCase(

@@ -8,6 +8,8 @@ sealed class ResponseWrapper<T , E : MyBasicError> {
     fun isSucceed() : Boolean = this is Succeed
     fun isFailed() : Boolean = this is Failed
     fun isLoading() : Boolean = this is Loading
+    fun asSucceed(): Succeed<T , E> =
+        this as Succeed
 }
 
 interface MyBasicError

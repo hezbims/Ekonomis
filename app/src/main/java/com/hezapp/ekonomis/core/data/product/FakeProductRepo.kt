@@ -2,6 +2,7 @@ package com.hezapp.ekonomis.core.data.product
 
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
+import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
@@ -91,13 +92,17 @@ class FakeProductRepo : IProductRepo {
             val invoice = FakeInvoiceRepo.listData.single { invoice ->
                 invoiceItem.invoiceId == invoice.id
             }
+            val profile = FakeProfileRepo.listPerson.single { profile ->
+                profile.id == invoice.profileId
+            }
 
             // kalau pembelian, atau product id nya bukan ini,
-            if (invoiceItem.productId != invoiceItem.id ||
+            if (invoiceItem.productId != productId ||
                 invoice.transactionType != TransactionType.PEMBELIAN)
                 null
             else
                 ProductTransaction(
+                    profileName = profile.name,
                     date = invoice.date,
                     ppn = invoice.ppn,
                     quantity = invoiceItem.quantity,
@@ -111,13 +116,17 @@ class FakeProductRepo : IProductRepo {
             val invoice = FakeInvoiceRepo.listData.single { invoice ->
                 invoiceItem.invoiceId == invoice.id
             }
+            val profile = FakeProfileRepo.listPerson.single { profile ->
+                profile.id == invoice.profileId
+            }
 
             // kalau pembelian, atau product id nya bukan ini,
-            if (invoiceItem.productId != invoiceItem.id ||
+            if (invoiceItem.productId != productId ||
                 invoice.transactionType != TransactionType.PENJUALAN)
                 null
             else
                 ProductTransaction(
+                    profileName = profile.name,
                     date = invoice.date,
                     ppn = invoice.ppn,
                     quantity = invoiceItem.quantity,
@@ -128,7 +137,7 @@ class FakeProductRepo : IProductRepo {
         }
         return ProductDetail(
             id = productId,
-            name = product.name,
+            productName = product.name,
             inProductTransactions = inProductTransactions,
             outProductTransactions = outProductTransactions,
         )

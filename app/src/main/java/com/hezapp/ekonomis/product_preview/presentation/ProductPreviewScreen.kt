@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.product_preview.presentation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,16 +17,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
+import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 @Composable
-fun ProductPreviewScreen(){
+fun ProductPreviewScreen(
+    navController : NavHostController,
+){
     val viewModel = viewModel<ProductPreviewViewModel>()
     val state = viewModel.state.collectAsStateWithLifecycle().value
     LaunchedEffect(Unit) {
@@ -34,7 +41,8 @@ fun ProductPreviewScreen(){
 
     ProductPreviewScreen(
         state = state,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        navController = navController,
     )
 }
 
@@ -42,6 +50,7 @@ fun ProductPreviewScreen(){
 private fun ProductPreviewScreen(
     state: ProductPreviewUiState,
     onEvent: (ProductPreviewEvent) -> Unit,
+    navController: NavHostController,
 ){
     ResponseLoader(
         response = state.productsResponse,
@@ -57,7 +66,14 @@ private fun ProductPreviewScreen(
                 modifier = Modifier.fillMaxSize(),
             ) {
                 items(listData){ item ->
-                    PreviewCardItem(item)
+                    PreviewCardItem(
+                        item,
+                        onClick = {
+                            navController.navigateOnce(
+                                MyRoutes.DetailProduct(item.id)
+                            )
+                        }
+                    )
                 }
             }
         else
@@ -66,17 +82,32 @@ private fun ProductPreviewScreen(
 }
 
 @Composable
-private fun PreviewCardItem(item: PreviewProductSummary){
+private fun PreviewCardItem(
+    item: PreviewProductSummary,
+    onClick: () -> Unit,
+){
     ListItem(
         headlineContent = {
             Text(item.name)
         },
-        trailingContent = {
+        supportingContent = {
             Text(
-                "${item.costOfGoodsSold?.toRupiah() ?: "-"}/${item.unitType?.getStringId()?.let { stringResource(it) } ?: "-"}"
+                "Harga pokok : ${
+                    item.costOfGoodsSold?.let { costOfGoodsSold ->
+                        item.unitType?.let { unitType ->
+                            "${costOfGoodsSold.toRupiah()}/${stringResource(unitType.getStringId())}"
+                        } ?: "-"
+                    } ?: "-"
+                }"
             )
         },
-        tonalElevation = 0.75.dp
+        trailingContent = {
+
+        },
+        tonalElevation = 0.75.dp,
+        modifier = Modifier.clickable {
+            onClick()
+        }
     )
 }
 
@@ -104,7 +135,8 @@ private fun PreviewProductPreviewScreen(){
                 state = ProductPreviewUiState(
                     productsResponse = ResponseWrapper.Succeed(listData),
                 ),
-                onEvent = {}
+                onEvent = {},
+                navController = rememberNavController(),
             )
         }
     }

@@ -42,10 +42,12 @@ fun MyBottomNavBar(
                     },
                     selected = selectedItem == index,
                     onClick = {
-                        selectedItem = index
-                        navController.navigate(myRoutes){
-                            popUpTo(0)
-                            launchSingleTop = true
+                        if (index != selectedItem) {
+                            selectedItem = index
+                            navController.navigate(myRoutes) {
+                                popUpTo(0)
+                                launchSingleTop = true
+                            }
                         }
                     }
                 )

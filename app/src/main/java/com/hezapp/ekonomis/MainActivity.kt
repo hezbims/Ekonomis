@@ -23,6 +23,7 @@ import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navGraphViewModel
+import com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
@@ -146,7 +147,15 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable<MyRoutes.ProductPreview> {
-                            ProductPreviewScreen()
+                            ProductPreviewScreen(
+                                navController = navController,
+                            )
+                        }
+
+                        composable<MyRoutes.DetailProduct> {
+                            ProductDetailScreen(
+                                productId = it.toRoute<MyRoutes.DetailProduct>().productId
+                            )
                         }
 
                     }

@@ -24,6 +24,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
+import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
@@ -43,7 +44,14 @@ fun ProductPreviewScreen(
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         onNewAppBarState(
-            MyAppBarState().withTitleText(
+            MyAppBarState(
+                bottomBar = {
+                    MyBottomNavBar(
+                        currentIndex = 1,
+                        navController = navController,
+                    )
+                }
+            ).withTitleText(
                 context.getString(R.string.product_preview_title)
             )
         )

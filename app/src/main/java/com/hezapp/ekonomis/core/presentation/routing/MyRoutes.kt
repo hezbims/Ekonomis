@@ -4,10 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.outlined.Inventory2
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.toRoute
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes.ProductPreview
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes.TransactionHistory
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -47,34 +46,9 @@ sealed class MyRoutes {
         data object Transaction
     }
 
-
-    companion object {
-        val navigationBarRoutes = listOf<MyBottomNavItem>(TransactionHistory, ProductPreview)
-
-        fun getScreenTitleId(backStackEntry: NavBackStackEntry) : Int{
-            val destination = backStackEntry.destination
-            if (destination.hasRoute<TransactionHistory>())
-                return R.string.transaction_history_title
-            else if (destination.hasRoute<ProductPreview>())
-                return R.string.product_preview_title
-            else if (destination.hasRoute<AddOrUpdateTransactionForm>()){
-                val id = backStackEntry.toRoute<AddOrUpdateTransactionForm>().id
-                return if (id == null)
-                    R.string.add_new_transaction_content_description
-                else
-                    R.string.edit_transaction_title
-            }
-            else if (destination.hasRoute<SearchAndChooseProduct>())
-                return R.string.select_product_label
-            else if (destination.hasRoute<SearchAndChooseProfile>()){
-                return R.string.choose_profile_label
-            } else if (destination.hasRoute<DetailProduct>()){
-                return R.string.detail_product_label
-            }
-            else throw RuntimeException("Unknown Route Type")
-        }
-    }
 }
+
+val bottomNavBarItems = listOf<MyBottomNavItem>(TransactionHistory, ProductPreview)
 
 interface  MyBottomNavItem {
     val icon : ImageVector

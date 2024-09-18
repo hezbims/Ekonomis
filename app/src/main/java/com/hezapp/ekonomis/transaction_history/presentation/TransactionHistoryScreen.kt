@@ -6,6 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
 import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.transaction_history.presentation.component.TransactionHistoryListView
 
@@ -20,7 +21,14 @@ fun TransactionHistoryScreen(
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         onNewAppBarState(
-            MyAppBarState().withTitleText(
+            MyAppBarState(
+                bottomBar = {
+                    MyBottomNavBar(
+                        currentIndex = 0,
+                        navController = navController,
+                    )
+                }
+            ).withTitleText(
                 context.getString(R.string.transaction_history_title)
             )
         )

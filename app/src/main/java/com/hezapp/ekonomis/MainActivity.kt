@@ -55,10 +55,7 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                     bottomBar = {
-                        MyBottomNavBar(
-                            navController = navController,
-                            navBackStackEntry = backStackEntry
-                        )
+                        appBarState.bottomBar()
                     },
                     floatingActionButton = {
                         MyFloatingActionButton(

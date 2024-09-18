@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 
 data class MyAppBarState(
     val title: @Composable (() -> Unit) = {},
+    val bottomBar: @Composable (() -> Unit) = {},
     val navigationIcon: @Composable (() -> Unit)? = null,
 ){
     fun withTitleText(text: String) =

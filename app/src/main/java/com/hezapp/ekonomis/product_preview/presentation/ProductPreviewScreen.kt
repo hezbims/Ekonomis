@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -20,13 +21,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
 import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
-import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
+import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
@@ -36,33 +38,37 @@ import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 @Composable
 fun ProductPreviewScreen(
     navController : NavHostController,
-    onNewAppBarState: (MyAppBarState) -> Unit,
-){
+) {
     val viewModel = viewModel<ProductPreviewViewModel>()
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        onNewAppBarState(
-            MyAppBarState(
-                bottomBar = {
-                    MyBottomNavBar(
-                        currentIndex = 1,
-                        navController = navController,
-                    )
-                }
-            ).withTitleText(
-                context.getString(R.string.product_preview_title)
-            )
-        )
         viewModel.onEvent(ProductPreviewEvent.LoadProducts)
     }
+    val appBarState = remember {
+        MyScaffoldState(
+            bottomBar = {
+                MyBottomNavBar(
+                    currentIndex = 1,
+                    navController = navController,
+                )
+            }
+        ).withTitleText(
+            context.getString(R.string.product_preview_title)
+        )
+    }
 
-    ProductPreviewScreen(
-        state = state,
-        onEvent = viewModel::onEvent,
+    MyScaffold(
+        scaffoldState = appBarState,
         navController = navController,
-    )
+    ) {
+        ProductPreviewScreen(
+            state = state,
+            onEvent = viewModel::onEvent,
+            navController = navController,
+        )
+    }
 }
 
 @Composable

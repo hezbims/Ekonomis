@@ -40,6 +40,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.RegisterNewProductNameBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
@@ -48,38 +50,42 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTran
 import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
-import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
+import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 
 @Composable
 fun SearchAndChooseProductScreen(
     addNewTransactionViewModel: AddNewTransactionViewModel,
-    onNewAppBarState: (MyAppBarState) -> Unit,
+    navController : NavHostController,
 ){
     val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
 
     val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        onNewAppBarState(
-            MyAppBarState().withTitleText(
-                context.getString(R.string.select_product_label)
-            )
+    val scaffoldState = remember {
+        MyScaffoldState().withTitleText(
+            context.getString(R.string.select_product_label)
         )
     }
-    SearchAndChooseProductScreen(
-        state = searchAndChooseProductUiState,
-        onEvent = searchAndChooseProductViewModel::onEvent,
-        onProductSpecificationConfirmed = {
-            addNewTransactionViewModel.onEvent(
-                AddNewTransactionEvent.AddNewInvoiceItem(it)
-            )
-            Toast.makeText(
-                context,
-                "Berhasil memilih barang : ${it.productName}",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    )
+
+    MyScaffold(
+        scaffoldState = scaffoldState,
+        navController = navController
+    ) {
+        SearchAndChooseProductScreen(
+            state = searchAndChooseProductUiState,
+            onEvent = searchAndChooseProductViewModel::onEvent,
+            onProductSpecificationConfirmed = {
+                addNewTransactionViewModel.onEvent(
+                    AddNewTransactionEvent.AddNewInvoiceItem(it)
+                )
+                Toast.makeText(
+                    context,
+                    "Berhasil memilih barang : ${it.productName}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
+    }
 }
 
 @Composable

@@ -32,6 +32,7 @@ fun TransactionHistoryListView(
     navController : NavHostController,
     state : TransactionHistoryUiState,
     onEvent : (TransactionHistoryEvent) -> Unit,
+    modifier : Modifier = Modifier,
 ){
     val navigateToTransactionDetail = state.navigateToTransactionDetail
     LaunchedEffect(navigateToTransactionDetail) {
@@ -46,7 +47,7 @@ fun TransactionHistoryListView(
         onRetry = {
             onEvent(TransactionHistoryEvent.LoadListPreviewTransactionHistory)
         },
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) { data ->
         if (data.isNotEmpty())
             LazyColumn(

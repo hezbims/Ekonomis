@@ -38,18 +38,20 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
-import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
+import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @Composable
 fun SearchAndChooseProfileScreen(
     transactionType: TransactionType,
     onSelectProfile: (ProfileEntity) -> Unit,
-    onNewAppBarState: (MyAppBarState) -> Unit,
+    navController: NavHostController,
 ) {
     val viewModel = viewModel<SearchAndChooseProfileViewModel>(
         factory = SearchAndChooseProfileViewModel.Factory(transactionType)
@@ -57,21 +59,27 @@ fun SearchAndChooseProfileScreen(
 
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        onNewAppBarState(
-            MyAppBarState().withTitleText(
-                context.getString(
-                    R.string.choose_profile_label,
-                    context.getString(transactionType.getProfileStringId())
-                )
-            )
-        )
         viewModel.onEvent(SearchAndChooseProfileEvent.LoadAvailableProfiles)
     }
-    SearchAndChooseProfileScreen(
-        onSelectProfile = onSelectProfile,
-        state = viewModel.state.collectAsState().value,
-        onEvent = viewModel::onEvent,
-    )
+    val scaffoldState = remember {
+        MyScaffoldState().withTitleText(
+            context.getString(
+                R.string.choose_profile_label,
+                context.getString(transactionType.getProfileStringId())
+            )
+        )
+    }
+
+    MyScaffold(
+        scaffoldState = scaffoldState,
+        navController = navController,
+    ) {
+        SearchAndChooseProfileScreen(
+            onSelectProfile = onSelectProfile,
+            state = viewModel.state.collectAsState().value,
+            onEvent = viewModel::onEvent,
+        )
+    }
 }
 
 @Composable

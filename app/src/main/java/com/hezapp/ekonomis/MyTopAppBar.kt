@@ -9,19 +9,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
-import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
+import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopAppBar(
-    appBarState: MyAppBarState,
+    scaffoldState: MyScaffoldState,
     navController: NavHostController,
 ){
     TopAppBar(
-        title = appBarState.title,
+        title = scaffoldState.title,
         navigationIcon = {
-            appBarState.navigationIcon?.let {
+            scaffoldState.navigationIcon?.let {
                 it()
             } ?: navController.previousBackStackEntry?.let {
                 IconButton(

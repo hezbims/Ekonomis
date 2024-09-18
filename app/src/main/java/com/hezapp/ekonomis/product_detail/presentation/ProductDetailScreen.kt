@@ -23,6 +23,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,11 +32,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.domain.product.ProductTransaction
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
-import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
+import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
@@ -45,33 +48,39 @@ import java.util.Calendar
 @Composable
 fun ProductDetailScreen(
     productId: Int,
-    onNewAppBarState: (MyAppBarState) -> Unit,
+    navController: NavHostController,
     viewModel: ProductDetailViewModel = viewModel {
         ProductDetailViewModel(productId = productId)
     },
 ){
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        onNewAppBarState(
-            MyAppBarState().withTitleText(
-                context.getString(R.string.detail_product_label)
-            )
-        )
         viewModel.onEvent(ProductDetailEvent.LoadDetailProduct)
     }
+    val scaffoldState = remember {
+        MyScaffoldState().withTitleText(
+            context.getString(R.string.detail_product_label)
+        )
+    }
+
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
-    ResponseLoader(
-        response = state.detailProductResponse,
-        onRetry = {
-            viewModel.onEvent(ProductDetailEvent.LoadDetailProduct)
-        },
-        modifier = Modifier.fillMaxSize()
+    MyScaffold(
+        scaffoldState = scaffoldState,
+        navController = navController,
     ) {
-        ProductDetailScreen(
-            productDetail = it,
-            onEvent = viewModel::onEvent,
-        )
+        ResponseLoader(
+            response = state.detailProductResponse,
+            onRetry = {
+                viewModel.onEvent(ProductDetailEvent.LoadDetailProduct)
+            },
+            modifier = Modifier.fillMaxSize()
+        ) {
+            ProductDetailScreen(
+                productDetail = it,
+                onEvent = viewModel::onEvent,
+            )
+        }
     }
 }
 

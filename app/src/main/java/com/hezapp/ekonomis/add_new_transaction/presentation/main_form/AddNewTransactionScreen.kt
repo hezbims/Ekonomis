@@ -48,6 +48,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.utils.toFormErrorUiModel
@@ -55,7 +56,7 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisu
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
-import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
+import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
@@ -71,39 +72,11 @@ fun AddNewTransactionScreen(
     navController : NavHostController,
     viewModel : AddNewTransactionViewModel,
     onSubmitSucceed: () -> Unit,
-    onNewAppBarState: (MyAppBarState) -> Unit,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val submitResponse = state.submitResponse
     val context = LocalContext.current
 
-    LaunchedEffect(state.transactionType) {
-        onNewAppBarState(
-            MyAppBarState(
-                title =  {
-                    Text(context.getString(R.string.add_new_transaction_content_description))
-                },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            if (state.transactionType != null)
-                                viewModel.onEvent(
-                                    AddNewTransactionEvent.ShowQuitConfirmationDialog
-                                )
-                            else navController.goBackSafely()
-                        }
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = context.getString(
-                                R.string.back_icon_content_description
-                            )
-                        )
-                    }
-                }
-            )
-        )
-    }
     LaunchedEffect(submitResponse) {
         when(submitResponse){
             is ResponseWrapper.Failed -> {
@@ -130,17 +103,48 @@ fun AddNewTransactionScreen(
         }
     }
 
-    AddNewTransactionScreen(
-        navController = navController,
-        state = state,
-        onEvent = viewModel::onEvent,
-    )
+    val scaffoldState = remember(state.transactionType) {
+        MyScaffoldState(
+            title =  {
+                Text(context.getString(R.string.add_new_transaction_content_description))
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = {
+                        if (state.transactionType != null)
+                            viewModel.onEvent(
+                                AddNewTransactionEvent.ShowQuitConfirmationDialog
+                            )
+                        else navController.goBackSafely()
+                    }
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = context.getString(
+                            R.string.back_icon_content_description
+                        )
+                    )
+                }
+            }
+        )
+    }
 
-    ConfirmQuitBackHanlder(
-        state = state,
-        onEvent = viewModel::onEvent,
+    MyScaffold(
+        scaffoldState = scaffoldState,
         navController = navController,
-    )
+    ) {
+        AddNewTransactionScreen(
+            navController = navController,
+            state = state,
+            onEvent = viewModel::onEvent,
+        )
+
+        ConfirmQuitBackHanlder(
+            state = state,
+            onEvent = viewModel::onEvent,
+            navController = navController,
+        )
+    }
 }
 
 @Composable

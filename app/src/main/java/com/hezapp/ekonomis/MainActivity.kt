@@ -7,6 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +24,7 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTran
 import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SearchAndChooseProductScreen
 import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileScreen
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navGraphViewModel
@@ -39,12 +44,14 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val backStackEntry = navController.currentBackStackEntryAsState().value
 
+                var appBarState by remember { mutableStateOf(MyAppBarState()) }
+                val onNewAppBarState : (MyAppBarState) -> Unit = { appBarState = it }
 
                 Scaffold(
                     topBar = {
                         MyTopAppBar(
+                            appBarState = appBarState,
                             navController = navController,
-                            navBackStackEntry = backStackEntry
                         )
                     },
                     bottomBar = {
@@ -79,7 +86,8 @@ class MainActivity : ComponentActivity() {
                                 transHistoryViewModel?.let { viewModel ->
                                     TransactionHistoryScreen(
                                         navController = navController,
-                                        viewModel = viewModel
+                                        viewModel = viewModel,
+                                        onNewAppBarState = onNewAppBarState,
                                     )
                                 }
                             }
@@ -104,7 +112,8 @@ class MainActivity : ComponentActivity() {
                                                         TransactionHistoryEvent
                                                             .LoadListPreviewTransactionHistory
                                                     )
-                                                }
+                                                },
+                                                onNewAppBarState = onNewAppBarState,
                                             )
                                         }
                                     }
@@ -117,8 +126,8 @@ class MainActivity : ComponentActivity() {
 
                                     addOrUpdateTransViewModel?.let { viewModel ->
                                         SearchAndChooseProductScreen(
-                                            navController = navController,
                                             addNewTransactionViewModel = viewModel,
+                                            onNewAppBarState = onNewAppBarState,
                                         )
                                     }
                                 }
@@ -139,7 +148,8 @@ class MainActivity : ComponentActivity() {
                                                     )
                                                 )
                                                 navController.goBackSafely()
-                                            }
+                                            },
+                                            onNewAppBarState = onNewAppBarState,
                                         )
                                     }
                                 }
@@ -149,12 +159,14 @@ class MainActivity : ComponentActivity() {
                         composable<MyRoutes.ProductPreview> {
                             ProductPreviewScreen(
                                 navController = navController,
+                                onNewAppBarState = onNewAppBarState,
                             )
                         }
 
                         composable<MyRoutes.DetailProduct> {
                             ProductDetailScreen(
-                                productId = it.toRoute<MyRoutes.DetailProduct>().productId
+                                productId = it.toRoute<MyRoutes.DetailProduct>().productId,
+                                onNewAppBarState = onNewAppBarState,
                             )
                         }
 

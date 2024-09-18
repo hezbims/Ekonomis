@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -41,17 +42,29 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @Composable
 fun SearchAndChooseProfileScreen(
     transactionType: TransactionType,
     onSelectProfile: (ProfileEntity) -> Unit,
+    onNewAppBarState: (MyAppBarState) -> Unit,
 ) {
     val viewModel = viewModel<SearchAndChooseProfileViewModel>(
         factory = SearchAndChooseProfileViewModel.Factory(transactionType)
     )
+
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
+        onNewAppBarState(
+            MyAppBarState().withTitleText(
+                context.getString(
+                    R.string.choose_profile_label,
+                    context.getString(transactionType.getProfileStringId())
+                )
+            )
+        )
         viewModel.onEvent(SearchAndChooseProfileEvent.LoadAvailableProfiles)
     }
     SearchAndChooseProfileScreen(

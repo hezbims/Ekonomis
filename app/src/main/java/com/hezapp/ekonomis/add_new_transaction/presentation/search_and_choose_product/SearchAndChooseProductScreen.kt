@@ -40,25 +40,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_new_transaction.presentation.component.RegisterNewProductNameBottomSheet
+import com.hezapp.ekonomis.add_new_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
 import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionViewModel
 import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.add_new_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 
 @Composable
 fun SearchAndChooseProductScreen(
-    navController : NavHostController,
     addNewTransactionViewModel: AddNewTransactionViewModel,
+    onNewAppBarState: (MyAppBarState) -> Unit,
 ){
     val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
 
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        onNewAppBarState(
+            MyAppBarState().withTitleText(
+                context.getString(R.string.select_product_label)
+            )
+        )
+    }
     SearchAndChooseProductScreen(
         state = searchAndChooseProductUiState,
         onEvent = searchAndChooseProductViewModel::onEvent,

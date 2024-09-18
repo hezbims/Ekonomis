@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,10 +20,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
@@ -32,10 +35,18 @@ import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 @Composable
 fun ProductPreviewScreen(
     navController : NavHostController,
+    onNewAppBarState: (MyAppBarState) -> Unit,
 ){
     val viewModel = viewModel<ProductPreviewViewModel>()
     val state = viewModel.state.collectAsStateWithLifecycle().value
+
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
+        onNewAppBarState(
+            MyAppBarState().withTitleText(
+                context.getString(R.string.product_preview_title)
+            )
+        )
         viewModel.onEvent(ProductPreviewEvent.LoadProducts)
     }
 

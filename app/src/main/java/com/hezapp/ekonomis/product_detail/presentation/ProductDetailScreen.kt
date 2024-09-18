@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.domain.product.ProductTransaction
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
@@ -43,11 +45,18 @@ import java.util.Calendar
 @Composable
 fun ProductDetailScreen(
     productId: Int,
+    onNewAppBarState: (MyAppBarState) -> Unit,
     viewModel: ProductDetailViewModel = viewModel {
         ProductDetailViewModel(productId = productId)
-    }
+    },
 ){
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
+        onNewAppBarState(
+            MyAppBarState().withTitleText(
+                context.getString(R.string.detail_product_label)
+            )
+        )
         viewModel.onEvent(ProductDetailEvent.LoadDetailProduct)
     }
     val state = viewModel.state.collectAsStateWithLifecycle().value

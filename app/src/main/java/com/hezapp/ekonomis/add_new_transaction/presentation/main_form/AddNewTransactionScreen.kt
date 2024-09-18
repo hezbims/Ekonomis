@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.AlertDialog
@@ -27,6 +28,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -53,6 +55,7 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.utils.PercentageVisu
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
+import com.hezapp.ekonomis.core.presentation.model.MyAppBarState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
@@ -68,10 +71,39 @@ fun AddNewTransactionScreen(
     navController : NavHostController,
     viewModel : AddNewTransactionViewModel,
     onSubmitSucceed: () -> Unit,
+    onNewAppBarState: (MyAppBarState) -> Unit,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val submitResponse = state.submitResponse
     val context = LocalContext.current
+
+    LaunchedEffect(state.transactionType) {
+        onNewAppBarState(
+            MyAppBarState(
+                title =  {
+                    Text(context.getString(R.string.add_new_transaction_content_description))
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            if (state.transactionType != null)
+                                viewModel.onEvent(
+                                    AddNewTransactionEvent.ShowQuitConfirmationDialog
+                                )
+                            else navController.goBackSafely()
+                        }
+                    ) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = context.getString(
+                                R.string.back_icon_content_description
+                            )
+                        )
+                    }
+                }
+            )
+        )
+    }
     LaunchedEffect(submitResponse) {
         when(submitResponse){
             is ResponseWrapper.Failed -> {
@@ -366,7 +398,7 @@ fun ConfirmQuitBackHanlder(
                 Text("Yakin ingin kembali?")
             },
             text = {
-                Text("Data form sekarang akan dihapus.")
+                Text("Data form sekarang tidak akan disimpan.")
             },
             confirmButton = {
                 TextButton(

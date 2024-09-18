@@ -48,4 +48,9 @@
     <string name="search_profile_name_label">Cari Nama %1$s</string>
     <string name="profile_name_label">Nama %1$s</string>
     <string name="name_label">Nama</string>
+    <string name="detail_product_label">Detail Barang</string>
+    <string name="purchase_price_label">Harga Beli</string>
+    <string name="selling_price_label">Harga jual</string>
+    <string name="cancel_label">Batal</string>
+    <string name="yes_label">Ya</string>
 </resources>

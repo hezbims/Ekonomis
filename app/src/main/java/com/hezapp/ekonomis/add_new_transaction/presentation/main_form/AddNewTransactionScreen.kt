@@ -1,6 +1,8 @@
 package com.hezapp.ekonomis.add_new_transaction.presentation.main_form
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -33,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -52,8 +56,11 @@ import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
+import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
@@ -95,6 +102,12 @@ fun AddNewTransactionScreen(
         navController = navController,
         state = state,
         onEvent = viewModel::onEvent,
+    )
+
+    ConfirmQuitBackHanlder(
+        state = state,
+        onEvent = viewModel::onEvent,
+        navController = navController,
     )
 }
 
@@ -319,6 +332,59 @@ private fun ChooseDateField(
             DatePicker(state = datePickerState)
         }
     }
+}
+
+@Composable
+fun ConfirmQuitBackHanlder(
+    state: AddNewTransactionUiState,
+    onEvent: (AddNewTransactionEvent) -> Unit,
+    navController: NavHostController,
+){
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    var isBackPressDone by rememberSaveable { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
+    BackHandler(
+        enabled = isBackPressDone
+    ) {
+        isBackPressDone = false
+        coroutineScope.launch {
+            awaitFrame()
+            if (state.transactionType != null)
+                onEvent(AddNewTransactionEvent.ShowQuitConfirmationDialog)
+            else
+                onBackPressedDispatcher?.onBackPressed()
+            isBackPressDone = true
+        }
+    }
+
+    val onDismissRequest = { onEvent(AddNewTransactionEvent.DoneShowQuitConfirmationDialog) }
+
+    if (state.showQuitConfirmationDialog)
+        AlertDialog(
+            onDismissRequest = onDismissRequest,
+            title = {
+                Text("Yakin ingin kembali?")
+            },
+            text = {
+                Text("Data form sekarang akan dihapus.")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        navController.goBackSafely()
+                    }
+                ) {
+                    Text(stringResource(R.string.yes_label))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = onDismissRequest
+                ) {
+                    Text(stringResource(R.string.cancel_label))
+                }
+            }
+        )
 }
 
 @Composable

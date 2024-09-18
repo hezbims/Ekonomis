@@ -52,6 +52,10 @@ class AddNewTransactionViewModel : ViewModel() {
                 doneHandlingSubmitDataResponse()
             is AddNewTransactionEvent.UpdateFormError ->
                 updateFormError(event.newFormError)
+            AddNewTransactionEvent.DoneShowQuitConfirmationDialog ->
+                doneShowQuitConfirmationDialog()
+            AddNewTransactionEvent.ShowQuitConfirmationDialog ->
+                showQuitConfirmationDialog()
         }
     }
 
@@ -146,6 +150,14 @@ class AddNewTransactionViewModel : ViewModel() {
     private fun updateFormError(newFormError: TransactionFormErrorUiModel){
         _state.update { it.copy(formError = newFormError) }
     }
+
+    private fun showQuitConfirmationDialog() {
+        _state.update { it.copy(showQuitConfirmationDialog = true) }
+    }
+
+    private fun doneShowQuitConfirmationDialog(){
+        _state.update { it.copy(showQuitConfirmationDialog = false) }
+    }
 }
 
 sealed class AddNewTransactionEvent {
@@ -161,6 +173,8 @@ sealed class AddNewTransactionEvent {
     data object SubmitData : AddNewTransactionEvent()
     data object DoneHandlingSubmitDataResponse : AddNewTransactionEvent()
     class UpdateFormError(val newFormError: TransactionFormErrorUiModel) : AddNewTransactionEvent()
+    data object ShowQuitConfirmationDialog : AddNewTransactionEvent()
+    data object DoneShowQuitConfirmationDialog : AddNewTransactionEvent()
 }
 
 data class AddNewTransactionUiState(
@@ -179,6 +193,7 @@ data class AddNewTransactionUiState(
         profileError = null,
         ppnError = null,
     ),
+    val showQuitConfirmationDialog : Boolean = false
 ){
     companion object {
         fun init() = AddNewTransactionUiState(

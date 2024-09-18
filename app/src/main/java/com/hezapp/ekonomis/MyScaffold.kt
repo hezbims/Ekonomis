@@ -1,7 +1,9 @@
 package com.hezapp.ekonomis
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +26,12 @@ fun MyScaffold(
         bottomBar = { scaffoldState.bottomBar() },
         floatingActionButton = { scaffoldState.floatingActionButton() }
     ) {
-        Box(modifier = Modifier.padding(it)){
+        Box(
+            modifier = Modifier
+                .padding(it)
+                .consumeWindowInsets(it)
+                .systemBarsPadding()
+        ){
             content()
         }
     }

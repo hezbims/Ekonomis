@@ -53,4 +53,5 @@
     <string name="selling_price_label">Harga jual</string>
     <string name="cancel_label">Batal</string>
     <string name="yes_label">Ya</string>
+    <string name="confirm_label">Konfirmasi</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -62,6 +63,7 @@ import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
+import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
@@ -153,16 +155,17 @@ private fun AddNewTransactionScreen(
     state : AddNewTransactionUiState,
     onEvent : (AddNewTransactionEvent) -> Unit,
 ){
-    Column(
-        modifier = Modifier.fillMaxSize()
+    Column (
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
                 .padding(horizontal = 24.dp)
-                .verticalScroll(state = rememberScrollState())
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
         ) {
             TransactionTypeDropdown(
                 value = state.transactionType,
@@ -208,6 +211,7 @@ private fun AddNewTransactionScreen(
         }
 
         state.transactionType?.let {
+            val isKeyboardOpened by rememberIsKeyboardOpen()
             Button(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 enabled = state.submitResponse?.isLoading() != true,
@@ -217,7 +221,8 @@ private fun AddNewTransactionScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(
-                        bottom = 48.dp, start = 24.dp, end = 24.dp
+                        bottom = if (isKeyboardOpened) 0.dp else 48.dp,
+                        start = 24.dp, end = 24.dp
                     )
             ) {
                 Text("Simpan")

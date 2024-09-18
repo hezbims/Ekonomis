@@ -6,13 +6,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircleOutline
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
@@ -51,6 +57,8 @@ import com.hezapp.ekonomis.add_new_transaction.presentation.model.InvoiceItemUiM
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
+import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
+import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
 
 @Composable
 fun SearchAndChooseProductScreen(
@@ -59,6 +67,7 @@ fun SearchAndChooseProductScreen(
 ){
     val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
+    val totalSelectedProduct = addNewTransactionViewModel.state.collectAsStateWithLifecycle().value.invoiceItems.size
 
     val context = LocalContext.current
     val scaffoldState = remember {
@@ -74,6 +83,7 @@ fun SearchAndChooseProductScreen(
         SearchAndChooseProductScreen(
             state = searchAndChooseProductUiState,
             onEvent = searchAndChooseProductViewModel::onEvent,
+            navController = navController,
             onProductSpecificationConfirmed = {
                 addNewTransactionViewModel.onEvent(
                     AddNewTransactionEvent.AddNewInvoiceItem(it)
@@ -83,7 +93,8 @@ fun SearchAndChooseProductScreen(
                     "Berhasil memilih barang : ${it.productName}",
                     Toast.LENGTH_SHORT
                 ).show()
-            }
+            },
+            totalSelectedProduct = totalSelectedProduct
         )
     }
 }
@@ -93,6 +104,8 @@ private fun SearchAndChooseProductScreen(
     state: SearchAndChooseProductUiState,
     onEvent: (SearchAndChooseProductEvent) -> Unit,
     onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
+    totalSelectedProduct: Int,
+    navController: NavHostController,
 ){
     val secondaryColor = MaterialTheme.colorScheme.secondary
     var showRegisterNewProductNameBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -123,10 +136,15 @@ private fun SearchAndChooseProductScreen(
         focusRequester.requestFocus()
     }
 
+    val isKeyboardOpen by rememberIsKeyboardOpen()
     Column(
-      modifier = Modifier.padding(
-          bottom = 16.dp, start = 24.dp, end = 24.dp,
-      )
+      modifier = Modifier
+          .fillMaxSize()
+          .padding(
+              start = 24.dp, end = 24.dp,
+              bottom = if (isKeyboardOpen) 0.dp else 48.dp
+          )
+          .imePadding()
     ) {
         OutlinedTextField(
             value = state.searchQuery,
@@ -149,7 +167,7 @@ private fun SearchAndChooseProductScreen(
             onRetry = {
                 onEvent(SearchAndChooseProductEvent.LoadAvailableProducts)
             },
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.weight(1f)
         ) { data ->
             LazyColumn(
                 contentPadding = PaddingValues(
@@ -174,6 +192,23 @@ private fun SearchAndChooseProductScreen(
                     )
                 }
             }
+        }
+
+        Button(
+            contentPadding = PaddingValues(vertical = 12.dp),
+            onClick = {
+                navController.goBackSafely()
+            },
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Icon(
+                Icons.Outlined.CheckCircleOutline,
+                contentDescription = stringResource(R.string.confirm_label)
+            )
+
+            Spacer(Modifier.width(4.dp))
+
+            Text("Konfirmasi Pilihan ($totalSelectedProduct barang)")
         }
     }
 

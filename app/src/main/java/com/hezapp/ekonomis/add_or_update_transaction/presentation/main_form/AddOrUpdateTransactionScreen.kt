@@ -70,7 +70,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 @Composable
-fun AddNewTransactionScreen(
+fun AddOrUpdateTransactionScreen(
     navController : NavHostController,
     viewModel : AddNewTransactionViewModel,
     onSubmitSucceed: () -> Unit,
@@ -135,7 +135,7 @@ fun AddNewTransactionScreen(
         scaffoldState = scaffoldState,
         navController = navController,
     ) {
-        AddNewTransactionScreen(
+        AddOrUpdateTransactionScreen(
             navController = navController,
             state = state,
             onEvent = viewModel::onEvent,
@@ -150,7 +150,7 @@ fun AddNewTransactionScreen(
 }
 
 @Composable
-private fun AddNewTransactionScreen(
+private fun AddOrUpdateTransactionScreen(
     navController: NavHostController,
     state : AddNewTransactionUiState,
     onEvent : (AddNewTransactionEvent) -> Unit,

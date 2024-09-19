@@ -1,6 +1,6 @@
 package com.hezapp.ekonomis.core.domain.invoice_item.repo
 
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 
 interface IInvoiceItemRepo {
     suspend fun createOrUpdateInvoiceItems(invoiceItems: List<InvoiceItemEntity>)

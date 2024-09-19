@@ -2,8 +2,8 @@ package com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_ch
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetValidatedProductPriceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

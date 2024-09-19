@@ -5,10 +5,10 @@ import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.product.FakeProductRepo
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
-import com.hezapp.ekonomis.core.domain.entity.InvoiceEntity
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 
 class FakeDebugLoggerUtils {
     companion object {

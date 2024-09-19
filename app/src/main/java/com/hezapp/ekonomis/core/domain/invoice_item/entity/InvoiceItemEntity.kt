@@ -1,10 +1,11 @@
-package com.hezapp.ekonomis.core.domain.entity
+package com.hezapp.ekonomis.core.domain.invoice_item.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 
 @Entity(
     tableName = "invoice_items",

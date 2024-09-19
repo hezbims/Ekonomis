@@ -1,9 +1,9 @@
 package com.hezapp.ekonomis.add_or_update_transaction.domain.model
 
-import com.hezapp.ekonomis.core.domain.entity.InvoiceEntity
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 
 data class InvoiceFormModel(
     val id: Int,

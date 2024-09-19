@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.domain.profile
+package com.hezapp.ekonomis.core.domain.profile.model
 
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 

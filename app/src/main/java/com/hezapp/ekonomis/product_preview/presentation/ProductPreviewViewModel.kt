@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
+import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

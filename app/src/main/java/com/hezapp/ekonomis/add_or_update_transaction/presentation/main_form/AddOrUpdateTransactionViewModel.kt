@@ -7,9 +7,9 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidat
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.CreateOrUpdateInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

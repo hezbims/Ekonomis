@@ -1,6 +1,6 @@
 package com.hezapp.ekonomis.core.data.invoice_item
 
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.repo.IInvoiceItemRepo
 import kotlinx.coroutines.delay
 

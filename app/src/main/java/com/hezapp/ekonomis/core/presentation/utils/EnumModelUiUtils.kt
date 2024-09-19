@@ -1,8 +1,8 @@
 package com.hezapp.ekonomis.core.presentation.utils
 
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 
 fun UnitType.getStringId() : Int =
     when(this){

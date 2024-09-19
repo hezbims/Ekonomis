@@ -1,6 +1,6 @@
 package com.hezapp.ekonomis.add_or_update_transaction.domain.use_case
 
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.utils.contains
 
 class GetDeletedInvoiceItemsUseCase {

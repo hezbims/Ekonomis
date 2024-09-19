@@ -1,6 +1,6 @@
 package com.hezapp.ekonomis.core.domain.invoice.model
 
-import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 
 data class PreviewTransactionHistory(
     val id : Int,

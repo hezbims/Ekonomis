@@ -3,8 +3,8 @@ package com.hezapp.ekonomis.product_preview.domain.use_case
 import com.hezapp.ekonomis.core.data.product.FakeProductRepo
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.IProductRepo
-import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
+import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

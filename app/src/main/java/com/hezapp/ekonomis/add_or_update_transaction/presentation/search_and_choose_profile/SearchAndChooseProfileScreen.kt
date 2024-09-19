@@ -41,8 +41,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId

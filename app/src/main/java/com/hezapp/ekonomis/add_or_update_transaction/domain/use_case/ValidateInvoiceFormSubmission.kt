@@ -7,7 +7,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.model.PpnError
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.ProfileInputError
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.TransactionDateError
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.TransactionTypeError
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 
 class ValidateInvoiceFormSubmission {
     operator fun invoke(invoiceForm: InvoiceFormModel) : InvoiceValidationResult {

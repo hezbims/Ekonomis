@@ -1,4 +1,6 @@
-package com.hezapp.ekonomis.core.domain.entity.support_enum
+package com.hezapp.ekonomis.core.domain.invoice.entity
+
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 
 enum class TransactionType(val id : Int) {
     PEMBELIAN(0), PENJUALAN(1);

@@ -1,8 +1,8 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.model
 
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.entity.relationship.InvoiceItemWithProduct
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.relationship.InvoiceItemWithProduct
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import java.util.UUID
 
 data class InvoiceItemUiModel(

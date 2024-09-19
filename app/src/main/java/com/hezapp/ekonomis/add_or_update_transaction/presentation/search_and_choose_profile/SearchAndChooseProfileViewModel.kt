@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
-import com.hezapp.ekonomis.core.domain.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.profile.CreateNewProfileError
+import com.hezapp.ekonomis.core.domain.profile.model.CreateNewProfileError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -71,7 +71,8 @@ class SearchAndChooseProfileViewModel(
             profileRepo.addNewProfile(profile = ProfileEntity(
                 name = profileName,
                 type = _state.value.profileType
-            )).collect { response ->
+            )
+            ).collect { response ->
                 _state.update { it.copy(createNewProfileResponse = response) }
             }
         }
@@ -86,7 +87,7 @@ data class SearchAndChooseProfileUiState(
     val availableProfilesResponse: ResponseWrapper<List<ProfileEntity>, MyBasicError> = ResponseWrapper.Loading(),
     val transactionType: TransactionType,
     val searchQuery: String = "",
-    val createNewProfileResponse: ResponseWrapper<Any?,CreateNewProfileError>? = null,
+    val createNewProfileResponse: ResponseWrapper<Any?, CreateNewProfileError>? = null,
 ){
     val profileType: ProfileType
         get() = transactionType.getProfileType()

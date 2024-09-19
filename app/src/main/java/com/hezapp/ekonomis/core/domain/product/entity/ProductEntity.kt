@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.domain.entity
+package com.hezapp.ekonomis.core.domain.product.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

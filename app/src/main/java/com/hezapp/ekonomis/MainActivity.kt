@@ -14,7 +14,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddO
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductScreen
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileScreen
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navGraphViewModel

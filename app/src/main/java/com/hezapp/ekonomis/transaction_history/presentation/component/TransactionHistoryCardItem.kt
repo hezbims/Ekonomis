@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah

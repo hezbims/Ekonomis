@@ -38,7 +38,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductUiState
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.InsertProductError
+import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

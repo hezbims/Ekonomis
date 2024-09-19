@@ -51,8 +51,8 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_cho
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SpecifyProductQuantityUiState
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SpecifyProductQuantityViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.RupiahVisualTransformation
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 

@@ -54,7 +54,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.Spec
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely

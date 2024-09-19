@@ -3,11 +3,11 @@ package com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_ch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.data.product.FakeProductRepo
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.IProductRepo
-import com.hezapp.ekonomis.core.domain.product.InsertProductError
+import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

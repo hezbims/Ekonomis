@@ -44,7 +44,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.Spec
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionUiState
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce

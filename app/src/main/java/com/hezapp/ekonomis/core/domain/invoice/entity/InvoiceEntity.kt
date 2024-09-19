@@ -1,9 +1,9 @@
-package com.hezapp.ekonomis.core.domain.entity
+package com.hezapp.ekonomis.core.domain.invoice.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 
 @Entity(
     tableName = "invoices",

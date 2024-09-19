@@ -1,9 +1,9 @@
-package com.hezapp.ekonomis.core.domain.entity.relationship
+package com.hezapp.ekonomis.core.domain.invoice_item.relationship
 
 import androidx.room.Embedded
 import androidx.room.Relation
-import com.hezapp.ekonomis.core.domain.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 
 data class InvoiceItemWithProduct(
     @Embedded

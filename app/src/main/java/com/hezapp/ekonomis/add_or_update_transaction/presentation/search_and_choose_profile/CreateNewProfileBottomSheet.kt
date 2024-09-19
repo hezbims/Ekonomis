@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.profile.CreateNewProfileError
+import com.hezapp.ekonomis.core.domain.profile.model.CreateNewProfileError
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 @OptIn(ExperimentalMaterial3Api::class)

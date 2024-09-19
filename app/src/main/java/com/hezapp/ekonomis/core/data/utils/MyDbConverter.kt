@@ -1,9 +1,9 @@
-package com.hezapp.ekonomis.core.domain.entity.converter
+package com.hezapp.ekonomis.core.data.utils
 
 import androidx.room.TypeConverter
-import com.hezapp.ekonomis.core.domain.entity.support_enum.ProfileType
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 
 class MyDbConverter {
 

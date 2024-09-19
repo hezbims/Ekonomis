@@ -1,7 +1,7 @@
 package com.hezapp.ekonomis.product_detail.presentation
 
-import com.hezapp.ekonomis.core.domain.product.ProductDetail
-import com.hezapp.ekonomis.core.domain.product.ProductTransaction
+import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
+import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 
 data class ProductDetailUiModel(
     val id : Int,

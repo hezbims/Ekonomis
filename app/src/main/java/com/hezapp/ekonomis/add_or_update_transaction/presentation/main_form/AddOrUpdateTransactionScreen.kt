@@ -54,7 +54,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.utils.toFormErrorUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState

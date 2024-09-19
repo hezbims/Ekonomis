@@ -23,9 +23,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.PreviewProductSummary
+import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState

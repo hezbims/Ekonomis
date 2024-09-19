@@ -8,7 +8,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.model.PpnError
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.ProfileInputError
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.TransactionDateError
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.TransactionFormErrorUiModel
-import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 fun InvoiceValidationResult.toFormErrorUiModel(

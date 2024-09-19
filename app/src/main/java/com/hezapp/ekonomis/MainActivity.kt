@@ -9,9 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionEvent
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionScreen
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionViewModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductScreen
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileScreen
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
@@ -61,11 +61,11 @@ class MainActivity : ComponentActivity() {
                             composable<MyRoutes.AddOrUpdateTransactionForm> {
                                 val transactionHistoryViewModel : TransactionHistoryViewModel? =
                                     it.navGraphViewModel(navController, 2)
-                                val addNewTransactionViewModel : AddNewTransactionViewModel? =
+                                val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
                                     it.navGraphViewModel(navController, 1)
 
                                 transactionHistoryViewModel?.let { transHisViewModel ->
-                                    addNewTransactionViewModel?.let { addTransViewModel ->
+                                    addOrUpdateTransactionViewModel?.let { addTransViewModel ->
                                         AddOrUpdateTransactionScreen(
                                             navController = navController,
                                             viewModel = addTransViewModel,
@@ -83,19 +83,19 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable<MyRoutes.SearchAndChooseProduct> {
-                                val addOrUpdateTransViewModel : AddNewTransactionViewModel? =
+                                val addOrUpdateTransViewModel : AddOrUpdateTransactionViewModel? =
                                     it.navGraphViewModel(navController, 1)
 
                                 addOrUpdateTransViewModel?.let { viewModel ->
                                     SearchAndChooseProductScreen(
-                                        addNewTransactionViewModel = viewModel,
+                                        addOrUpdateTransactionViewModel = viewModel,
                                         navController = navController,
                                     )
                                 }
                             }
 
                             composable<MyRoutes.SearchAndChooseProfile> {
-                                val addOrUpdateTransactionViewModel : AddNewTransactionViewModel? =
+                                val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
                                     it.navGraphViewModel(navController, 1)
 
                                 addOrUpdateTransactionViewModel?.let { viewModel ->
@@ -105,7 +105,7 @@ class MainActivity : ComponentActivity() {
                                         ),
                                         onSelectProfile = { selectedProfile ->
                                             viewModel.onEvent(
-                                                AddNewTransactionEvent.ChangeProfile(
+                                                AddOrUpdateTransactionEvent.ChangeProfile(
                                                     selectedProfile
                                                 )
                                             )

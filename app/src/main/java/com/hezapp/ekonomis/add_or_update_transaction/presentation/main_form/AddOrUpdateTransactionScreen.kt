@@ -72,7 +72,7 @@ import java.util.Calendar
 @Composable
 fun AddOrUpdateTransactionScreen(
     navController : NavHostController,
-    viewModel : AddNewTransactionViewModel,
+    viewModel : AddOrUpdateTransactionViewModel,
     onSubmitSucceed: () -> Unit,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
@@ -82,10 +82,10 @@ fun AddOrUpdateTransactionScreen(
     LaunchedEffect(submitResponse) {
         when(submitResponse){
             is ResponseWrapper.Failed -> {
-                viewModel.onEvent(AddNewTransactionEvent.DoneHandlingSubmitDataResponse)
+                viewModel.onEvent(AddOrUpdateTransactionEvent.DoneHandlingSubmitDataResponse)
                 val validationResult = submitResponse.error
                 if (validationResult != null){
-                    viewModel.onEvent(AddNewTransactionEvent.UpdateFormError(
+                    viewModel.onEvent(AddOrUpdateTransactionEvent.UpdateFormError(
                         validationResult.toFormErrorUiModel(context, state.transactionType!!)
                     ))
                 } else {
@@ -97,7 +97,7 @@ fun AddOrUpdateTransactionScreen(
                 }
             }
             is ResponseWrapper.Succeed -> {
-                viewModel.onEvent(AddNewTransactionEvent.DoneHandlingSubmitDataResponse)
+                viewModel.onEvent(AddOrUpdateTransactionEvent.DoneHandlingSubmitDataResponse)
                 onSubmitSucceed()
             }
             is ResponseWrapper.Loading -> Unit
@@ -115,7 +115,7 @@ fun AddOrUpdateTransactionScreen(
                     onClick = {
                         if (state.transactionType != null)
                             viewModel.onEvent(
-                                AddNewTransactionEvent.ShowQuitConfirmationDialog
+                                AddOrUpdateTransactionEvent.ShowQuitConfirmationDialog
                             )
                         else navController.goBackSafely()
                     }
@@ -152,8 +152,8 @@ fun AddOrUpdateTransactionScreen(
 @Composable
 private fun AddOrUpdateTransactionScreen(
     navController: NavHostController,
-    state : AddNewTransactionUiState,
-    onEvent : (AddNewTransactionEvent) -> Unit,
+    state : AddOrUpdateTransactionUiState,
+    onEvent : (AddOrUpdateTransactionEvent) -> Unit,
 ){
     Column (
         modifier = Modifier
@@ -170,7 +170,7 @@ private fun AddOrUpdateTransactionScreen(
             TransactionTypeDropdown(
                 value = state.transactionType,
                 onValueChange = { newTransactionType ->
-                    onEvent(AddNewTransactionEvent.ChangeTransactionType(newTransactionType))
+                    onEvent(AddOrUpdateTransactionEvent.ChangeTransactionType(newTransactionType))
                 },
             )
 
@@ -178,7 +178,7 @@ private fun AddOrUpdateTransactionScreen(
                 ChooseDateField(
                     value = state.transactionDateMillis,
                     onValueChange = { selectedDate ->
-                        onEvent(AddNewTransactionEvent.ChangeTransactionDate(selectedDate))
+                        onEvent(AddOrUpdateTransactionEvent.ChangeTransactionDate(selectedDate))
                     },
                     error = state.formError.transactionDateError,
                 )
@@ -193,7 +193,7 @@ private fun AddOrUpdateTransactionScreen(
                     PpnField(
                         value = state.ppn,
                         onValueChange = {
-                            onEvent(AddNewTransactionEvent.ChangePpn(it))
+                            onEvent(AddOrUpdateTransactionEvent.ChangePpn(it))
                         },
                         error = state.formError.ppnError,
                     )
@@ -216,7 +216,7 @@ private fun AddOrUpdateTransactionScreen(
                 contentPadding = PaddingValues(vertical = 16.dp),
                 enabled = state.submitResponse?.isLoading() != true,
                 onClick = {
-                    onEvent(AddNewTransactionEvent.SubmitData)
+                    onEvent(AddOrUpdateTransactionEvent.SubmitData)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -280,7 +280,7 @@ private fun TransactionTypeDropdown(
 private fun ChooseProfileField(
     navController: NavHostController,
     error: String?,
-    state: AddNewTransactionUiState,
+    state: AddOrUpdateTransactionUiState,
 ){
     val personTypeString = stringResource(state.transactionType!!.getProfileStringId())
 
@@ -377,8 +377,8 @@ private fun ChooseDateField(
 
 @Composable
 fun ConfirmQuitBackHanlder(
-    state: AddNewTransactionUiState,
-    onEvent: (AddNewTransactionEvent) -> Unit,
+    state: AddOrUpdateTransactionUiState,
+    onEvent: (AddOrUpdateTransactionEvent) -> Unit,
     navController: NavHostController,
 ){
     val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
@@ -391,14 +391,14 @@ fun ConfirmQuitBackHanlder(
         coroutineScope.launch {
             awaitFrame()
             if (state.transactionType != null)
-                onEvent(AddNewTransactionEvent.ShowQuitConfirmationDialog)
+                onEvent(AddOrUpdateTransactionEvent.ShowQuitConfirmationDialog)
             else
                 onBackPressedDispatcher?.onBackPressed()
             isBackPressDone = true
         }
     }
 
-    val onDismissRequest = { onEvent(AddNewTransactionEvent.DoneShowQuitConfirmationDialog) }
+    val onDismissRequest = { onEvent(AddOrUpdateTransactionEvent.DoneShowQuitConfirmationDialog) }
 
     if (state.showQuitConfirmationDialog)
         AlertDialog(

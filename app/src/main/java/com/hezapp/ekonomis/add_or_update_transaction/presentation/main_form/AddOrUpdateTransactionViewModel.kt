@@ -18,43 +18,43 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddNewTransactionViewModel : ViewModel() {
+class AddOrUpdateTransactionViewModel : ViewModel() {
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
     private val createOrUpdateInvoiceUseCase = CreateOrUpdateInvoiceUseCase()
 
-    private val _state = MutableStateFlow(AddNewTransactionUiState.init())
-    val state : StateFlow<AddNewTransactionUiState>
+    private val _state = MutableStateFlow(AddOrUpdateTransactionUiState.init())
+    val state : StateFlow<AddOrUpdateTransactionUiState>
         get() = _state.asStateFlow()
 
-    fun onEvent(event: AddNewTransactionEvent){
+    fun onEvent(event: AddOrUpdateTransactionEvent){
         when(event){
-            is AddNewTransactionEvent.ChangeTransactionType ->
+            is AddOrUpdateTransactionEvent.ChangeTransactionType ->
                 changeTransactionType(event.newTransactionType)
-            is AddNewTransactionEvent.ChangeProfile ->
+            is AddOrUpdateTransactionEvent.ChangeProfile ->
                 changeProfile(event.newProfile)
-            is AddNewTransactionEvent.ChangeTransactionDate ->
+            is AddOrUpdateTransactionEvent.ChangeTransactionDate ->
                 changeTransactionDate(event.newDate)
-            is AddNewTransactionEvent.ChangePpn ->
+            is AddOrUpdateTransactionEvent.ChangePpn ->
                 changePpn(event.newPpn)
-            is AddNewTransactionEvent.AddNewInvoiceItem ->
+            is AddOrUpdateTransactionEvent.AddNewInvoiceItem ->
                 addOrInsertInvoiceItem(item = event.item)
-            is AddNewTransactionEvent.ChooseInvoiceItemForEdit ->
+            is AddOrUpdateTransactionEvent.ChooseInvoiceItemForEdit ->
                 chooseInvoiceItemForEdit(event.item)
-            AddNewTransactionEvent.CancelEditInvoiceItem ->
+            AddOrUpdateTransactionEvent.CancelEditInvoiceItem ->
                 doneEditInvoiceItem()
-            is AddNewTransactionEvent.DeleteInvoiceItem ->
+            is AddOrUpdateTransactionEvent.DeleteInvoiceItem ->
                 deleteInvoiceItem(event.uuid)
-            is AddNewTransactionEvent.EditInvoiceItem ->
+            is AddOrUpdateTransactionEvent.EditInvoiceItem ->
                 editInvoiceItem(event.item)
-            AddNewTransactionEvent.SubmitData ->
+            AddOrUpdateTransactionEvent.SubmitData ->
                 submitData()
-            AddNewTransactionEvent.DoneHandlingSubmitDataResponse ->
+            AddOrUpdateTransactionEvent.DoneHandlingSubmitDataResponse ->
                 doneHandlingSubmitDataResponse()
-            is AddNewTransactionEvent.UpdateFormError ->
+            is AddOrUpdateTransactionEvent.UpdateFormError ->
                 updateFormError(event.newFormError)
-            AddNewTransactionEvent.DoneShowQuitConfirmationDialog ->
+            AddOrUpdateTransactionEvent.DoneShowQuitConfirmationDialog ->
                 doneShowQuitConfirmationDialog()
-            AddNewTransactionEvent.ShowQuitConfirmationDialog ->
+            AddOrUpdateTransactionEvent.ShowQuitConfirmationDialog ->
                 showQuitConfirmationDialog()
         }
     }
@@ -62,7 +62,7 @@ class AddNewTransactionViewModel : ViewModel() {
     private fun changeTransactionType(newTransactionType: TransactionType){
         if (_state.value.transactionType != newTransactionType)
             _state.update {
-                AddNewTransactionUiState.init().copy(transactionType = newTransactionType)
+                AddOrUpdateTransactionUiState.init().copy(transactionType = newTransactionType)
             }
     }
 
@@ -160,24 +160,24 @@ class AddNewTransactionViewModel : ViewModel() {
     }
 }
 
-sealed class AddNewTransactionEvent {
-    class ChangeTransactionType(val newTransactionType: TransactionType) : AddNewTransactionEvent()
-    class ChangeProfile(val newProfile: ProfileEntity) : AddNewTransactionEvent()
-    class ChangeTransactionDate(val newDate: Long) : AddNewTransactionEvent()
-    class ChangePpn(val newPpn : String) : AddNewTransactionEvent()
-    class AddNewInvoiceItem(val item: InvoiceItemUiModel) : AddNewTransactionEvent()
-    class EditInvoiceItem(val item: InvoiceItemUiModel) : AddNewTransactionEvent()
-    class ChooseInvoiceItemForEdit(val item: InvoiceItemUiModel) : AddNewTransactionEvent()
-    data object CancelEditInvoiceItem : AddNewTransactionEvent()
-    class DeleteInvoiceItem(val uuid: String) : AddNewTransactionEvent()
-    data object SubmitData : AddNewTransactionEvent()
-    data object DoneHandlingSubmitDataResponse : AddNewTransactionEvent()
-    class UpdateFormError(val newFormError: TransactionFormErrorUiModel) : AddNewTransactionEvent()
-    data object ShowQuitConfirmationDialog : AddNewTransactionEvent()
-    data object DoneShowQuitConfirmationDialog : AddNewTransactionEvent()
+sealed class AddOrUpdateTransactionEvent {
+    class ChangeTransactionType(val newTransactionType: TransactionType) : AddOrUpdateTransactionEvent()
+    class ChangeProfile(val newProfile: ProfileEntity) : AddOrUpdateTransactionEvent()
+    class ChangeTransactionDate(val newDate: Long) : AddOrUpdateTransactionEvent()
+    class ChangePpn(val newPpn : String) : AddOrUpdateTransactionEvent()
+    class AddNewInvoiceItem(val item: InvoiceItemUiModel) : AddOrUpdateTransactionEvent()
+    class EditInvoiceItem(val item: InvoiceItemUiModel) : AddOrUpdateTransactionEvent()
+    class ChooseInvoiceItemForEdit(val item: InvoiceItemUiModel) : AddOrUpdateTransactionEvent()
+    data object CancelEditInvoiceItem : AddOrUpdateTransactionEvent()
+    class DeleteInvoiceItem(val uuid: String) : AddOrUpdateTransactionEvent()
+    data object SubmitData : AddOrUpdateTransactionEvent()
+    data object DoneHandlingSubmitDataResponse : AddOrUpdateTransactionEvent()
+    class UpdateFormError(val newFormError: TransactionFormErrorUiModel) : AddOrUpdateTransactionEvent()
+    data object ShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
+    data object DoneShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
 }
 
-data class AddNewTransactionUiState(
+data class AddOrUpdateTransactionUiState(
     val id: Int,
     val transactionType: TransactionType?,
     val profile: ProfileEntity?,
@@ -196,7 +196,7 @@ data class AddNewTransactionUiState(
     val showQuitConfirmationDialog : Boolean = false
 ){
     companion object {
-        fun init() = AddNewTransactionUiState(
+        fun init() = AddOrUpdateTransactionUiState(
             id = 0,
             transactionType = null,
             profile = null,

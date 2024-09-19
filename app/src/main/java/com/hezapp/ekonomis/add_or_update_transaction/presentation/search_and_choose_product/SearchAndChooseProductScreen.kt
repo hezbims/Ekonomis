@@ -51,8 +51,8 @@ import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.RegisterNewProductNameBottomSheet
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionViewModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
@@ -62,12 +62,12 @@ import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
 
 @Composable
 fun SearchAndChooseProductScreen(
-    addNewTransactionViewModel: AddNewTransactionViewModel,
+    addOrUpdateTransactionViewModel: AddOrUpdateTransactionViewModel,
     navController : NavHostController,
 ){
     val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
-    val totalSelectedProduct = addNewTransactionViewModel.state.collectAsStateWithLifecycle().value.invoiceItems.size
+    val totalSelectedProduct = addOrUpdateTransactionViewModel.state.collectAsStateWithLifecycle().value.invoiceItems.size
 
     val context = LocalContext.current
     val scaffoldState = remember {
@@ -85,8 +85,8 @@ fun SearchAndChooseProductScreen(
             onEvent = searchAndChooseProductViewModel::onEvent,
             navController = navController,
             onProductSpecificationConfirmed = {
-                addNewTransactionViewModel.onEvent(
-                    AddNewTransactionEvent.AddNewInvoiceItem(it)
+                addOrUpdateTransactionViewModel.onEvent(
+                    AddOrUpdateTransactionEvent.AddNewInvoiceItem(it)
                 )
                 Toast.makeText(
                     context,

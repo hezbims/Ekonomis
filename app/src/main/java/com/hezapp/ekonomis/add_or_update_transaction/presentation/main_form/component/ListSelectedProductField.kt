@@ -41,8 +41,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionUiState
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionUiState
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.entity.support_enum.UnitType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
@@ -58,8 +58,8 @@ import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 @Composable
 fun ListSelectedProductField(
     navController: NavHostController,
-    state : AddNewTransactionUiState,
-    onEvent : (AddNewTransactionEvent) -> Unit,
+    state : AddOrUpdateTransactionUiState,
+    onEvent : (AddOrUpdateTransactionEvent) -> Unit,
     error: String?,
     modifier : Modifier = Modifier,
 ){
@@ -116,7 +116,7 @@ fun ListSelectedProductField(
                         SelectedProductCardItem(
                             item = item,
                             onClickEdit = {
-                                onEvent(AddNewTransactionEvent.ChooseInvoiceItemForEdit(item))
+                                onEvent(AddOrUpdateTransactionEvent.ChooseInvoiceItemForEdit(item))
                             }
                         )
                         if (index < state.invoiceItems.lastIndex)
@@ -137,13 +137,13 @@ fun ListSelectedProductField(
         SpecifyProductQuantityAndPriceBottomSheet(
             invoiceItem = editItem,
             onDismissRequest = {
-                onEvent(AddNewTransactionEvent.CancelEditInvoiceItem)
+                onEvent(AddOrUpdateTransactionEvent.CancelEditInvoiceItem)
             },
             onProductSpecificationConfirmed = { newInvoiceItem ->
-                onEvent(AddNewTransactionEvent.EditInvoiceItem(newInvoiceItem))
+                onEvent(AddOrUpdateTransactionEvent.EditInvoiceItem(newInvoiceItem))
             },
             onDeleteConfirmed = {
-                onEvent(AddNewTransactionEvent.DeleteInvoiceItem(uuid = editItem.listId))
+                onEvent(AddOrUpdateTransactionEvent.DeleteInvoiceItem(uuid = editItem.listId))
             }
         )
     }
@@ -236,7 +236,7 @@ private fun PreviewListSelectedProductFieldEmpty(){
             ) {
                 ListSelectedProductField(
                     navController = rememberNavController(),
-                    state = AddNewTransactionUiState.init(),
+                    state = AddOrUpdateTransactionUiState.init(),
                     onEvent = {},
                     modifier = Modifier.fillMaxWidth(),
                     error = "List barang tidak boleh kosong"
@@ -256,7 +256,7 @@ private fun PreviewListSelectedProductFieldWithItem(){
             ) {
                 ListSelectedProductField(
                     navController = rememberNavController(),
-                    state = AddNewTransactionUiState
+                    state = AddOrUpdateTransactionUiState
                         .init().copy(
                             invoiceItems = listOf(
                                 InvoiceItemUiModel.new(

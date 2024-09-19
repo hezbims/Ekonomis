@@ -36,5 +36,6 @@ fun MyTopAppBar(
                 }
             }
         },
+        actions = scaffoldState.actions,
     )
 }

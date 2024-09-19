@@ -54,4 +54,8 @@
     <string name="cancel_label">Batal</string>
     <string name="yes_label">Ya</string>
     <string name="confirm_label">Konfirmasi</string>
+    <string name="decrement_month_and_year_label">Kurangi tahun dan bulan</string>
+    <string name="increment_month_and_year_label">Tambah tahun dan bulan</string>
+    <string name="period_label">Periode</string>
+    <string name="apply_label">Terapkan</string>
 </resources>

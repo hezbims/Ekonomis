@@ -4,9 +4,11 @@ import com.hezapp.ekonomis.add_new_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.invoice.repo.IInvoiceRepo
 import kotlinx.coroutines.delay
+import java.util.Calendar
 
 class FakeInvoiceRepo : IInvoiceRepo {
     override suspend fun createNewInvoice(newInvoice: InvoiceFormModel) : Int {
@@ -25,7 +27,9 @@ class FakeInvoiceRepo : IInvoiceRepo {
         return newInvoice.id
     }
 
-    override suspend fun getPreviewInvoices(): List<PreviewTransactionHistory> {
+    override suspend fun getPreviewInvoices(
+        filter: PreviewTransactionFilter,
+    ): List<PreviewTransactionHistory> {
         delay(300L)
 
         val result =listData.map { invoice ->
@@ -42,7 +46,14 @@ class FakeInvoiceRepo : IInvoiceRepo {
                 profileType = currentProfile.type,
                 totalPrice = currentInvoiceItem.sumOf { it.price.toLong() },
             )
-        }
+        }.filter {
+            val nextMonthYear = Calendar.getInstance().apply {
+                timeInMillis = filter.monthYear
+                add(Calendar.MONTH, 1)
+            }.timeInMillis
+
+            it.date >= filter.monthYear && it.date < nextMonthYear
+        }.sortedByDescending { it.date }
         return result
     }
 

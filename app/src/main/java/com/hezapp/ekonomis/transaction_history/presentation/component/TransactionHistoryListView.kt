@@ -106,7 +106,7 @@ fun PreviewTransactionHistoryListView(){
             TransactionHistoryListView(
                 navController = rememberNavController(),
                 onEvent = {_ ->},
-                state = TransactionHistoryUiState.init().copy(
+                state = TransactionHistoryUiState().copy(
                     transactionHistoryResponse = ResponseWrapper.Succeed(
                         data = listTransaksi
                     )

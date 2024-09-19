@@ -9,11 +9,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionEvent
-import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionScreen
-import com.hezapp.ekonomis.add_new_transaction.presentation.main_form.AddNewTransactionViewModel
-import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_product.SearchAndChooseProductScreen
-import com.hezapp.ekonomis.add_new_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileScreen
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionEvent
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionScreen
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddNewTransactionViewModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductScreen
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileScreen
 import com.hezapp.ekonomis.core.domain.entity.support_enum.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely

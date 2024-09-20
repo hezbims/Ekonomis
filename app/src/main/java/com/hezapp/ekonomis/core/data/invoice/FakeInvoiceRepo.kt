@@ -2,11 +2,15 @@ package com.hezapp.ekonomis.core.data.invoice
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
+import com.hezapp.ekonomis.core.data.product.FakeProductRepo
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
+import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
+import com.hezapp.ekonomis.core.domain.invoice.relationship.InvoiceWithInvoiceItemAndProducts
 import com.hezapp.ekonomis.core.domain.invoice.repo.IInvoiceRepo
+import com.hezapp.ekonomis.core.domain.invoice_item.relationship.InvoiceItemWithProduct
 import kotlinx.coroutines.delay
 import java.util.Calendar
 
@@ -55,6 +59,36 @@ class FakeInvoiceRepo : IInvoiceRepo {
             it.date >= filter.monthYear && it.date < nextMonthYear
         }.sortedByDescending { it.date }
         return result
+    }
+
+    override suspend fun getFullInvoiceDetails(id: Int): FullInvoiceDetails {
+        val invoice = listData.single {
+            it.id == id
+        }
+
+        val profile = FakeProfileRepo.listPerson.single {
+            it.id == invoice.profileId
+        }
+
+        val invoiceItems = FakeInvoiceItemRepo.listItem.filter {
+            it.invoiceId == invoice.id
+        }.map { invoiceItem ->
+            val product = FakeProductRepo.listProduct.single { product ->
+                invoiceItem.productId == product.id
+            }
+            InvoiceItemWithProduct(
+                invoiceItem = invoiceItem,
+                product = product
+            )
+        }
+
+        return FullInvoiceDetails(
+            profile = profile,
+            invoice = InvoiceWithInvoiceItemAndProducts(
+                invoice = invoice,
+                invoiceItemWithProducts = invoiceItems
+            )
+        )
     }
 
     companion object {

@@ -34,8 +34,6 @@ class TransactionHistoryViewModel : ViewModel() {
                 loadListPreviewTransactionHistory()
             TransactionHistoryEvent.DoneNavigateToTransactionDetail ->
                 doneNavigateToTransactionDetail()
-            is TransactionHistoryEvent.NavigateToTransactionDetail ->
-                navigateToTransactionDetail(event.transactionId)
             TransactionHistoryEvent.DismissFilterBottomSheet ->
                 dismissFilterBottomSheet()
             TransactionHistoryEvent.ShowFilterBottomSheet ->
@@ -52,12 +50,6 @@ class TransactionHistoryViewModel : ViewModel() {
                     it.copy(transactionHistoryResponse = response)
                 }
             }
-        }
-    }
-
-    private fun navigateToTransactionDetail(transactionId : Int){
-        _state.update {
-            it.copy(navigateToTransactionDetail = transactionId)
         }
     }
 
@@ -95,7 +87,6 @@ data class TransactionHistoryUiState(
 
 sealed class TransactionHistoryEvent {
     data object LoadListPreviewTransactionHistory : TransactionHistoryEvent()
-    class NavigateToTransactionDetail(val transactionId : Int) : TransactionHistoryEvent()
     data object DoneNavigateToTransactionDetail : TransactionHistoryEvent()
     data object ShowFilterBottomSheet : TransactionHistoryEvent()
     data object DismissFilterBottomSheet : TransactionHistoryEvent()

@@ -1,30 +1,43 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.CreateOrUpdateInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetFullInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
-import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.toUiModel
+import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddOrUpdateTransactionViewModel : ViewModel() {
+class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
     private val createOrUpdateInvoiceUseCase = CreateOrUpdateInvoiceUseCase()
+    private val getFullInvoice = GetFullInvoiceUseCase()
 
-    private val _state = MutableStateFlow(AddOrUpdateTransactionUiState.init())
-    val state : StateFlow<AddOrUpdateTransactionUiState>
-        get() = _state.asStateFlow()
+    private val _state = MutableStateFlow(AddOrUpdateTransactionUiState())
+    val state : StateFlow<AddOrUpdateTransactionUiState> = _state
+        .onStart {
+            loadPreviousInvoice(invoiceId = invoiceId)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = AddOrUpdateTransactionUiState(),
+        )
 
     fun onEvent(event: AddOrUpdateTransactionEvent){
         when(event){
@@ -59,35 +72,80 @@ class AddOrUpdateTransactionViewModel : ViewModel() {
         }
     }
 
+    private fun loadPreviousInvoice(invoiceId: Int?){
+        if (invoiceId == null){
+            _state.update { it.copy(prevFormData = ResponseWrapper.Succeed(
+                data = TransactionUiFormDataModel.initNew()
+            )) }
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            getFullInvoice(invoiceId).collect { response ->
+                _state.update {
+                    when(response){
+                        is ResponseWrapper.Failed -> it.copy(prevFormData = ResponseWrapper.Failed())
+                        is ResponseWrapper.Loading -> it.copy(prevFormData = ResponseWrapper.Loading())
+                        is ResponseWrapper.Succeed -> {
+                            val uiModel = TransactionUiFormDataModel.fromFullInvoiceDetails(response.data)
+                            it.copy(
+                                prevFormData = ResponseWrapper.Succeed(uiModel),
+                                curFormData = uiModel
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun changeTransactionType(newTransactionType: TransactionType){
-        if (_state.value.transactionType != newTransactionType)
+        if (_state.value.curFormData.transactionType != newTransactionType)
             _state.update {
-                AddOrUpdateTransactionUiState.init().copy(transactionType = newTransactionType)
+                it.copy(
+                    curFormData = TransactionUiFormDataModel.initNew().copy(
+                        id = it.curFormData.id,
+                        transactionType = newTransactionType,
+                    )
+                )
             }
     }
 
     private fun changeProfile(newProfile : ProfileEntity){
         _state.update {
-            val nextError = it.formError.copy(profileError = null)
-            it.copy(profile = newProfile, formError = nextError)
+            it.copy(
+                curFormData = it.curFormData.copy(profile = newProfile),
+                formError = it.formError.copy(profileError = null),
+            )
         }
     }
 
     private fun changeTransactionDate(newDate: Long){
         _state.update {
-            val nextError = it.formError.copy(transactionDateError = null)
-            it.copy(transactionDateMillis = newDate, formError = nextError)
+            it.copy(
+                curFormData = it.curFormData.copy(transactionDateMillis = newDate),
+                formError = it.formError.copy(transactionDateError = null)
+            )
         }
     }
 
     private fun changePpn(inputPpn : String){
         try {
             if (inputPpn.isEmpty())
-                _state.update { it.copy(ppn = null) }
+                _state.update {
+                    it.copy(
+                        curFormData = it.curFormData.copy(ppn = null),
+                        formError = it.formError.copy(ppnError = null),
+                    )
+                }
             else {
                 _state.update {
-                    val nextError = it.formError.copy(ppnError = null)
-                    it.copy(ppn = getValidPpnFromInput(inputPpn), formError = nextError)
+                    it.copy(
+                        curFormData = it.curFormData.copy(
+                            ppn = getValidPpnFromInput(inputPpn)
+                        ),
+                        formError = it.formError.copy(ppnError = null)
+                    )
                 }
             }
         } catch (_ : Exception){ }
@@ -96,24 +154,33 @@ class AddOrUpdateTransactionViewModel : ViewModel() {
     private fun addOrInsertInvoiceItem(
         item: InvoiceItemUiModel,
     ){
-        val prevInvoiceItems = _state.value.invoiceItems
         _state.update {
-            val nextError = it.formError.copy(invoiceItemsError = null)
-            it.copy(invoiceItems = prevInvoiceItems.plus(item), formError = nextError)
+            it.copy(
+                curFormData = it.curFormData.copy(
+                    invoiceItems = it.curFormData.invoiceItems.plus(item)
+                ),
+                formError = it.formError.copy(invoiceItemsError = null)
+            )
         }
     }
 
     private fun editInvoiceItem(updateItem: InvoiceItemUiModel){
-        val prevInvoiceItems = _state.value.invoiceItems
-        _state.update { it.copy(invoiceItems =
-            prevInvoiceItems.map { prevItem ->
-                if (updateItem.listId == prevItem.listId)
-                    updateItem
-                else
-                    prevItem
-            },
-            editInvoiceItem = null,
-        ) }
+        _state.update {
+            val prevInvoiceItems = it.curFormData.invoiceItems
+            val newFormData = it.curFormData.copy(
+                invoiceItems = prevInvoiceItems.map { prevItem ->
+                    if (updateItem.listId == prevItem.listId)
+                        updateItem
+                    else
+                        prevItem
+
+                }
+            )
+            it.copy(
+                curFormData = newFormData,
+                editInvoiceItem = null,
+            )
+        }
     }
 
     private fun chooseInvoiceItemForEdit(item: InvoiceItemUiModel){
@@ -125,14 +192,16 @@ class AddOrUpdateTransactionViewModel : ViewModel() {
     }
 
     private fun deleteInvoiceItem(uuid: String){
-        val newInvoiceItems = _state.value.invoiceItems.filter { item ->
-            item.listId != uuid
-        }
+        _state.update {
+            val newInvoiceItems = it.curFormData.invoiceItems.filter { item ->
+                item.listId != uuid
+            }
 
-        _state.update { it.copy(
-            invoiceItems = newInvoiceItems,
-            editInvoiceItem = null,
-        ) }
+            it.copy(
+                curFormData = it.curFormData.copy(invoiceItems = newInvoiceItems),
+                editInvoiceItem = null,
+            )
+        }
     }
 
     private fun submitData(){
@@ -158,6 +227,13 @@ class AddOrUpdateTransactionViewModel : ViewModel() {
     private fun doneShowQuitConfirmationDialog(){
         _state.update { it.copy(showQuitConfirmationDialog = false) }
     }
+
+    class Factory(private val invoiceId: Int?) : ViewModelProvider.NewInstanceFactory() {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            @Suppress("UNCHECKED_CAST")
+            return AddOrUpdateTransactionViewModel(invoiceId = invoiceId) as T
+        }
+    }
 }
 
 sealed class AddOrUpdateTransactionEvent {
@@ -178,13 +254,8 @@ sealed class AddOrUpdateTransactionEvent {
 }
 
 data class AddOrUpdateTransactionUiState(
-    val id: Int,
-    val transactionType: TransactionType?,
-    val profile: ProfileEntity?,
-    val transactionDateMillis : Long?,
-    val ppn : Int?,
-    val invoiceItems : List<InvoiceItemUiModel> = emptyList(),
-    val prevInvoiceItems: List<InvoiceItemEntity>,
+    val curFormData : TransactionUiFormDataModel = TransactionUiFormDataModel.initNew(),
+    val prevFormData : ResponseWrapper<TransactionUiFormDataModel , MyBasicError> = ResponseWrapper.Loading(),
     val editInvoiceItem: InvoiceItemUiModel? = null,
     val submitResponse: ResponseWrapper<Any?, InvoiceValidationResult>? = null,
     val formError: TransactionFormErrorUiModel = TransactionFormErrorUiModel(
@@ -195,27 +266,57 @@ data class AddOrUpdateTransactionUiState(
     ),
     val showQuitConfirmationDialog : Boolean = false
 ){
-    companion object {
-        fun init() = AddOrUpdateTransactionUiState(
-            id = 0,
-            transactionType = null,
-            profile = null,
-            transactionDateMillis = null,
-            ppn = null,
-            prevInvoiceItems = emptyList(),
-        )
-    }
-
     fun toInvoiceFormModel() : InvoiceFormModel =
         InvoiceFormModel(
-            id = id,
-            ppn = ppn,
-            prevInvoiceItems = prevInvoiceItems,
-            newInvoiceItems = invoiceItems.map { it.toInvoiceItemEntity(id) },
-            profile = profile,
-            transactionDateMillis = transactionDateMillis,
-            transactionType = transactionType,
+            id = curFormData.id,
+            ppn = curFormData.ppn,
+            prevInvoiceItems = prevFormData.asSucceed().data.invoiceItems.map { it.toInvoiceItemEntity(it.id) },
+            newInvoiceItems = curFormData.invoiceItems.map { it.toInvoiceItemEntity(invoiceId = it.id) },
+            profile = curFormData.profile,
+            transactionDateMillis = curFormData.transactionDateMillis,
+            transactionType = curFormData.transactionType,
         )
+
+    val isFormDataEdited : Boolean
+        get() =
+            when(prevFormData){
+                is ResponseWrapper.Failed -> false
+                is ResponseWrapper.Loading -> false
+                is ResponseWrapper.Succeed -> prevFormData.data != curFormData
+            }
+}
+
+data class TransactionUiFormDataModel(
+    val id: Int,
+    val transactionType: TransactionType?,
+    val profile: ProfileEntity?,
+    val transactionDateMillis : Long?,
+    val ppn : Int?,
+    val invoiceItems : List<InvoiceItemUiModel>,
+){
+    companion object {
+        fun initNew() : TransactionUiFormDataModel =
+            TransactionUiFormDataModel(
+                id = 0,
+                transactionType = null,
+                profile = null,
+                transactionDateMillis = null,
+                ppn = null,
+                invoiceItems = emptyList(),
+            )
+
+        fun fromFullInvoiceDetails(invoiceDetails : FullInvoiceDetails) : TransactionUiFormDataModel =
+            TransactionUiFormDataModel(
+                id = invoiceDetails.invoice.invoice.id,
+                transactionType = invoiceDetails.invoice.invoice.transactionType,
+                profile = invoiceDetails.profile,
+                transactionDateMillis = invoiceDetails.invoice.invoice.date,
+                ppn = invoiceDetails.invoice.invoice.ppn,
+                invoiceItems = invoiceDetails.invoice.invoiceItemWithProducts.map {
+                    it.toUiModel()
+                }
+            )
+    }
 }
 
 data class TransactionFormErrorUiModel(

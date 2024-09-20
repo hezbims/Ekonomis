@@ -85,7 +85,7 @@ fun ListSelectedProductField(
         Box(
             modifier = Modifier
                 .defaultMinSize(
-                    minHeight = if (state.invoiceItems.isEmpty()) 120.dp
+                    minHeight = if (state.curFormData.invoiceItems.isEmpty()) 120.dp
                                 else 0.dp
                 )
                 .fillMaxWidth()
@@ -96,7 +96,7 @@ fun ListSelectedProductField(
                     shape = MaterialTheme.shapes.small,
                 )
         ) {
-            if (state.invoiceItems.isEmpty())
+            if (state.curFormData.invoiceItems.isEmpty())
                 Text(
                     "Belum ada barang yang anda pilih",
                     textAlign = TextAlign.Center,
@@ -112,14 +112,14 @@ fun ListSelectedProductField(
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                 ) {
-                    state.invoiceItems.forEachIndexed { index , item ->
+                    state.curFormData.invoiceItems.forEachIndexed { index , item ->
                         SelectedProductCardItem(
                             item = item,
                             onClickEdit = {
                                 onEvent(AddOrUpdateTransactionEvent.ChooseInvoiceItemForEdit(item))
                             }
                         )
-                        if (index < state.invoiceItems.lastIndex)
+                        if (index < state.curFormData.invoiceItems.lastIndex)
                             HorizontalDivider()
                     }
                 }
@@ -236,7 +236,7 @@ private fun PreviewListSelectedProductFieldEmpty(){
             ) {
                 ListSelectedProductField(
                     navController = rememberNavController(),
-                    state = AddOrUpdateTransactionUiState.init(),
+                    state = AddOrUpdateTransactionUiState(),
                     onEvent = {},
                     modifier = Modifier.fillMaxWidth(),
                     error = "List barang tidak boleh kosong"
@@ -256,27 +256,29 @@ private fun PreviewListSelectedProductFieldWithItem(){
             ) {
                 ListSelectedProductField(
                     navController = rememberNavController(),
-                    state = AddOrUpdateTransactionUiState
-                        .init().copy(
-                            invoiceItems = listOf(
-                                InvoiceItemUiModel.new(
-                                    productId = 0,
-                                    productName = "White Vinegar",
-                                    quantity = 500,
-                                    unitType = UnitType.PIECE,
-                                    id = 0,
-                                    price = (1_000_000_000).toInt(),
-                                ),
-                                InvoiceItemUiModel.new(
-                                    productId = 0,
-                                    productName = "Extra Virgin Olive Oil",
-                                    quantity = 10,
-                                    unitType = UnitType.CARTON,
-                                    id = 1,
-                                    price = (54_000).toInt(),
-                                ),
-                            )
-                        ),
+                    state = AddOrUpdateTransactionUiState().let {
+                        val invoiceItems = listOf(
+                            InvoiceItemUiModel.new(
+                                productId = 0,
+                                productName = "White Vinegar",
+                                quantity = 500,
+                                unitType = UnitType.PIECE,
+                                id = 0,
+                                price = (1_000_000_000).toInt(),
+                            ),
+                            InvoiceItemUiModel.new(
+                                productId = 0,
+                                productName = "Extra Virgin Olive Oil",
+                                quantity = 10,
+                                unitType = UnitType.CARTON,
+                                id = 1,
+                                price = (54_000).toInt(),
+                            ),
+                        )
+                        it.copy(
+                            curFormData = it.curFormData.copy(invoiceItems = invoiceItems)
+                        )
+                    },
                     onEvent = {},
                     error = null,
                     modifier = Modifier.fillMaxWidth()

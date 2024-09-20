@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
@@ -25,6 +26,7 @@ fun NavHostController.navigateOnce(routes: MyRoutes){
 inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
     navController: NavHostController,
     countParent: Int,
+    factory: ViewModelProvider.Factory? = null,
 ) : T? {
     var graph = destination.parent
 
@@ -33,6 +35,9 @@ inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
 
     graph?.route?.let {
         val backStackEntry = remember(this) { navController.getBackStackEntry(it) }
-        return viewModel(backStackEntry)
+        return viewModel(
+            viewModelStoreOwner = backStackEntry,
+            factory = factory,
+        )
     } ?: return null
 }

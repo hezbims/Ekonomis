@@ -12,17 +12,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryUiState
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
@@ -34,14 +35,6 @@ fun TransactionHistoryListView(
     onEvent : (TransactionHistoryEvent) -> Unit,
     modifier : Modifier = Modifier,
 ){
-    val navigateToTransactionDetail = state.navigateToTransactionDetail
-    LaunchedEffect(navigateToTransactionDetail) {
-        if (navigateToTransactionDetail != null){
-            onEvent(TransactionHistoryEvent.DoneNavigateToTransactionDetail)
-
-        }
-    }
-
     ResponseLoader(
         response = state.transactionHistoryResponse,
         onRetry = {
@@ -61,7 +54,9 @@ fun TransactionHistoryListView(
                     TransactionHistoryCardItem(
                         data = item,
                         onClick = {
-                            onEvent(TransactionHistoryEvent.NavigateToTransactionDetail(item.id))
+                            navController.navigateOnce(
+                                MyRoutes.AddOrUpdateTransactionForm(id = item.id)
+                            )
                         }
                     )
                 }

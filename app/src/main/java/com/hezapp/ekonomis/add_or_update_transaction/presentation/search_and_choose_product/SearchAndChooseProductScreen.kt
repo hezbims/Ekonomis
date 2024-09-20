@@ -67,7 +67,7 @@ fun SearchAndChooseProductScreen(
 ){
     val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
-    val totalSelectedProduct = addOrUpdateTransactionViewModel.state.collectAsStateWithLifecycle().value.invoiceItems.size
+    val totalSelectedProduct = addOrUpdateTransactionViewModel.state.collectAsStateWithLifecycle().value.curFormData.invoiceItems.size
 
     val context = LocalContext.current
     val scaffoldState = remember {

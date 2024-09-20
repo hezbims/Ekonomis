@@ -62,7 +62,13 @@ class MainActivity : ComponentActivity() {
                                 val transactionHistoryViewModel : TransactionHistoryViewModel? =
                                     it.navGraphViewModel(navController, 2)
                                 val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
-                                    it.navGraphViewModel(navController, 1)
+                                    it.navGraphViewModel(
+                                        navController = navController,
+                                        countParent = 1,
+                                        factory = AddOrUpdateTransactionViewModel.Factory(
+                                            it.toRoute<MyRoutes.AddOrUpdateTransactionForm>().id
+                                        )
+                                    )
 
                                 transactionHistoryViewModel?.let { transHisViewModel ->
                                     addOrUpdateTransactionViewModel?.let { addTransViewModel ->

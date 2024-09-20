@@ -54,9 +54,10 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.utils.toFormErrorUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
+import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
@@ -72,8 +73,8 @@ import java.util.Calendar
 @Composable
 fun AddOrUpdateTransactionScreen(
     navController : NavHostController,
-    viewModel : AddOrUpdateTransactionViewModel,
     onSubmitSucceed: () -> Unit,
+    viewModel : AddOrUpdateTransactionViewModel,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val submitResponse = state.submitResponse
@@ -86,7 +87,7 @@ fun AddOrUpdateTransactionScreen(
                 val validationResult = submitResponse.error
                 if (validationResult != null){
                     viewModel.onEvent(AddOrUpdateTransactionEvent.UpdateFormError(
-                        validationResult.toFormErrorUiModel(context, state.transactionType!!)
+                        validationResult.toFormErrorUiModel(context, state.curFormData.transactionType!!)
                     ))
                 } else {
                     Toast.makeText(
@@ -105,7 +106,7 @@ fun AddOrUpdateTransactionScreen(
         }
     }
 
-    val scaffoldState = remember(state.transactionType) {
+    val scaffoldState = remember(state.curFormData.transactionType) {
         MyScaffoldState(
             title =  {
                 Text(context.getString(R.string.add_new_transaction_content_description))
@@ -113,7 +114,7 @@ fun AddOrUpdateTransactionScreen(
             navigationIcon = {
                 IconButton(
                     onClick = {
-                        if (state.transactionType != null)
+                        if (state.isFormDataEdited)
                             viewModel.onEvent(
                                 AddOrUpdateTransactionEvent.ShowQuitConfirmationDialog
                             )
@@ -135,11 +136,16 @@ fun AddOrUpdateTransactionScreen(
         scaffoldState = scaffoldState,
         navController = navController,
     ) {
-        AddOrUpdateTransactionScreen(
-            navController = navController,
-            state = state,
-            onEvent = viewModel::onEvent,
-        )
+        ResponseLoader(
+            response = state.prevFormData,
+            onRetry = {}
+        ) {
+            AddOrUpdateTransactionScreen(
+                navController = navController,
+                state = state,
+                onEvent = viewModel::onEvent,
+            )
+        }
 
         ConfirmQuitBackHanlder(
             state = state,
@@ -168,15 +174,15 @@ private fun AddOrUpdateTransactionScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             TransactionTypeDropdown(
-                value = state.transactionType,
+                value = state.curFormData.transactionType,
                 onValueChange = { newTransactionType ->
                     onEvent(AddOrUpdateTransactionEvent.ChangeTransactionType(newTransactionType))
                 },
             )
 
-            state.transactionType?.let { transactionType ->
+            state.curFormData.transactionType?.let { transactionType ->
                 ChooseDateField(
-                    value = state.transactionDateMillis,
+                    value = state.curFormData.transactionDateMillis,
                     onValueChange = { selectedDate ->
                         onEvent(AddOrUpdateTransactionEvent.ChangeTransactionDate(selectedDate))
                     },
@@ -191,7 +197,7 @@ private fun AddOrUpdateTransactionScreen(
 
                 if (transactionType == TransactionType.PEMBELIAN)
                     PpnField(
-                        value = state.ppn,
+                        value = state.curFormData.ppn,
                         onValueChange = {
                             onEvent(AddOrUpdateTransactionEvent.ChangePpn(it))
                         },
@@ -210,7 +216,7 @@ private fun AddOrUpdateTransactionScreen(
             Spacer(Modifier.height(24.dp))
         }
 
-        state.transactionType?.let {
+        state.curFormData.transactionType?.let {
             val isKeyboardOpened by rememberIsKeyboardOpen()
             Button(
                 contentPadding = PaddingValues(vertical = 16.dp),
@@ -282,20 +288,20 @@ private fun ChooseProfileField(
     error: String?,
     state: AddOrUpdateTransactionUiState,
 ){
-    val personTypeString = stringResource(state.transactionType!!.getProfileStringId())
+    val personTypeString = stringResource(state.curFormData.transactionType!!.getProfileStringId())
 
     val textFieldInteractionSource =
-        remember(state.transactionType.id) { MutableInteractionSource() }.also { interactionSource ->
+        remember(state.curFormData.transactionType.id) { MutableInteractionSource() }.also { interactionSource ->
             LaunchedEffect(interactionSource) {
                 interactionSource.interactions.collect {
                     if (it is PressInteraction.Release)
-                        navController.navigateOnce(MyRoutes.SearchAndChooseProfile(state.transactionType.id))
+                        navController.navigateOnce(MyRoutes.SearchAndChooseProfile(state.curFormData.transactionType.id))
                 }
             }
         }
 
     TextField(
-        value = state.profile?.name ?: "",
+        value = state.curFormData.profile?.name ?: "",
         onValueChange = { },
         readOnly = true,
         label = {
@@ -390,7 +396,7 @@ fun ConfirmQuitBackHanlder(
         isBackPressDone = false
         coroutineScope.launch {
             awaitFrame()
-            if (state.transactionType != null)
+            if (state.isFormDataEdited)
                 onEvent(AddOrUpdateTransactionEvent.ShowQuitConfirmationDialog)
             else
                 onBackPressedDispatcher?.onBackPressed()

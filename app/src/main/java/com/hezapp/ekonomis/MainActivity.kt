@@ -89,6 +89,13 @@ class MainActivity : ComponentActivity() {
                                                         .LoadListPreviewTransactionHistory
                                                 )
                                             },
+                                            onDeleteSucceed = {
+                                                navController.goBackSafely()
+                                                transHisViewModel.onEvent(
+                                                    TransactionHistoryEvent
+                                                        .LoadListPreviewTransactionHistory
+                                                )
+                                            }
                                         )
                                     }
                                 }

@@ -12,4 +12,5 @@ interface IInvoiceRepo {
         filter: PreviewTransactionFilter,
     ) : List<PreviewTransactionHistory>
     suspend fun getFullInvoiceDetails(id : Int) : FullInvoiceDetails
+    suspend fun deleteInvoice(id: Int)
 }

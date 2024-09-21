@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.CreateOrUpdateInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.DeleteInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetFullInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
@@ -28,6 +29,7 @@ class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
     private val createOrUpdateInvoiceUseCase = CreateOrUpdateInvoiceUseCase()
     private val getFullInvoice = GetFullInvoiceUseCase()
+    private val deleteInvoice = DeleteInvoiceUseCase()
 
     private val _state = MutableStateFlow(AddOrUpdateTransactionUiState())
     val state : StateFlow<AddOrUpdateTransactionUiState> = _state
@@ -71,6 +73,14 @@ class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
                 doneShowQuitConfirmationDialog()
             AddOrUpdateTransactionEvent.ShowQuitConfirmationDialog ->
                 showQuitConfirmationDialog()
+            AddOrUpdateTransactionEvent.ShowDeleteConfirmationDialog ->
+                showDeleteConfirmationDialog()
+            AddOrUpdateTransactionEvent.ConfirmDeleteTransaction ->
+                confirmDeleteTransaction()
+            AddOrUpdateTransactionEvent.DismissDeleteConfirmationDialog ->
+                dismissDeleteConfirmationDialog()
+            AddOrUpdateTransactionEvent.DoneHandlingDeleteResponse ->
+                doneHandlingDeleteResponse()
         }
     }
 
@@ -230,6 +240,27 @@ class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
         _state.update { it.copy(showQuitConfirmationDialog = false) }
     }
 
+    private fun showDeleteConfirmationDialog(){
+        _state.update { it.copy(showDeleteConfirmationDialog = true) }
+    }
+
+    private fun dismissDeleteConfirmationDialog(){
+        _state.update { it.copy(showDeleteConfirmationDialog = false) }
+    }
+
+    private fun confirmDeleteTransaction(){
+        viewModelScope.launch(Dispatchers.IO) {
+            _state.update { it.copy(showDeleteConfirmationDialog = false) }
+            deleteInvoice(_state.value.curFormData.id).collect { response ->
+                _state.update { it.copy(deleteResponse = response) }
+            }
+        }
+    }
+
+    private fun doneHandlingDeleteResponse(){
+        _state.update { it.copy(deleteResponse = null) }
+    }
+
     class Factory(private val invoiceId: Int?) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
@@ -255,6 +286,10 @@ sealed class AddOrUpdateTransactionEvent {
     class UpdateFormError(val newFormError: TransactionFormErrorUiModel) : AddOrUpdateTransactionEvent()
     data object ShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
     data object DoneShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
+    data object ShowDeleteConfirmationDialog : AddOrUpdateTransactionEvent()
+    data object DismissDeleteConfirmationDialog : AddOrUpdateTransactionEvent()
+    data object ConfirmDeleteTransaction : AddOrUpdateTransactionEvent()
+    data object DoneHandlingDeleteResponse : AddOrUpdateTransactionEvent()
 }
 
 data class AddOrUpdateTransactionUiState(
@@ -262,6 +297,8 @@ data class AddOrUpdateTransactionUiState(
     val prevFormData : ResponseWrapper<TransactionUiFormDataModel , MyBasicError> = ResponseWrapper.Loading(),
     val editInvoiceItem: InvoiceItemUiModel? = null,
     val submitResponse: ResponseWrapper<Any?, InvoiceValidationResult>? = null,
+    val deleteResponse : ResponseWrapper<Any?, MyBasicError>? = null,
+    val showDeleteConfirmationDialog: Boolean = false,
     val formError: TransactionFormErrorUiModel = TransactionFormErrorUiModel(
         transactionDateError = null,
         invoiceItemsError = null,

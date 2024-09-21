@@ -91,6 +91,10 @@ class FakeInvoiceRepo : IInvoiceRepo {
         )
     }
 
+    override suspend fun deleteInvoice(id: Int) {
+        listData.removeIf { it.id == id }
+    }
+
     companion object {
         val listData = mutableListOf<InvoiceEntity>()
         var id = listData.size + 1

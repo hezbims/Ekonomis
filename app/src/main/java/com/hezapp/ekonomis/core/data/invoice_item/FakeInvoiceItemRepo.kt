@@ -33,6 +33,10 @@ class FakeInvoiceItemRepo : IInvoiceItemRepo {
         }
     }
 
+    override suspend fun deleteInvoiceItems(invoiceId: Int) {
+        listItem.removeIf { it.invoiceId == invoiceId }
+    }
+
     companion object {
         val listItem = mutableListOf<InvoiceItemEntity>()
         var id = listItem.size + 1

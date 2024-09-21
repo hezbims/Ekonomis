@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -28,8 +29,10 @@ import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -51,7 +54,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.DeleteTransactionDialog
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ListSelectedProductField
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.LoadingOverlay
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.utils.toFormErrorUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
@@ -74,6 +79,7 @@ import java.util.Calendar
 fun AddOrUpdateTransactionScreen(
     navController : NavHostController,
     onSubmitSucceed: () -> Unit,
+    onDeleteSucceed: () -> Unit,
     viewModel : AddOrUpdateTransactionViewModel,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
@@ -100,6 +106,24 @@ fun AddOrUpdateTransactionScreen(
             is ResponseWrapper.Succeed -> {
                 viewModel.onEvent(AddOrUpdateTransactionEvent.DoneHandlingSubmitDataResponse)
                 onSubmitSucceed()
+            }
+            is ResponseWrapper.Loading -> Unit
+            null -> Unit
+        }
+    }
+    LaunchedEffect(state.deleteResponse) {
+        when(state.deleteResponse){
+            is ResponseWrapper.Failed -> {
+                viewModel.onEvent(AddOrUpdateTransactionEvent.DoneHandlingDeleteResponse)
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.failed_to_delete_transaction),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            is ResponseWrapper.Succeed -> {
+                viewModel.onEvent(AddOrUpdateTransactionEvent.DoneHandlingDeleteResponse)
+                onDeleteSucceed()
             }
             is ResponseWrapper.Loading -> Unit
             null -> Unit
@@ -132,34 +156,71 @@ fun AddOrUpdateTransactionScreen(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = context.getString(
                             R.string.back_icon_content_description
-                        )
+                        ),
                     )
+                }
+            },
+            actions = {
+                when(state.prevFormData){
+                    is ResponseWrapper.Failed -> Unit
+                    is ResponseWrapper.Loading -> Unit
+                    is ResponseWrapper.Succeed ->
+                        if (state.prevFormData.data.isEditing)
+                            FilledTonalIconButton (
+                                onClick = {
+                                    viewModel.onEvent(
+                                        AddOrUpdateTransactionEvent.ShowDeleteConfirmationDialog
+                                    )
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Filled.Delete,
+                                    contentDescription = stringResource(R.string.delete_transaction_label),
+                                    tint = MaterialTheme.colorScheme.error,
+                                )
+                            }
                 }
             }
         )
     }
 
-    MyScaffold(
-        scaffoldState = scaffoldState,
-        navController = navController,
+    LoadingOverlay(
+        isLoading =
+            state.deleteResponse?.isLoading() == true ||
+            state.submitResponse?.isLoading() == true
     ) {
-        ResponseLoader(
-            response = state.prevFormData,
-            onRetry = {},
-            modifier = Modifier.fillMaxSize()
+        MyScaffold(
+            scaffoldState = scaffoldState,
+            navController = navController,
         ) {
-            AddOrUpdateTransactionScreen(
-                navController = navController,
+            ResponseLoader(
+                response = state.prevFormData,
+                onRetry = {},
+                modifier = Modifier.fillMaxSize()
+            ) {
+                AddOrUpdateTransactionScreen(
+                    navController = navController,
+                    state = state,
+                    onEvent = viewModel::onEvent,
+                )
+            }
+
+            ConfirmQuitBackHanlder(
                 state = state,
                 onEvent = viewModel::onEvent,
+                navController = navController,
+            )
+
+            DeleteTransactionDialog(
+                isShown = state.showDeleteConfirmationDialog,
+                onDismissRequest = {
+                    viewModel.onEvent(AddOrUpdateTransactionEvent.DismissDeleteConfirmationDialog)
+                },
+                onDeleteConfirmed = {
+                    viewModel.onEvent(AddOrUpdateTransactionEvent.ConfirmDeleteTransaction)
+                }
             )
         }
-
-        ConfirmQuitBackHanlder(
-            state = state,
-            onEvent = viewModel::onEvent,
-            navController = navController,
-        )
     }
 }
 

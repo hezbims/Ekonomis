@@ -111,7 +111,7 @@ fun AddOrUpdateTransactionScreen(
             title =  {
                 Text(
                     context.getString(
-                        if (state.curFormData.id == 0)
+                        if (!state.curFormData.isEditing)
                             R.string.add_new_transaction_content_description
                         else
                             R.string.edit_transaction_title
@@ -186,6 +186,7 @@ private fun AddOrUpdateTransactionScreen(
                 onValueChange = { newTransactionType ->
                     onEvent(AddOrUpdateTransactionEvent.ChangeTransactionType(newTransactionType))
                 },
+                isEnabled = !state.curFormData.isEditing
             )
 
             state.curFormData.transactionType?.let { transactionType ->
@@ -250,11 +251,16 @@ private fun AddOrUpdateTransactionScreen(
 private fun TransactionTypeDropdown(
     value: TransactionType?,
     onValueChange : (TransactionType) -> Unit,
+    isEnabled: Boolean,
 ){
     var expanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = {newExpanded -> expanded = newExpanded},
+        onExpandedChange = {
+            newExpanded ->
+                if (isEnabled)
+                    expanded = newExpanded
+       },
     ) {
         TextField(
             value =
@@ -263,6 +269,7 @@ private fun TransactionTypeDropdown(
             onValueChange = { },
             readOnly = true,
             label = { Text(stringResource(R.string.choose_transaction_type_label)) },
+            enabled = isEnabled,
             trailingIcon = { Icon(Icons.Filled.ArrowDropDown, contentDescription = "Dropdown Symbol") },
             modifier = Modifier
                 .fillMaxWidth()

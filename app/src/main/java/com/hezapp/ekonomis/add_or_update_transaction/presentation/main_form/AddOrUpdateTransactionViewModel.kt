@@ -298,6 +298,9 @@ data class TransactionUiFormDataModel(
     val ppn : Int?,
     val invoiceItems : List<InvoiceItemUiModel>,
 ){
+    val isEditing : Boolean
+        get() = id != 0
+
     companion object {
         fun initNew() : TransactionUiFormDataModel =
             TransactionUiFormDataModel(

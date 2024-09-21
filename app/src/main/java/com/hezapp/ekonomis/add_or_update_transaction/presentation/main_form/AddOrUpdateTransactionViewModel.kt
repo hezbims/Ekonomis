@@ -235,9 +235,6 @@ class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
                 return AddOrUpdateTransactionViewModel(invoiceId = invoiceId) as T
             throw IllegalArgumentException()
         }
-
-        val keyCreation : String
-            get() = "add_or_update_transaction_vm_${invoiceId ?: 0}"
     }
 }
 

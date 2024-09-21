@@ -80,7 +80,7 @@ fun ListSelectedProductField(
             SelectProductButton(
                 onClick = {
                     navController.navigateOnce(
-                        MyRoutes.SearchAndChooseProduct(invoiceId = state.curFormData.id)
+                        MyRoutes.SearchAndChooseProduct
                     )
                 }
             )

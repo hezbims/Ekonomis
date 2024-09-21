@@ -299,7 +299,6 @@ private fun ChooseProfileField(
                         navController.navigateOnce(
                             MyRoutes.SearchAndChooseProfile(
                                 transactionTypeId = state.curFormData.transactionType.id,
-                                invoiceId = state.curFormData.id,
                             )
                         )
                 }

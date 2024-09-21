@@ -1,7 +1,6 @@
 package com.hezapp.ekonomis
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -76,7 +75,6 @@ class MainActivity : ComponentActivity() {
                                         navController = navController,
                                         countParent = 1,
                                         factory = factory,
-                                        key = factory.keyCreation,
                                     )
 
                                 transactionHistoryViewModel?.let { transHisViewModel ->
@@ -98,14 +96,10 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable<MyRoutes.SearchAndChooseProduct> {
-                                val invoiceId = it.toRoute<MyRoutes.SearchAndChooseProduct>().invoiceId
-                                val factory = AddOrUpdateTransactionViewModel.Factory(invoiceId = invoiceId)
                                 val addOrUpdateTransViewModel : AddOrUpdateTransactionViewModel? =
                                     it.navGraphViewModel(
                                         navController = navController,
                                         countParent = 1,
-                                        factory = factory,
-                                        key = factory.keyCreation,
                                     )
 
                                 addOrUpdateTransViewModel?.let { viewModel ->
@@ -117,15 +111,10 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable<MyRoutes.SearchAndChooseProfile> {
-                                val invoiceId = it.toRoute<MyRoutes.SearchAndChooseProfile>().invoiceId
-                                val factory = AddOrUpdateTransactionViewModel.Factory(invoiceId = invoiceId)
-                                Log.e("qqq profile key", factory.keyCreation)
                                 val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
                                     it.navGraphViewModel(
                                         navController = navController,
                                         countParent = 1,
-                                        factory = factory,
-                                        key = factory.keyCreation
                                     )
 
                                 addOrUpdateTransactionViewModel?.let { viewModel ->

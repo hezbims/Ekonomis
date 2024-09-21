@@ -1,8 +1,8 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.model
 
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.invoice_item.relationship.InvoiceItemWithProduct
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
+import com.hezapp.ekonomis.core.domain.invoice_item.relationship.InvoiceItemWithProduct
 import java.util.UUID
 
 data class InvoiceItemUiModel(
@@ -67,7 +67,7 @@ data class InvoiceItemUiModel(
 
 fun InvoiceItemWithProduct.toUiModel() : InvoiceItemUiModel =
     InvoiceItemUiModel.new(
-        id = invoiceItem.invoiceId,
+        id = invoiceItem.id,
         productId = product.id,
         productName = product.name,
         quantity = invoiceItem.quantity,

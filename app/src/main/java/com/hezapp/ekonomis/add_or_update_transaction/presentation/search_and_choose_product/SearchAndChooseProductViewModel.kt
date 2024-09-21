@@ -3,11 +3,11 @@ package com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_ch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.data.product.FakeProductRepo
-import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
+import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -56,7 +56,7 @@ class SearchAndChooseProductViewModel : ViewModel() {
 
     private fun registerNewProduct(productName : String){
         viewModelScope.launch(Dispatchers.IO) {
-            productRepo.insertProduct(ProductEntity(name = productName)).collect { response ->
+            productRepo.insertProduct(ProductEntity(id = 0 , name = productName)).collect { response ->
                 _state.update { it.copy(registerNewProductResponse = response) }
                 if (response is ResponseWrapper.Succeed)
                     loadAvailableProducts()

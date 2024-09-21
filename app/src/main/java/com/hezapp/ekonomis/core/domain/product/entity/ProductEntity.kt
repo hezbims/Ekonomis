@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "products")
 data class ProductEntity(
     @PrimaryKey
-    val id : Int = 0,
+    val id : Int,
     val name : String,
 )

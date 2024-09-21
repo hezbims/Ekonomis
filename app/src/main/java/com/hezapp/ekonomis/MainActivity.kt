@@ -1,9 +1,12 @@
 package com.hezapp.ekonomis
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
@@ -36,6 +39,8 @@ class MainActivity : ComponentActivity() {
                 NavHost(
                     navController,
                     startDestination = MyRoutes.NavGraph.Transaction,
+                    enterTransition = { EnterTransition.None },
+                    exitTransition = { ExitTransition.None }
                 ) {
                     navigation<MyRoutes.NavGraph.Transaction>(
                         startDestination = MyRoutes.TransactionHistory
@@ -61,13 +66,17 @@ class MainActivity : ComponentActivity() {
                             composable<MyRoutes.AddOrUpdateTransactionForm> {
                                 val transactionHistoryViewModel : TransactionHistoryViewModel? =
                                     it.navGraphViewModel(navController, 2)
+
+                                val transactionId = it.toRoute<MyRoutes.AddOrUpdateTransactionForm>().id
+                                val factory = AddOrUpdateTransactionViewModel.Factory(
+                                    transactionId,
+                                )
                                 val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
                                     it.navGraphViewModel(
                                         navController = navController,
                                         countParent = 1,
-                                        factory = AddOrUpdateTransactionViewModel.Factory(
-                                            it.toRoute<MyRoutes.AddOrUpdateTransactionForm>().id
-                                        )
+                                        factory = factory,
+                                        key = factory.keyCreation,
                                     )
 
                                 transactionHistoryViewModel?.let { transHisViewModel ->
@@ -89,8 +98,15 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable<MyRoutes.SearchAndChooseProduct> {
+                                val invoiceId = it.toRoute<MyRoutes.SearchAndChooseProduct>().invoiceId
+                                val factory = AddOrUpdateTransactionViewModel.Factory(invoiceId = invoiceId)
                                 val addOrUpdateTransViewModel : AddOrUpdateTransactionViewModel? =
-                                    it.navGraphViewModel(navController, 1)
+                                    it.navGraphViewModel(
+                                        navController = navController,
+                                        countParent = 1,
+                                        factory = factory,
+                                        key = factory.keyCreation,
+                                    )
 
                                 addOrUpdateTransViewModel?.let { viewModel ->
                                     SearchAndChooseProductScreen(
@@ -101,8 +117,16 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable<MyRoutes.SearchAndChooseProfile> {
+                                val invoiceId = it.toRoute<MyRoutes.SearchAndChooseProfile>().invoiceId
+                                val factory = AddOrUpdateTransactionViewModel.Factory(invoiceId = invoiceId)
+                                Log.e("qqq profile key", factory.keyCreation)
                                 val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
-                                    it.navGraphViewModel(navController, 1)
+                                    it.navGraphViewModel(
+                                        navController = navController,
+                                        countParent = 1,
+                                        factory = factory,
+                                        key = factory.keyCreation
+                                    )
 
                                 addOrUpdateTransactionViewModel?.let { viewModel ->
                                     SearchAndChooseProfileScreen(

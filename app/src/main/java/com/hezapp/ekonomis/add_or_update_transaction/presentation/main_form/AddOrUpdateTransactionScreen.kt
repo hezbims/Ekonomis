@@ -138,7 +138,8 @@ fun AddOrUpdateTransactionScreen(
     ) {
         ResponseLoader(
             response = state.prevFormData,
-            onRetry = {}
+            onRetry = {},
+            modifier = Modifier.fillMaxSize()
         ) {
             AddOrUpdateTransactionScreen(
                 navController = navController,
@@ -295,7 +296,12 @@ private fun ChooseProfileField(
             LaunchedEffect(interactionSource) {
                 interactionSource.interactions.collect {
                     if (it is PressInteraction.Release)
-                        navController.navigateOnce(MyRoutes.SearchAndChooseProfile(state.curFormData.transactionType.id))
+                        navController.navigateOnce(
+                            MyRoutes.SearchAndChooseProfile(
+                                transactionTypeId = state.curFormData.transactionType.id,
+                                invoiceId = state.curFormData.id,
+                            )
+                        )
                 }
             }
         }

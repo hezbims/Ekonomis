@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 
 @Entity(
     tableName = "invoice_items",
@@ -28,7 +28,7 @@ import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 )
 data class InvoiceItemEntity(
     @PrimaryKey
-    val id : Int = 0,
+    val id : Int,
 
     @ColumnInfo(name = "product_id")
     val productId : Int,

@@ -8,18 +8,18 @@ class FakeInvoiceItemRepo : IInvoiceItemRepo {
     override suspend fun createOrUpdateInvoiceItems(invoiceItems: List<InvoiceItemEntity>) {
         delay(300L)
         for (newInvoiceItem in invoiceItems){
-            val oldItem = listItem.singleOrNull {
-                it.id == newInvoiceItem.id
+            val oldItem = listItem.singleOrNull { dbItem ->
+                dbItem.id == newInvoiceItem.id
             }
 
             if (oldItem == null)
                 listItem.add(newInvoiceItem.copy(id = id++))
             else
-                listItem.replaceAll {
-                    if (it.id == oldItem.id)
+                listItem.replaceAll { dbItem ->
+                    if (dbItem.id == oldItem.id)
                         newInvoiceItem
                     else
-                        it
+                        dbItem
                 }
         }
     }

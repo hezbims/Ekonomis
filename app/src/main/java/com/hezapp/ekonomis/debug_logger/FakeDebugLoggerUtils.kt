@@ -6,8 +6,8 @@ import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.product.FakeProductRepo
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
-import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 
 class FakeDebugLoggerUtils {
@@ -29,16 +29,20 @@ transaction type : ${transactionType.toLogString()}
 profile : ${profile.name}""".trimIndent()
         }
 
-        fun logAllInvoiceItems(){
-            val contents = FakeInvoiceItemRepo.listItem.joinToString("\n\n") {
+        fun logAllInvoiceItems(
+            listItem: List<InvoiceItemEntity> = FakeInvoiceItemRepo.listItem,
+            tag: String = "qqqInvoice Items"
+        ){
+            val contents = listItem.joinToString("\n\n") {
                 it.toLogString()
             }
-            Log.e("qqqInvoice Items", contents)
+            Log.e(tag, contents)
         }
 
         private fun InvoiceItemEntity.toLogString() : String {
             val product = FakeProductRepo.listProduct.single { it.id == productId }
             return """id : $id,
+invoice id : $invoiceId
 product name : ${product.name},
 price : $price,
 quantity : $quantity,

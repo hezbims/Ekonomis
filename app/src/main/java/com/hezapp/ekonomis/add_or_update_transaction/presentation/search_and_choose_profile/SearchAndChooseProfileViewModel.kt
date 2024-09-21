@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.profile.model.CreateNewProfileError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,6 +69,7 @@ class SearchAndChooseProfileViewModel(
     private fun createNewProfile(profileName: String){
         viewModelScope.launch(Dispatchers.IO) {
             profileRepo.addNewProfile(profile = ProfileEntity(
+                id = 0,
                 name = profileName,
                 type = _state.value.profileType
             )

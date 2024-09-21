@@ -27,6 +27,7 @@ inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
     navController: NavHostController,
     countParent: Int,
     factory: ViewModelProvider.Factory? = null,
+    key: String? = null,
 ) : T? {
     var graph = destination.parent
 
@@ -35,8 +36,10 @@ inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
 
     graph?.route?.let {
         val backStackEntry = remember(this) { navController.getBackStackEntry(it) }
+
         return viewModel(
             viewModelStoreOwner = backStackEntry,
+            key = key,
             factory = factory,
         )
     } ?: return null

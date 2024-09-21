@@ -1,9 +1,9 @@
 package com.hezapp.ekonomis.add_or_update_transaction.domain.model
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 
 data class InvoiceFormModel(
     val id: Int,
@@ -16,6 +16,7 @@ data class InvoiceFormModel(
 ){
     fun toEntity() : InvoiceEntity =
         InvoiceEntity(
+            id = id,
             date = transactionDateMillis!!,
             ppn = ppn,
             profileId = profile!!.id,

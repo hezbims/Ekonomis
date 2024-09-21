@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "profiles")
 data class ProfileEntity(
     @PrimaryKey
-    val id : Int = 0,
+    val id : Int,
     val name : String,
     val type : ProfileType
 )

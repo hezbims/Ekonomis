@@ -31,10 +31,10 @@ sealed class MyRoutes {
     class AddOrUpdateTransactionForm(val id : Int?) : MyRoutes()
 
     @Serializable
-    data object SearchAndChooseProduct : MyRoutes()
+    class SearchAndChooseProduct(val invoiceId : Int?) : MyRoutes()
 
     @Serializable
-    class SearchAndChooseProfile(val transactionTypeId : Int) : MyRoutes()
+    class SearchAndChooseProfile(val transactionTypeId : Int, val invoiceId: Int?) : MyRoutes()
 
     @Serializable
     class DetailProduct(val productId: Int) : MyRoutes()

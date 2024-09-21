@@ -77,7 +77,13 @@ fun ListSelectedProductField(
                 style = MaterialTheme.typography.titleSmall
             )
 
-            SelectProductButton(navController = navController)
+            SelectProductButton(
+                onClick = {
+                    navController.navigateOnce(
+                        MyRoutes.SearchAndChooseProduct(invoiceId = state.curFormData.id)
+                    )
+                }
+            )
         }
 
         Spacer(Modifier.height(12.dp))
@@ -176,7 +182,7 @@ fun SelectedProductCardItem(
 
 @Composable
 private fun SelectProductButton(
-    navController : NavHostController
+    onClick : () -> Unit,
 ){
     val primaryColor =  MaterialTheme.colorScheme.primary
     
@@ -196,7 +202,7 @@ private fun SelectProductButton(
                     cornerRadius = CornerRadius(12f, 12f)
                 )
             }
-            .clickable { navController.navigateOnce(MyRoutes.SearchAndChooseProduct) }
+            .clickable { onClick() }
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(6.dp),

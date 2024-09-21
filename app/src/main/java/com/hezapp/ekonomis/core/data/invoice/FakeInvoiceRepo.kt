@@ -57,7 +57,9 @@ class FakeInvoiceRepo : IInvoiceRepo {
             }.timeInMillis
 
             it.date >= filter.monthYear && it.date < nextMonthYear
-        }.sortedByDescending { it.date }
+        }.sortedWith(
+            compareBy({ -it.date } , { -it.id })
+        )
         return result
     }
 

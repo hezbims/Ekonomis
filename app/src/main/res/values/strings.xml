@@ -58,4 +58,7 @@
     <string name="increment_month_and_year_label">Tambah tahun dan bulan</string>
     <string name="period_label">Periode</string>
     <string name="apply_label">Terapkan</string>
+    <string name="delete_transaction_label">Hapus Transaksi</string>
+    <string name="are_you_sure_to_delete_current_transaction">Apakah anda yakin ingin menghapus transaksi ini?</string>
+    <string name="failed_to_delete_transaction">Kesalahan tidak diketahui. Gagal menghapus catatan transaksi</string>
 </resources>

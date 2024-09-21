@@ -109,7 +109,14 @@ fun AddOrUpdateTransactionScreen(
     val scaffoldState = remember(state.curFormData.transactionType) {
         MyScaffoldState(
             title =  {
-                Text(context.getString(R.string.add_new_transaction_content_description))
+                Text(
+                    context.getString(
+                        if (state.curFormData.id == 0)
+                            R.string.add_new_transaction_content_description
+                        else
+                            R.string.edit_transaction_title
+                    )
+                )
             },
             navigationIcon = {
                 IconButton(

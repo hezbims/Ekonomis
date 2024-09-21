@@ -36,7 +36,9 @@ class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = AddOrUpdateTransactionUiState(),
+            initialValue = AddOrUpdateTransactionUiState().let {
+                it.copy(curFormData = it.curFormData.copy(id = invoiceId ?: 0))
+            },
         )
 
     fun onEvent(event: AddOrUpdateTransactionEvent){

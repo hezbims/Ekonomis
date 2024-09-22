@@ -3,18 +3,19 @@ package com.hezapp.ekonomis.core.data.product
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
-import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
-import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
 import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 import com.hezapp.ekonomis.core.domain.utils.PriceUtils
+import com.hezapp.ekonomis.core.domain.utils.isInAMonthYearPeriod
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -86,7 +87,10 @@ class FakeProductRepo : IProductRepo {
         }
     }
 
-    override suspend fun getProductDetail(productId : Int): ProductDetail {
+    override suspend fun getProductDetail(
+        productId : Int,
+        monthYearPeriod: Long,
+    ): ProductDetail {
         val product = listProduct.single { it.id == productId }
         val inProductTransactions = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
             val invoice = FakeInvoiceRepo.listData.single { invoice ->
@@ -110,7 +114,7 @@ class FakeProductRepo : IProductRepo {
                     unitType = invoiceItem.unitType,
                     id = invoiceItem.id,
                 )
-        }
+        }.filter { it.date.isInAMonthYearPeriod(monthYearPeriod) }
 
         val outProductTransactions = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
             val invoice = FakeInvoiceRepo.listData.single { invoice ->
@@ -134,7 +138,8 @@ class FakeProductRepo : IProductRepo {
                     unitType = invoiceItem.unitType,
                     id = invoiceItem.id,
                 )
-        }
+        }.filter { it.date.isInAMonthYearPeriod(monthYearPeriod) }
+
         return ProductDetail(
             id = productId,
             productName = product.name,

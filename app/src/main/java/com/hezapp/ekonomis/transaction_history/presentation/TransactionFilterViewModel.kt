@@ -5,11 +5,12 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
+import com.hezapp.ekonomis.core.domain.utils.getNextMonthYear
+import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.util.Calendar
 
 class TransactionFilterViewModel(
     initialState: PreviewTransactionFilter
@@ -30,25 +31,13 @@ class TransactionFilterViewModel(
 
     private fun decrementMonthYear(){
         _state.update {
-            val currentMonthYearCalendar = Calendar.getInstance().apply {
-                timeInMillis = it.monthYear
-            }
-            val prevMonthYearCalendar = currentMonthYearCalendar.apply {
-                add(Calendar.MONTH, -1)
-            }
-            it.copy(monthYear = prevMonthYearCalendar.timeInMillis)
+            it.copy(monthYear = it.monthYear.getPreviousMonthYear())
         }
     }
 
     private fun incrementMonthYear(){
         _state.update {
-            val currentMonthYearCalendar = Calendar.getInstance().apply {
-                timeInMillis = it.monthYear
-            }
-            val nextMonthYear = currentMonthYearCalendar.apply {
-                add(Calendar.MONTH, 1)
-            }
-            it.copy(monthYear = nextMonthYear.timeInMillis)
+            it.copy(monthYear = it.monthYear.getNextMonthYear())
         }
     }
 }

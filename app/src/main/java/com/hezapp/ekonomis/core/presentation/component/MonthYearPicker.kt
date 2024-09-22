@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.transaction_history.presentation.component
+package com.hezapp.ekonomis.core.presentation.component
 
 import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Column
@@ -31,17 +31,19 @@ fun MonthYearPicker(
     onDecrementMonthYear: () -> Unit,
     onIncrementMonthYear: () -> Unit,
     modifier: Modifier = Modifier,
-    label: String = stringResource(R.string.period_label),
+    label: String? = stringResource(R.string.period_label),
 ){
     Column(
         modifier = modifier,
     ) {
-        Text(
-            label,
-            style = MaterialTheme.typography.titleSmall,
-        )
+        label?.let {
+            Text(
+                label,
+                style = MaterialTheme.typography.titleSmall,
+            )
 
-        Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(4.dp))
+        }
 
         OutlinedCard {
             Row(

@@ -11,8 +11,8 @@ import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 import com.hezapp.ekonomis.core.domain.invoice.relationship.InvoiceWithInvoiceItemAndProducts
 import com.hezapp.ekonomis.core.domain.invoice.repo.IInvoiceRepo
 import com.hezapp.ekonomis.core.domain.invoice_item.relationship.InvoiceItemWithProduct
+import com.hezapp.ekonomis.core.domain.utils.isInAMonthYearPeriod
 import kotlinx.coroutines.delay
-import java.util.Calendar
 
 class FakeInvoiceRepo : IInvoiceRepo {
     override suspend fun createNewInvoice(newInvoice: InvoiceFormModel) : Int {
@@ -51,12 +51,7 @@ class FakeInvoiceRepo : IInvoiceRepo {
                 totalPrice = currentInvoiceItem.sumOf { it.price.toLong() },
             )
         }.filter {
-            val nextMonthYear = Calendar.getInstance().apply {
-                timeInMillis = filter.monthYear
-                add(Calendar.MONTH, 1)
-            }.timeInMillis
-
-            it.date >= filter.monthYear && it.date < nextMonthYear
+            it.date.isInAMonthYearPeriod(monthYearPeriod = filter.monthYear)
         }.sortedWith(
             compareBy({ -it.date } , { -it.id })
         )

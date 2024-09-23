@@ -3,9 +3,12 @@ package com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_ch
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imeNestedScroll
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -41,8 +44,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
@@ -82,6 +85,7 @@ fun SearchAndChooseProfileScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SearchAndChooseProfileScreen(
     onSelectProfile: (ProfileEntity) -> Unit,
@@ -92,9 +96,29 @@ private fun SearchAndChooseProfileScreen(
     var showCreateNewPersonBottomSheet by rememberSaveable { mutableStateOf(false) }
     val secondaryColor = MaterialTheme.colorScheme.secondary
 
-    val createNewPersonLabel = remember {
+    val personNotFoundLabel = remember {
         buildAnnotatedString {
             append("Nama ${personTypeString.replaceFirstChar { it.lowercase() }} tidak ketemu?\n")
+            withLink(
+                link = LinkAnnotation.Clickable(
+                    tag = "create-new-person",
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = secondaryColor,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                ) {
+                    showCreateNewPersonBottomSheet = true
+                },
+            ) {
+                append("Buat baru disini")
+            }
+        }
+    }
+    val personListEmptyLabel = remember {
+        buildAnnotatedString {
+            append("Belum ada nama ${personTypeString.replaceFirstChar { it.lowercase() }} terdaftar.\n")
             withLink(
                 link = LinkAnnotation.Clickable(
                     tag = "create-new-person",
@@ -121,7 +145,7 @@ private fun SearchAndChooseProfileScreen(
     Column(
         modifier = Modifier.padding(
             start = 24.dp, end = 24.dp, top = 6.dp,
-        )
+        ).imePadding()
     ) {
         TextField(
             value = state.searchQuery,
@@ -142,28 +166,34 @@ private fun SearchAndChooseProfileScreen(
             },
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .imeNestedScroll(),
         ) { listProfile ->
             if (listProfile.isEmpty())
                 Text(
-                    createNewPersonLabel,
+                    if (state.searchQuery.isEmpty())
+                        personListEmptyLabel
+                    else
+                        personNotFoundLabel,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
-            else
+            else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(
-                        top = 24.dp, bottom = 64.dp,
+                        top = 24.dp, bottom = 48.dp,
                     ),
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     item {
                         Text(
-                            createNewPersonLabel,
+                            personNotFoundLabel,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 12.dp)
+                                .padding(
+                                    bottom = 12.dp
+                                )
                         )
                     }
 
@@ -188,6 +218,7 @@ private fun SearchAndChooseProfileScreen(
                         }
                     }
                 }
+            }
         }
     }
 

@@ -63,4 +63,6 @@
     <string name="failed_to_delete_transaction">Kesalahan tidak diketahui. Gagal menghapus catatan transaksi</string>
     <string name="change_label">Ubah</string>
     <string name="change_period_label">Ubah Periode</string>
+    <string name="register_new_product_here_label">Daftarkan barang baru disini</string>
+    <string name="product_name_not_found_question">Nama barang tidak ketemu?\n</string>
 </resources>

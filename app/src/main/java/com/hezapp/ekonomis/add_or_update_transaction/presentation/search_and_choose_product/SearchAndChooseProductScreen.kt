@@ -5,10 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -99,6 +101,7 @@ fun SearchAndChooseProductScreen(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SearchAndChooseProductScreen(
     state: SearchAndChooseProductUiState,
@@ -110,9 +113,10 @@ private fun SearchAndChooseProductScreen(
     val secondaryColor = MaterialTheme.colorScheme.secondary
     var showRegisterNewProductNameBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-    val createNewProductLabel = remember {
+    val context = LocalContext.current
+    val productNotFoundLabel = remember {
         buildAnnotatedString {
-            append("Nama barang tidak ketemu?\n")
+            append(context.getString(R.string.product_name_not_found_question))
             withLink(
                 link = LinkAnnotation.Clickable(
                     tag = "create-new-person",
@@ -126,7 +130,27 @@ private fun SearchAndChooseProductScreen(
                     showRegisterNewProductNameBottomSheet = true
                 },
             ) {
-                append("Daftarkan nama baru disini")
+                append(context.getString(R.string.register_new_product_here_label))
+            }
+        }
+    }
+    val productEmptyLabel = remember {
+        buildAnnotatedString {
+            append("Belum ada daftar barang.\n")
+            withLink(
+                link = LinkAnnotation.Clickable(
+                    tag = "create-new-person",
+                    styles = TextLinkStyles(
+                        style = SpanStyle(
+                            color = secondaryColor,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    )
+                ) {
+                    showRegisterNewProductNameBottomSheet = true
+                },
+            ) {
+                append(context.getString(R.string.register_new_product_here_label))
             }
         }
     }
@@ -171,29 +195,42 @@ private fun SearchAndChooseProductScreen(
                 .fillMaxWidth()
                 .weight(1f)
         ) { data ->
-            LazyColumn(
-                contentPadding = PaddingValues(
-                    bottom = 48.dp, top = 12.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                item {
-                    Text(
-                        createNewProductLabel,
-                        modifier = Modifier.padding(bottom = 8.dp)
-                    )
-                }
+            if (data.isEmpty())
+                Text(
+                    if (state.searchQuery.isEmpty())
+                        productEmptyLabel
+                    else
+                        productNotFoundLabel,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            else
+                LazyColumn(
+                    contentPadding = PaddingValues(
+                        bottom = 48.dp, top = 12.dp
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .imeNestedScroll(),
+                ) {
+                    item {
+                        Text(
+                            productNotFoundLabel,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
 
-                items(data){
-                    ListAvailableProductCardItem(
-                        it,
-                        onClick = {
-                            onEvent(SearchAndChooseProductEvent.SelectProductForSpecification(it))
-                        }
-                    )
+                    items(data){
+                        ListAvailableProductCardItem(
+                            it,
+                            onClick = {
+                                onEvent(SearchAndChooseProductEvent
+                                    .SelectProductForSpecification(it))
+                            }
+                        )
+                    }
                 }
-            }
         }
 
         Button(

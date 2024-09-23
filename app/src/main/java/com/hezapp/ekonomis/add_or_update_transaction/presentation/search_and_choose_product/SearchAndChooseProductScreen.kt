@@ -167,7 +167,9 @@ private fun SearchAndChooseProductScreen(
             onRetry = {
                 onEvent(SearchAndChooseProductEvent.LoadAvailableProducts)
             },
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
         ) { data ->
             LazyColumn(
                 contentPadding = PaddingValues(

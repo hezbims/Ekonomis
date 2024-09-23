@@ -1,9 +1,10 @@
 package com.hezapp.ekonomis.core.data.profile
 
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.BuildConfig
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.profile.model.CreateNewProfileError
 import com.hezapp.ekonomis.core.domain.profile.repo.IProfileRepo
 import kotlinx.coroutines.delay
@@ -45,7 +46,7 @@ class FakeProfileRepo : IProfileRepo {
     }
 
     companion object {
-        val listPerson = mutableListOf(
+        val listPerson = if (BuildConfig.DEBUG) mutableListOf(
             ProfileEntity(
                 id = 1,
                 name = "Beni",
@@ -61,7 +62,7 @@ class FakeProfileRepo : IProfileRepo {
                 name = "Komang",
                 type = ProfileType.SUPPLIER
             ),
-        )
+        ) else mutableListOf()
         var id = listPerson.size + 1
     }
 }

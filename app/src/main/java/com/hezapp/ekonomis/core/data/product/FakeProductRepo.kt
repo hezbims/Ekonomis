@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.core.data.product
 
+import com.hezapp.ekonomis.BuildConfig
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
@@ -156,7 +157,7 @@ class FakeProductRepo : IProductRepo {
 
 
     companion object {
-        val listProduct = mutableListOf(
+        val listProduct = if (BuildConfig.DEBUG) mutableListOf(
             ProductEntity(
                 id = 1,
                 name = "Tuna Deho"
@@ -165,7 +166,7 @@ class FakeProductRepo : IProductRepo {
                 id = 2,
                 name = "White Heinz Vinegar"
             )
-        )
+        ) else mutableListOf()
         var id = listProduct.size + 1
     }
 }

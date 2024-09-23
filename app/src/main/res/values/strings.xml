@@ -61,4 +61,6 @@
     <string name="delete_transaction_label">Hapus Transaksi</string>
     <string name="are_you_sure_to_delete_current_transaction">Apakah anda yakin ingin menghapus transaksi ini?</string>
     <string name="failed_to_delete_transaction">Kesalahan tidak diketahui. Gagal menghapus catatan transaksi</string>
+    <string name="change_label">Ubah</string>
+    <string name="change_period_label">Ubah Periode</string>
 </resources>

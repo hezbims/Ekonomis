@@ -3,7 +3,7 @@ package com.hezapp.ekonomis.core.data.product
 import com.hezapp.ekonomis.BuildConfig
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
-import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
+import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity

@@ -4,7 +4,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormMod
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
-import com.hezapp.ekonomis.core.data.utils.FakeTransactionProvider
+import com.hezapp.ekonomis.core.data.database.FakeTransactionProvider
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import kotlinx.coroutines.flow.Flow

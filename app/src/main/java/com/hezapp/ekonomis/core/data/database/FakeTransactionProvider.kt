@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.data.utils
+package com.hezapp.ekonomis.core.data.database
 
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import kotlinx.coroutines.Dispatchers

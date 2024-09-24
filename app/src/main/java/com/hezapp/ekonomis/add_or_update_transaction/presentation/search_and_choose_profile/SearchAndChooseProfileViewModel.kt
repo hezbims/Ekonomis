@@ -1,9 +1,9 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_profile
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.hezapp.ekonomis.core.data.profile.FakeProfileRepo
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.AddNewProfileUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.GetListProfileUseCase
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
@@ -18,18 +18,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SearchAndChooseProfileViewModel(
-    transactionType: TransactionType
+    transactionType: TransactionType,
+    private val getListProfile: GetListProfileUseCase,
+    private val addNewProfile: AddNewProfileUseCase,
 ) : ViewModel() {
-
-    class Factory(private val transactionType: TransactionType) : ViewModelProvider.NewInstanceFactory() {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return SearchAndChooseProfileViewModel(transactionType) as T
-        }
-    }
-
-    private val profileRepo = FakeProfileRepo()
-
     private val _state = MutableStateFlow(SearchAndChooseProfileUiState(
         transactionType = transactionType
     ))
@@ -52,7 +44,7 @@ class SearchAndChooseProfileViewModel(
     private fun loadAvailableProfiles(){
         viewModelScope.launch(Dispatchers.IO) {
             val currentState = _state.value
-            profileRepo.getPersonFiltered(
+            getListProfile(
                 profileName = currentState.searchQuery,
                 profileType = currentState.profileType,
             ).collect { response ->
@@ -68,12 +60,11 @@ class SearchAndChooseProfileViewModel(
 
     private fun createNewProfile(profileName: String){
         viewModelScope.launch(Dispatchers.IO) {
-            profileRepo.addNewProfile(profile = ProfileEntity(
+            addNewProfile(newProfile = ProfileEntity(
                 id = 0,
                 name = profileName,
-                type = _state.value.profileType
-            )
-            ).collect { response ->
+                type = _state.value.profileType,
+            )).collect { response ->
                 _state.update { it.copy(createNewProfileResponse = response) }
             }
         }

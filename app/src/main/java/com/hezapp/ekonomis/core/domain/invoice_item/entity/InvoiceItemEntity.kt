@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.core.domain.invoice_item.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
@@ -24,10 +25,14 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
             onUpdate = ForeignKey.RESTRICT,
             onDelete = ForeignKey.RESTRICT
         ),
+    ],
+    indices = [
+        Index("invoice_id"),
+        Index("product_id")
     ]
 )
 data class InvoiceItemEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id : Int,
 
     @ColumnInfo(name = "product_id")

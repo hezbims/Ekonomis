@@ -16,12 +16,6 @@ rootProject.file("key.properties").let {
         keystoreProperties.load(FileInputStream(it))
 }
 
-kotlin {
-    sourceSets.all {
-        languageSettings.enableLanguageFeature("ExplicitBackingFields")
-    }
-}
-
 android {
     namespace = "com.hezapp.ekonomis"
     compileSdk = 34
@@ -36,6 +30,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 

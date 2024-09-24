@@ -190,7 +190,6 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                     value = state.unitType,
                     onValueChange = {
                         onEvent(SpecifyProductQuantityEvent.ChangeUnitType(it))
-                        focusManager.moveFocus(FocusDirection.Right)
                     },
                     hasError = state.unitTypeHasError,
                     modifier = Modifier.weight(1f)

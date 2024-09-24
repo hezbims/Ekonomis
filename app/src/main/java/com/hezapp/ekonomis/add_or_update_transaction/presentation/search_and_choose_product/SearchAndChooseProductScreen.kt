@@ -51,11 +51,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.RegisterNewProductNameBottomSheet
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.component.RegisterNewProductNameBottomSheet
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState

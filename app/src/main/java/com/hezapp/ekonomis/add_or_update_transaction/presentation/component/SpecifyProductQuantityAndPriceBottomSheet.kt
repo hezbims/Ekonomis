@@ -3,7 +3,6 @@ package com.hezapp.ekonomis.add_or_update_transaction.presentation.component
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
@@ -26,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -40,10 +39,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
@@ -51,10 +52,9 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_cho
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SpecifyProductQuantityUiState
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SpecifyProductQuantityViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.RupiahVisualTransformation
-import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
+import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 @Composable
 fun SpecifyProductQuantityAndPriceBottomSheet(
@@ -74,6 +74,7 @@ fun SpecifyProductQuantityAndPriceBottomSheet(
 }
 
 @Composable
+
 fun SpecifyProductQuantityAndPriceBottomSheet(
     invoiceItem: InvoiceItemUiModel,
     onDismissRequest: () -> Unit,
@@ -183,10 +184,13 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
+                val focusManager = LocalFocusManager.current
+
                 DropdownUnitType(
                     value = state.unitType,
                     onValueChange = {
                         onEvent(SpecifyProductQuantityEvent.ChangeUnitType(it))
+                        focusManager.moveFocus(FocusDirection.Right)
                     },
                     hasError = state.unitTypeHasError,
                     modifier = Modifier.weight(1f)
@@ -198,6 +202,15 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                         onEvent(SpecifyProductQuantityEvent.ChangeQuantity(it))
                     },
                     hasError = state.quantityHasError,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Next,
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onNext = {
+                            focusManager.moveFocus(FocusDirection.Down)
+                        }
+                    ),
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -208,6 +221,15 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                     onEvent(SpecifyProductQuantityEvent.ChangePrice(it))
                 },
                 hasError = state.priceHasError,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onEvent(SpecifyProductQuantityEvent.VerifyProductData)
+                    }
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -293,12 +315,15 @@ private fun PriceField(
     value : Int?,
     onValueChange: (String) -> Unit,
     hasError: Boolean,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
     modifier: Modifier,
 ){
     TextField(
         value = value?.toString() ?: "",
         onValueChange = onValueChange,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
         supportingText = {
             if (hasError)
                 Text(stringResource(
@@ -332,12 +357,13 @@ private fun QuantityField(
     value: Int?,
     onValueChange: (String) -> Unit,
     hasError: Boolean,
+    keyboardOptions: KeyboardOptions,
+    keyboardActions: KeyboardActions,
     modifier: Modifier = Modifier,
 ){
     TextField(
         value = value?.toString() ?: "",
         onValueChange = onValueChange,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         isError = hasError,
         supportingText = {
             if (hasError)
@@ -346,33 +372,10 @@ private fun QuantityField(
                     stringResource(R.string.quantity_label)
                 ))
         },
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions,
         label = { Text(stringResource(R.string.quantity_label)) },
+
         modifier = modifier,
     )
-}
-
-@Preview
-@Composable
-private fun PreviewSpecifyProductQuantityAndPriceDialog(){
-    EkonomisTheme {
-        Surface {
-            Box(Modifier.padding(48.dp)) {
-                SpecifyProductQuantityAndPriceBottomSheet(
-                    onDismissRequest = {},
-                    state = SpecifyProductQuantityUiState(
-                        product = ProductEntity(
-                            id = 0, name = "Extra Virgin Olive Oil"
-                        ),
-                        price = null,
-                        quantity = null,
-                        unitType = null,
-                        listId = null,
-                        id = 0,
-                    ),
-                    onDeleteConfirmed = null,
-                    onEvent = {},
-                )
-            }
-        }
-    }
 }

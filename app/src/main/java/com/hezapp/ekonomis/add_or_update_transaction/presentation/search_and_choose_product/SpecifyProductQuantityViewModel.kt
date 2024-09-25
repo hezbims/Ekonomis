@@ -1,6 +1,6 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product
 
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetValidatedProductPriceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetValidatedProductPriceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType

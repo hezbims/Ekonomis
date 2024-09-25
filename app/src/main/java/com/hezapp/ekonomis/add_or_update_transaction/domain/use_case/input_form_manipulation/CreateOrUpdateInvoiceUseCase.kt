@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.add_or_update_transaction.domain.use_case
+package com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult

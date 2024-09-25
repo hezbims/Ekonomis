@@ -3,7 +3,7 @@ package com.hezapp.ekonomis.debug_logger
 import android.util.Log
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
-import com.hezapp.ekonomis.core.data.product.FakeProductRepo
+import com.hezapp.ekonomis.core.data.product.repo.FakeProductRepo
 import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType

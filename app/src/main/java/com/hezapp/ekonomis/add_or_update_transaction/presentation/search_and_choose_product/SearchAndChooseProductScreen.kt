@@ -47,7 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
@@ -61,13 +60,14 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchAndChooseProductScreen(
     addOrUpdateTransactionViewModel: AddOrUpdateTransactionViewModel,
     navController : NavHostController,
 ){
-    val searchAndChooseProductViewModel = viewModel<SearchAndChooseProductViewModel>()
+    val searchAndChooseProductViewModel = koinViewModel<SearchAndChooseProductViewModel>()
     val searchAndChooseProductUiState = searchAndChooseProductViewModel.state.collectAsState().value
     val totalSelectedProduct = addOrUpdateTransactionViewModel.state.collectAsStateWithLifecycle().value.curFormData.invoiceItems.size
 

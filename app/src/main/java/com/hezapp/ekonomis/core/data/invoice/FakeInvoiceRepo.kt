@@ -2,7 +2,7 @@ package com.hezapp.ekonomis.core.data.invoice
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
-import com.hezapp.ekonomis.core.data.product.FakeProductRepo
+import com.hezapp.ekonomis.core.data.product.repo.FakeProductRepo
 import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter

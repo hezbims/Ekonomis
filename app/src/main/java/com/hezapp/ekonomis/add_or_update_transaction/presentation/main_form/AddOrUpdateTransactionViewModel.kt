@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.CreateOrUpdateInvoiceUseCase
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.DeleteInvoiceUseCase
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetFullInvoiceUseCase
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.GetValidatedPpnFromInputStringUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.CreateOrUpdateInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.DeleteInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetFullInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetValidatedPpnFromInputStringUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.toUiModel
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError

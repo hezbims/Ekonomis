@@ -1,55 +1,31 @@
-package com.hezapp.ekonomis.core.data.product
+package com.hezapp.ekonomis.core.data.product.repo
 
 import com.hezapp.ekonomis.BuildConfig
 import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
-import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
-import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
 import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 import com.hezapp.ekonomis.core.domain.utils.PriceUtils
 import com.hezapp.ekonomis.core.domain.utils.isInAMonthYearPeriod
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlin.math.roundToInt
 
 class FakeProductRepo : IProductRepo {
-    override fun getAllProduct(searchQuery: String): Flow<ResponseWrapper<List<ProductEntity>, MyBasicError>> =
-        flow {
-            emit(ResponseWrapper.Loading())
-            delay(200L)
-            emit(ResponseWrapper.Succeed(
-                listProduct.filter {
-                    it.name.contains(searchQuery, ignoreCase = true)
-                }
-            ))
+    override suspend fun getAllProduct(searchQuery: String): List<ProductEntity> {
+        return listProduct.filter {
+            it.name.contains(searchQuery, ignoreCase = true)
         }
+    }
 
-    override fun insertProduct(newProduct: ProductEntity): Flow<ResponseWrapper<Any?, InsertProductError>> =
-        flow {
-            emit(ResponseWrapper.Loading())
-            delay(50L)
-            if (newProduct.name.isEmpty()){
-                emit(ResponseWrapper.Failed(InsertProductError.EmptyInputName))
-            } else if(
-                listProduct.firstOrNull { it.name.equals(newProduct.name, ignoreCase = true) } != null
-            ) {
-               emit(ResponseWrapper.Failed(InsertProductError.AlreadyUsed))
-            }
-            else {
-                listProduct.add(newProduct.copy(id = id++))
-                emit(ResponseWrapper.Succeed(null))
-            }
-        }
+    override  suspend fun insertProduct(newProduct: ProductEntity) {
+        listProduct.add(newProduct.copy(id = id++))
+    }
 
     override suspend fun getPreviewProductSummaries(): List<PreviewProductSummary> {
         return listProduct.map { product ->

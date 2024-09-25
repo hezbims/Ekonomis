@@ -13,12 +13,10 @@ import com.hezapp.ekonomis.core.domain.utils.toCalendar
 class InvoiceRepo(
     private val dao: InvoiceDao
 ) : IInvoiceRepo {
-    override suspend fun createNewInvoice(newInvoice: InvoiceFormModel): Int {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateInvoice(newInvoice: InvoiceFormModel): Int {
-        TODO("Not yet implemented")
+    override suspend fun createOrUpdateInvoice(newInvoice: InvoiceFormModel): Int {
+        return dao.upsertInvoice(
+            newInvoice.toEntity()
+        ).toInt()
     }
 
     override suspend fun getPreviewInvoices(filter: PreviewTransactionFilter): List<PreviewTransactionHistory> {
@@ -30,10 +28,10 @@ class InvoiceRepo(
     }
 
     override suspend fun getFullInvoiceDetails(id: Int): FullInvoiceDetails {
-        TODO("Not yet implemented")
+        return dao.getFullInvoiceDetails(id = id)
     }
 
     override suspend fun deleteInvoice(id: Int) {
-        TODO("Not yet implemented")
+        dao.deleteInvoice(invoiceId = id)
     }
 }

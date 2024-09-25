@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import com.hezapp.ekonomis.core.data.invoice.converter.TransactionTypeConverter
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.converter.UnitTypeConverter
+import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
 import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.data.profile.converter.ProfileTypeConverter
 import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
@@ -36,6 +37,7 @@ abstract class EkonomisDatabase : RoomDatabase() {
     abstract val profileDao: ProfileDao
     abstract val productDao: ProductDao
     abstract val invoiceDao: InvoiceDao
+    abstract val invoiceItemDao: InvoiceItemDao
 
     companion object {
         private const val DB_NAME = "ekonomis_db"

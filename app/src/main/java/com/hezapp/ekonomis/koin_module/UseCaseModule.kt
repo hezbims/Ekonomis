@@ -1,5 +1,8 @@
 package com.hezapp.ekonomis.koin_module
 
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.CreateOrUpdateInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.DeleteInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetFullInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.product.GetAllProductsUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.product.InsertNewProductUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.AddNewProfileUseCase
@@ -15,4 +18,20 @@ val UseCaseModule = module {
     factory { InsertNewProductUseCase(repo = get()) }
 
     factory { GetPreviewTransactionHistoryUseCase(repo = get()) }
+
+    factory { CreateOrUpdateInvoiceUseCase(
+        invoiceRepo = get(),
+        invoiceItemRepo = get(),
+        transactionProvider = get(),
+    ) }
+    factory { DeleteInvoiceUseCase(
+        invoiceRepo = get(),
+        invoiceItemRepo = get(),
+        transactionProvider = get()
+    ) }
+    factory { GetFullInvoiceUseCase(
+        repo = get()
+    ) }
+
+
 }

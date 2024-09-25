@@ -6,8 +6,7 @@ import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 
 interface IInvoiceRepo {
-    suspend fun createNewInvoice(newInvoice : InvoiceFormModel) : Int
-    suspend fun updateInvoice(newInvoice: InvoiceFormModel) : Int
+    suspend fun createOrUpdateInvoice(newInvoice : InvoiceFormModel) : Int
     suspend fun getPreviewInvoices(
         filter: PreviewTransactionFilter,
     ) : List<PreviewTransactionHistory>

@@ -1,23 +1,25 @@
 package com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation
 
+import android.util.Log
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
-import com.hezapp.ekonomis.core.data.invoice.repo.FakeInvoiceRepo
-import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
-import com.hezapp.ekonomis.core.data.database.FakeTransactionProvider
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.repo.IInvoiceRepo
+import com.hezapp.ekonomis.core.domain.invoice_item.repo.IInvoiceItemRepo
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
-class CreateOrUpdateInvoiceUseCase {
+class CreateOrUpdateInvoiceUseCase(
+    private val transactionProvider : ITransactionProvider,
+    private val invoiceRepo : IInvoiceRepo,
+    private val invoiceItemRepo : IInvoiceItemRepo,
+) {
 
+    // No-Database Interaction
     private val getDeletedInvoiceItems = GetDeletedInvoiceItemsUseCase()
     private val validateInvoiceFormSubmission = ValidateInvoiceFormSubmission()
-    private val transactionProvider : ITransactionProvider = FakeTransactionProvider()
-    private val invoiceRepo = FakeInvoiceRepo()
-    private val invoiceItemRepo = FakeInvoiceItemRepo()
 
     operator fun invoke(invoiceForm : InvoiceFormModel) :
         Flow<ResponseWrapper<Any? , InvoiceValidationResult>> =
@@ -31,11 +33,9 @@ class CreateOrUpdateInvoiceUseCase {
         }
 
         transactionProvider.withTransaction {
-            val invoiceId =
-                if (invoiceForm.isEditing)
-                    invoiceRepo.updateInvoice(invoiceForm)
-                else
-                    invoiceRepo.createNewInvoice(invoiceForm)
+            var invoiceId = invoiceRepo.createOrUpdateInvoice(invoiceForm)
+            if (invoiceId == -1)
+                invoiceId = invoiceForm.id
             val deletedInvoiceItems = getDeletedInvoiceItems(
                 oldInvoiceItems = invoiceForm.prevInvoiceItems,
                 newInvoiceItem = invoiceForm.newInvoiceItems,
@@ -49,5 +49,8 @@ class CreateOrUpdateInvoiceUseCase {
             )
         }
         emit(ResponseWrapper.Succeed(null))
-    }.catch { emit(ResponseWrapper.Failed()) }
+    }.catch {
+        Log.e("qqq", "${it.stackTrace}")
+        emit(ResponseWrapper.Failed())
+    }
 }

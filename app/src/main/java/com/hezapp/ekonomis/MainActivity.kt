@@ -27,6 +27,7 @@ import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEv
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,14 +69,11 @@ class MainActivity : ComponentActivity() {
                                     it.navGraphViewModel(navController, 2)
 
                                 val transactionId = it.toRoute<MyRoutes.AddOrUpdateTransactionForm>().id
-                                val factory = AddOrUpdateTransactionViewModel.Factory(
-                                    transactionId,
-                                )
                                 val addOrUpdateTransactionViewModel : AddOrUpdateTransactionViewModel? =
-                                    it.navGraphViewModel(
+                                    it.koinNavGraphViewModel(
                                         navController = navController,
                                         countParent = 1,
-                                        factory = factory,
+                                        parameters = { parametersOf(transactionId) },
                                     )
 
                                 transactionHistoryViewModel?.let { transHisViewModel ->

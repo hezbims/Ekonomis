@@ -1,7 +1,7 @@
 package com.hezapp.ekonomis.core.data.invoice.repo
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
-import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
+import com.hezapp.ekonomis.core.data.invoice_item.repo.FakeInvoiceItemRepo
 import com.hezapp.ekonomis.core.data.product.repo.FakeProductRepo
 import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
@@ -15,20 +15,20 @@ import com.hezapp.ekonomis.core.domain.utils.isInAMonthYearPeriod
 import kotlinx.coroutines.delay
 
 class FakeInvoiceRepo : IInvoiceRepo {
-    override suspend fun createNewInvoice(newInvoice: InvoiceFormModel) : Int {
+    override suspend fun createOrUpdateInvoice(newInvoice: InvoiceFormModel) : Int {
         delay(500L)
+        if (newInvoice.isEditing){
+            listData.replaceAll { oldInvoice ->
+                if (oldInvoice.id == newInvoice.id)
+                    newInvoice.toEntity()
+                else
+                    oldInvoice
+            }
+            return -1
+        }
+
         listData.add(newInvoice.toEntity().copy(id = id++))
         return listData.last().id
-    }
-
-    override suspend fun updateInvoice(newInvoice: InvoiceFormModel) : Int {
-        listData.replaceAll { oldInvoice ->
-            if (oldInvoice.id == newInvoice.id)
-                newInvoice.toEntity()
-            else
-                oldInvoice
-        }
-        return newInvoice.id
     }
 
     override suspend fun getPreviewInvoices(

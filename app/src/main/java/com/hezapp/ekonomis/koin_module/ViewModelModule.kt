@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.koin_module
 
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileViewModel
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
@@ -20,5 +21,12 @@ val ViewModelModule = module {
 
     viewModel { TransactionHistoryViewModel(
         getPreviewTransactionHistory = get()
+    ) }
+
+    viewModel { (invoiceId: Int?) -> AddOrUpdateTransactionViewModel(
+        invoiceId = invoiceId,
+        createOrUpdateInvoiceUseCase = get(),
+        deleteInvoice = get(),
+        getFullInvoice = get()
     ) }
 }

@@ -1,7 +1,6 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
@@ -25,11 +24,13 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
+class AddOrUpdateTransactionViewModel(
+    invoiceId : Int?,
+    private val createOrUpdateInvoiceUseCase : CreateOrUpdateInvoiceUseCase,
+    private val getFullInvoice : GetFullInvoiceUseCase,
+    private val deleteInvoice : DeleteInvoiceUseCase,
+) : ViewModel() {
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
-    private val createOrUpdateInvoiceUseCase = CreateOrUpdateInvoiceUseCase()
-    private val getFullInvoice = GetFullInvoiceUseCase()
-    private val deleteInvoice = DeleteInvoiceUseCase()
 
     private val _state = MutableStateFlow(AddOrUpdateTransactionUiState())
     val state : StateFlow<AddOrUpdateTransactionUiState> = _state
@@ -259,15 +260,6 @@ class AddOrUpdateTransactionViewModel(invoiceId : Int?) : ViewModel() {
 
     private fun doneHandlingDeleteResponse(){
         _state.update { it.copy(deleteResponse = null) }
-    }
-
-    class Factory(private val invoiceId: Int?) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            if (modelClass.isAssignableFrom(AddOrUpdateTransactionViewModel::class.java))
-                return AddOrUpdateTransactionViewModel(invoiceId = invoiceId) as T
-            throw IllegalArgumentException()
-        }
     }
 }
 

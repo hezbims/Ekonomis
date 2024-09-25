@@ -9,6 +9,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.ParametersDefinition
 
 fun NavHostController.goBackSafely(){
     if (currentBackStackEntry?.lifecycle?.currentState == Lifecycle.State.RESUMED){
@@ -41,6 +43,27 @@ inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
             viewModelStoreOwner = backStackEntry,
             key = key,
             factory = factory,
+        )
+    } ?: return null
+}
+
+@Composable
+inline fun <reified T: ViewModel> NavBackStackEntry.koinNavGraphViewModel(
+    navController: NavHostController,
+    countParent: Int,
+    noinline parameters: ParametersDefinition? = null
+) : T? {
+    var graph = destination.parent
+
+    for (i in 2..countParent)
+        graph = graph?.parent
+
+    graph?.route?.let {
+        val backStackEntry = remember(this) { navController.getBackStackEntry(it) }
+
+        return koinViewModel(
+            viewModelStoreOwner = backStackEntry,
+            parameters = parameters,
         )
     } ?: return null
 }

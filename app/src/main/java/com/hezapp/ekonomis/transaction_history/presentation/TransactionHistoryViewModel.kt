@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TransactionHistoryViewModel : ViewModel() {
-    private val getPreviewTransactionHistory = GetPreviewTransactionHistoryUseCase()
+class TransactionHistoryViewModel(
+    private val getPreviewTransactionHistory : GetPreviewTransactionHistoryUseCase
+) : ViewModel() {
+
 
     private val _state = MutableStateFlow(TransactionHistoryUiState())
     val state : StateFlow<TransactionHistoryUiState> = _state.onStart {

@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.transaction_history.domain.use_case
 
-import com.hezapp.ekonomis.core.data.invoice.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
@@ -10,8 +9,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
-class GetPreviewTransactionHistoryUseCase {
-    private val repo : IInvoiceRepo = FakeInvoiceRepo()
+class GetPreviewTransactionHistoryUseCase(
+    private val repo : IInvoiceRepo
+) {
 
     operator fun invoke(filter: PreviewTransactionFilter) :
     Flow<ResponseWrapper<List<PreviewTransactionHistory>, MyBasicError>> =

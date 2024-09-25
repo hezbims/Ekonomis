@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.data.invoice
+package com.hezapp.ekonomis.core.data.invoice.repo
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.core.data.invoice_item.FakeInvoiceItemRepo
@@ -36,7 +36,7 @@ class FakeInvoiceRepo : IInvoiceRepo {
     ): List<PreviewTransactionHistory> {
         delay(300L)
 
-        val result =listData.map { invoice ->
+        val result = listData.map { invoice ->
             val currentInvoiceItem = FakeInvoiceItemRepo.listItem.filter {
                 it.invoiceId == invoice.id
             }

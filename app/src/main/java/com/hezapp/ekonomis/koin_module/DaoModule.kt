@@ -1,6 +1,7 @@
 package com.hezapp.ekonomis.koin_module
 
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
+import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
 import org.koin.dsl.module
@@ -11,5 +12,8 @@ val DaoModule = module {
     }
     single<ProductDao>{
         get<EkonomisDatabase>().productDao
+    }
+    single<InvoiceDao> {
+        get<EkonomisDatabase>().invoiceDao
     }
 }

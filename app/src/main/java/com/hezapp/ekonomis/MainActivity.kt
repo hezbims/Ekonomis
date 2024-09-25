@@ -19,6 +19,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_cho
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
+import com.hezapp.ekonomis.core.presentation.utils.koinNavGraphViewModel
 import com.hezapp.ekonomis.core.presentation.utils.navGraphViewModel
 import com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
                     ){
                         composable<MyRoutes.TransactionHistory> {
                             val transHistoryViewModel : TransactionHistoryViewModel? =
-                                it.navGraphViewModel(
+                                it.koinNavGraphViewModel(
                                     navController = navController,
                                     countParent = 1
                                 )

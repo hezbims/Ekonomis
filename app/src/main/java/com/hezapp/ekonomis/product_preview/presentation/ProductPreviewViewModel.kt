@@ -13,8 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProductPreviewViewModel : ViewModel() {
-    private val getPreviewProductSummaries = GetPreviewProductSummariesUseCase()
+class ProductPreviewViewModel(
+    private val getPreviewProductSummaries : GetPreviewProductSummariesUseCase
+) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductPreviewUiState())
     val state : StateFlow<ProductPreviewUiState>

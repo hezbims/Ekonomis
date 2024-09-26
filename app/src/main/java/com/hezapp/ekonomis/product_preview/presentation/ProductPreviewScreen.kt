@@ -18,13 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
@@ -34,12 +33,13 @@ import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ProductPreviewScreen(
     navController : NavHostController,
 ) {
-    val viewModel = viewModel<ProductPreviewViewModel>()
+    val viewModel = koinViewModel<ProductPreviewViewModel>()
     val state = viewModel.state.collectAsStateWithLifecycle().value
 
     val context = LocalContext.current
@@ -144,13 +144,17 @@ private fun PreviewProductPreviewScreen(){
             val listData = listOf(
                 PreviewProductSummary(
                     id = 0,
-                    costOfGoodsSold = (400_000).toInt(),
+                    ppn = 11,
+                    price = (540_000).toInt(),
+                    quantity = 3,
                     name = "BBQ Sauce",
                     unitType = UnitType.CARTON
                 ),
                 PreviewProductSummary(
                     id = 0,
-                    costOfGoodsSold = (150_000).toInt(),
+                    ppn = 11,
+                    price = 28_000,
+                    quantity = 3,
                     name = "Extra Virgin Olive Oil Tomato Sauce",
                     unitType = UnitType.PIECE
                 )

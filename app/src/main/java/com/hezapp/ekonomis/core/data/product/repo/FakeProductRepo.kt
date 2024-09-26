@@ -12,9 +12,7 @@ import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
-import com.hezapp.ekonomis.core.domain.utils.PriceUtils
 import com.hezapp.ekonomis.core.domain.utils.isInAMonthYearPeriod
-import kotlin.math.roundToInt
 
 class FakeProductRepo : IProductRepo {
     override suspend fun getAllProduct(searchQuery: String): List<ProductEntity> {
@@ -52,13 +50,9 @@ class FakeProductRepo : IProductRepo {
             PreviewProductSummary(
                 id = product.id,
                 name = product.name,
-                costOfGoodsSold = hargaPokokItem?.let {
-                    PriceUtils.getCostOfGoodsSoldUseCase(
-                        totalPrice = it.invoiceItem.price,
-                        quantity = it.invoiceItem.quantity,
-                        ppn = it.invoice.ppn,
-                    ).roundToInt()
-                },
+                ppn = hargaPokokItem?.invoice?.ppn,
+                price = hargaPokokItem?.invoiceItem?.price,
+                quantity = hargaPokokItem?.invoiceItem?.quantity,
                 unitType = hargaPokokItem?.invoiceItem?.unitType,
             )
         }

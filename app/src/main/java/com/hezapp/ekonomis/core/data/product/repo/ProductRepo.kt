@@ -16,7 +16,7 @@ class ProductRepo(
         dao.insertNewProduct(newProduct)
 
     override suspend fun getPreviewProductSummaries(): List<PreviewProductSummary> {
-        TODO("Not yet implemented")
+        return dao.getPreviewProductSummaries()
     }
 
     override suspend fun getProductDetail(productId: Int, monthYearPeriod: Long): ProductDetail {

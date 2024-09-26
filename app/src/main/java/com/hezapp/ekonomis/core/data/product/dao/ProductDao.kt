@@ -49,4 +49,11 @@ interface ProductDao {
 
     @Insert
     suspend fun insertNewProduct(newProduct: ProductEntity)
+
+    @Query("""
+        SELECT * 
+        FROM products
+        WHERE id = :id
+    """)
+    suspend fun getProduct(id: Int) : ProductEntity
 }

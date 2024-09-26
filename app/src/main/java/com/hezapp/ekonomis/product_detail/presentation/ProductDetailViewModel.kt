@@ -15,9 +15,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-class ProductDetailViewModel(private val productId : Int) : ViewModel() {
-    private val getProductDetail = GetProductDetailUseCase()
-
+class ProductDetailViewModel(
+    private val productId : Int,
+    private val getProductDetail : GetProductDetailUseCase,
+) : ViewModel() {
     private val _state = MutableStateFlow(ProductDetailUiState())
     val state = _state.onStart {
         loadDetailProduct()

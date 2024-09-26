@@ -1,7 +1,11 @@
 package com.hezapp.ekonomis.core.data.invoice_item.repo
 
+import com.hezapp.ekonomis.core.data.invoice.repo.FakeInvoiceRepo
+import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.repo.IInvoiceItemRepo
+import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import kotlinx.coroutines.delay
 
 class FakeInvoiceItemRepo : IInvoiceItemRepo {
@@ -35,6 +39,41 @@ class FakeInvoiceItemRepo : IInvoiceItemRepo {
 
     override suspend fun deleteInvoiceItemsByInvoiceId(invoiceId: Int) {
         listItem.removeIf { it.invoiceId == invoiceId }
+    }
+
+    override suspend fun getProductTransactions(
+        startPeriod: Long,
+        endPeriod: Long,
+        productId: Int,
+        transactionType: TransactionType
+    ): List<ProductTransaction> {
+        return listItem.mapNotNull { invoiceItem ->
+            if (invoiceItem.productId != productId){
+                return@mapNotNull null
+            }
+
+            val invoice = FakeInvoiceRepo.listData.single { invoice ->
+                invoice.id == invoiceItem.invoiceId
+            }
+
+            if (invoice.date < startPeriod || invoice.date >= endPeriod){
+                return@mapNotNull null
+            }
+
+            val profile = FakeProfileRepo.listPerson.single { profile ->
+                invoice.profileId == profile.id
+            }
+
+            ProductTransaction(
+                date = invoice.date,
+                id = invoiceItem.id,
+                ppn = invoice.ppn,
+                price = invoiceItem.price,
+                quantity = invoiceItem.quantity,
+                unitType = invoiceItem.unitType,
+                profileName = profile.name
+            )
+        }
     }
 
     companion object {

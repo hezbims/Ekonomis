@@ -3,16 +3,12 @@ package com.hezapp.ekonomis.core.data.product.repo
 import com.hezapp.ekonomis.BuildConfig
 import com.hezapp.ekonomis.core.data.invoice.repo.FakeInvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.repo.FakeInvoiceItemRepo
-import com.hezapp.ekonomis.core.data.profile.repo.FakeProfileRepo
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
-import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
-import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
-import com.hezapp.ekonomis.core.domain.utils.isInAMonthYearPeriod
 
 class FakeProductRepo : IProductRepo {
     override suspend fun getAllProduct(searchQuery: String): List<ProductEntity> {
@@ -58,65 +54,8 @@ class FakeProductRepo : IProductRepo {
         }
     }
 
-    override suspend fun getProductDetail(
-        productId : Int,
-        monthYearPeriod: Long,
-    ): ProductDetail {
-        val product = listProduct.single { it.id == productId }
-        val inProductTransactions = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
-            val invoice = FakeInvoiceRepo.listData.single { invoice ->
-                invoiceItem.invoiceId == invoice.id
-            }
-            val profile = FakeProfileRepo.listPerson.single { profile ->
-                profile.id == invoice.profileId
-            }
-
-            // kalau pembelian, atau product id nya bukan ini,
-            if (invoiceItem.productId != productId ||
-                invoice.transactionType != TransactionType.PEMBELIAN)
-                null
-            else
-                ProductTransaction(
-                    profileName = profile.name,
-                    date = invoice.date,
-                    ppn = invoice.ppn,
-                    quantity = invoiceItem.quantity,
-                    totalPrice = invoiceItem.price,
-                    unitType = invoiceItem.unitType,
-                    id = invoiceItem.id,
-                )
-        }.filter { it.date.isInAMonthYearPeriod(monthYearPeriod) }
-
-        val outProductTransactions = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
-            val invoice = FakeInvoiceRepo.listData.single { invoice ->
-                invoiceItem.invoiceId == invoice.id
-            }
-            val profile = FakeProfileRepo.listPerson.single { profile ->
-                profile.id == invoice.profileId
-            }
-
-            // kalau pembelian, atau product id nya bukan ini,
-            if (invoiceItem.productId != productId ||
-                invoice.transactionType != TransactionType.PENJUALAN)
-                null
-            else
-                ProductTransaction(
-                    profileName = profile.name,
-                    date = invoice.date,
-                    ppn = invoice.ppn,
-                    quantity = invoiceItem.quantity,
-                    totalPrice = invoiceItem.price,
-                    unitType = invoiceItem.unitType,
-                    id = invoiceItem.id,
-                )
-        }.filter { it.date.isInAMonthYearPeriod(monthYearPeriod) }
-
-        return ProductDetail(
-            id = productId,
-            productName = product.name,
-            inProductTransactions = inProductTransactions,
-            outProductTransactions = outProductTransactions,
-        )
+    override suspend fun getProduct(productId: Int): ProductEntity {
+        return listProduct.single { it.id == productId }
     }
 
     private data class InvoiceItemWithInvoice(

@@ -3,7 +3,6 @@ package com.hezapp.ekonomis.core.data.product.repo
 import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
-import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 
 class ProductRepo(
@@ -19,7 +18,7 @@ class ProductRepo(
         return dao.getPreviewProductSummaries()
     }
 
-    override suspend fun getProductDetail(productId: Int, monthYearPeriod: Long): ProductDetail {
-        TODO("Not yet implemented")
+    override suspend fun getProduct(productId: Int): ProductEntity {
+        return dao.getProduct(id = productId)
     }
 }

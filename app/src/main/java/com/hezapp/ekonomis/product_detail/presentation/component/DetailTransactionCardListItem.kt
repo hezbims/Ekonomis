@@ -134,7 +134,7 @@ fun DetailTransactionCardListItem(
                     )
 
                     Text(
-                        text = item.totalPrice.toRupiah(),
+                        text = item.price.toRupiah(),
                         style = MaterialTheme.typography.bodySmall,
                     )
 
@@ -173,7 +173,7 @@ private fun PreviewExpandedOutTransactionCard(){
                     ppn = 11,
                     profileName = "Feni",
                     quantity = 5,
-                    totalPrice = 2_500_000,
+                    price = 2_500_000,
                     unitType = UnitType.PIECE,
                 ),
                 isOutTransaction = true,

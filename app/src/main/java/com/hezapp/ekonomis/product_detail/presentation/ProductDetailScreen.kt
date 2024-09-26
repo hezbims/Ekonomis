@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
@@ -36,15 +35,17 @@ import com.hezapp.ekonomis.core.presentation.utils.toFullMonthYearString
 import com.hezapp.ekonomis.product_detail.presentation.component.ChangePeriodDialog
 import com.hezapp.ekonomis.product_detail.presentation.component.DetailTransactionCardListItem
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.util.Calendar
 
 @Composable
 fun ProductDetailScreen(
     productId: Int,
     navController: NavHostController,
-    viewModel: ProductDetailViewModel = viewModel {
-        ProductDetailViewModel(productId = productId)
-    },
+    viewModel: ProductDetailViewModel = koinViewModel(
+        parameters = { parametersOf(productId) }
+    ),
 ){
     val context = LocalContext.current
     val scaffoldState = remember {
@@ -216,7 +217,7 @@ private fun PreviewProductDetailScreen(){
                                 date = listDate[0],
                                 ppn = null,
                                 quantity = 12,
-                                totalPrice = (500_000_000).toInt(),
+                                price = (500_000_000).toInt(),
                                 unitType = UnitType.CARTON,
                                 profileName = "Bu Mega"
                         ),
@@ -225,7 +226,7 @@ private fun PreviewProductDetailScreen(){
                                 date = listDate[1],
                                 ppn = null,
                                 quantity = 150,
-                                totalPrice = (500_000).toInt(),
+                                price = (500_000).toInt(),
                                 unitType = UnitType.PIECE,
                                 profileName = "Bu Mega"
                         ),
@@ -234,7 +235,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[2],
                             ppn = null,
                             quantity = 1,
-                            totalPrice = (45_000).toInt(),
+                            price = (45_000).toInt(),
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         )
@@ -245,7 +246,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[0],
                             ppn = 12,
                             quantity = 12,
-                            totalPrice = (500_000_000).toInt(),
+                            price = (500_000_000).toInt(),
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         ),
@@ -254,7 +255,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[1],
                             ppn = null,
                             quantity = 150,
-                            totalPrice = (500_000).toInt(),
+                            price = (500_000).toInt(),
                             unitType = UnitType.PIECE,
                             profileName = "Bu Mega"
                         ),
@@ -263,7 +264,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[2],
                             ppn = null,
                             quantity = 1,
-                            totalPrice = (45_000).toInt(),
+                            price = (45_000).toInt(),
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         ),

@@ -65,4 +65,5 @@
     <string name="change_period_label">Ubah Periode</string>
     <string name="register_new_product_here_label">Daftarkan barang baru disini</string>
     <string name="product_name_not_found_question">Nama barang tidak ketemu?\n</string>
+    <string name="transaction_summary">Rangkuman Transaksi</string>
 </resources>

@@ -10,6 +10,7 @@ fun Int.toShortRupiah() : String {
     return String.format(Locale.US, "Rp%d Ribu", this / 1_000)
 }
 
+fun Long.toRupiah() : String = toString().toRupiah()
 fun Int.toRupiah() : String = toString().toRupiah()
 
 fun CharSequence.toRupiah() : String {

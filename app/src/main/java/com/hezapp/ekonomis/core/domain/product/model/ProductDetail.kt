@@ -17,6 +17,17 @@ data class ProductDetail(
     val totalInPrice = inProductTransactions.sumOf {
         it.price.toLong()
     }
+    val totalOutUnit = outProductTransactions
+        .groupBy { it.unitType }
+        .entries.associateBy(
+            {it.key}, {it.value.sumOf { item -> item.quantity }}
+        )
+
+    val totalInUnit = inProductTransactions
+        .groupBy { it.unitType }
+        .entries.associateBy(
+            {it.key}, {it.value.sumOf { item -> item.quantity }}
+        )
 }
 
 data class ProductTransaction(

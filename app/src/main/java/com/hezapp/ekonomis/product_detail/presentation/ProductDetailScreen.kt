@@ -33,6 +33,7 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.toFullMonthYearString
 import com.hezapp.ekonomis.product_detail.presentation.component.ChangePeriodDialog
+import com.hezapp.ekonomis.product_detail.presentation.component.CurrentPeriodTransactionSummary
 import com.hezapp.ekonomis.product_detail.presentation.component.DetailTransactionCardListItem
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
@@ -140,6 +141,12 @@ private fun ProductDetailScreen(
             Spacer(Modifier.height(36.dp))
         }
 
+        item {
+            CurrentPeriodTransactionSummary(productDetail = productDetail)
+
+            Spacer(Modifier.height(36.dp))
+        }
+
         renderListProductTransaction(
             isOutTableTransaction = false,
             productTransactions = productDetail.inProductTransactions,
@@ -217,7 +224,7 @@ private fun PreviewProductDetailScreen(){
                                 date = listDate[0],
                                 ppn = null,
                                 quantity = 12,
-                                price = (500_000_000).toInt(),
+                                price = (324_000_000).toInt(),
                                 unitType = UnitType.CARTON,
                                 profileName = "Bu Mega"
                         ),

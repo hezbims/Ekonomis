@@ -218,6 +218,7 @@ private fun PreviewProductDetailScreen(){
                 productDetail = ProductDetail(
                     id = 0,
                     productName = "White Heinz Vinegar",
+                    firstDayOfMonthStock = null,
                     inProductTransactions = listOf(
                         ProductTransaction(
                                 id = 4,

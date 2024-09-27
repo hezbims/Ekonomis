@@ -1,9 +1,9 @@
 package com.hezapp.ekonomis.product_detail.presentation.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,33 +13,38 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
+import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 
 @Composable
-fun LazyItemScope.CurrentPeriodTransactionSummary(productDetail: ProductDetail){
+fun CurrentPeriodTransactionSummary(productDetail: ProductDetail){
     Text(
         stringResource(R.string.transaction_summary),
         style = MaterialTheme.typography.titleMedium
     )
 
-    SummaryPerTransaction(
-        totalPerUnit = productDetail.totalInUnit,
-        totalPrice = productDetail.totalInPrice,
-        transactionType = TransactionType.PEMBELIAN,
-    )
+    Column(
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        SummaryPerTransactionType(
+            totalPerUnit = productDetail.totalInUnit,
+            totalPrice = productDetail.totalInPrice,
+            transactionType = TransactionType.PEMBELIAN,
+        )
 
-    SummaryPerTransaction(
-        totalPerUnit = productDetail.totalOutUnit,
-        totalPrice = productDetail.totalOutPrice,
-        transactionType = TransactionType.PENJUALAN,
-    )
+        SummaryPerTransactionType(
+            totalPerUnit = productDetail.totalOutUnit,
+            totalPrice = productDetail.totalOutPrice,
+            transactionType = TransactionType.PENJUALAN,
+        )
+    }
 }
 
 @Composable
-private fun SummaryPerTransaction(
-    totalPerUnit: Map<UnitType, Int>,
+private fun SummaryPerTransactionType(
+    totalPerUnit: QuantityPerUnitType,
     totalPrice: Long,
     transactionType: TransactionType,
 ){
@@ -49,7 +54,7 @@ private fun SummaryPerTransaction(
     }
 
     Text(
-        text = "- Barang $transactionString",
+        text = "\u2022 Barang $transactionString",
         style = MaterialTheme.typography.bodyMedium,
     )
 
@@ -82,10 +87,10 @@ private fun SummaryPerTransaction(
 }
 
 @Composable
-private fun TotalUnitText(totalPerUnit : Map<UnitType, Int>){
+private fun TotalUnitText(totalPerUnit : QuantityPerUnitType){
     Text(
-        text = "${totalPerUnit[UnitType.CARTON] ?: 0} ${stringResource(UnitType.CARTON.getStringId())}, " +
-            "${totalPerUnit[UnitType.PIECE] ?: 0} ${stringResource(UnitType.PIECE.getStringId())}",
+        text = "${totalPerUnit.cartonQuantity} ${stringResource(UnitType.CARTON.getStringId())}, " +
+            "${totalPerUnit.pieceQuantity} ${stringResource(UnitType.PIECE.getStringId())}",
         style = MaterialTheme.typography.bodySmall
     )
 }

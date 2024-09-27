@@ -12,10 +12,12 @@ import com.hezapp.ekonomis.core.domain.utils.toCalendar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.last
 
 class GetProductDetailUseCase(
     private val productRepo : IProductRepo,
     private val invoiceItemRepo: IInvoiceItemRepo,
+    private val getStockOfAMonthPerUnitTypeUseCase: GetStockOfAMonthPerUnitTypeUseCase,
 ) {
     operator fun invoke(
         productId : Int,
@@ -41,12 +43,18 @@ class GetProductDetailUseCase(
             transactionType = TransactionType.PEMBELIAN,
         )
 
+        val firstDayOfMonthStock = getStockOfAMonthPerUnitTypeUseCase(
+            monthPeriod = startMonthPeriod,
+            productId = productId,
+        ).last()
+
         emit(ResponseWrapper.Succeed(
             ProductDetail(
                 id = currentProduct.id,
                 inProductTransactions = inTransactions,
                 outProductTransactions = outTransactions,
                 productName = currentProduct.name,
+                firstDayOfMonthStock = firstDayOfMonthStock.asSucceed().data,
             )
         ))
     }.catch { emit(ResponseWrapper.Failed()) }

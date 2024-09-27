@@ -8,6 +8,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.product.Ins
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.AddNewProfileUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.GetListProfileUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
+import com.hezapp.ekonomis.product_detail.domain.use_case.GetStockOfAMonthPerUnitTypeUseCase
 import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
 import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransactionHistoryUseCase
 import org.koin.dsl.module
@@ -39,8 +40,11 @@ val UseCaseModule = module {
         repo = get()
     ) }
 
+    factory { GetStockOfAMonthPerUnitTypeUseCase(repo = get()) }
+
     factory { GetProductDetailUseCase(
         productRepo = get(),
-        invoiceItemRepo = get()
+        invoiceItemRepo = get(),
+        getStockOfAMonthPerUnitTypeUseCase = get(),
     ) }
 }

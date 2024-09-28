@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.core.domain.invoice_item.repo
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.core.domain.product.model.QuantityPerUnitType
 
 interface IInvoiceItemRepo {
     suspend fun createOrUpdateInvoiceItems(invoiceItems: List<InvoiceItemEntity>)
@@ -14,4 +15,8 @@ interface IInvoiceItemRepo {
         productId: Int,
         transactionType: TransactionType,
     ) : List<ProductTransaction>
+    suspend fun getProductStockOnPreviousMonth(
+        currentMonthBeginning: Long,
+        productId: Int,
+    ) : QuantityPerUnitType
 }

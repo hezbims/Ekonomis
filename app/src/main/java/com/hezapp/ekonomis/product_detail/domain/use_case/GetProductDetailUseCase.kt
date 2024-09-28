@@ -40,6 +40,10 @@ class GetProductDetailUseCase(
             endPeriod = endMonthPeriod,
             transactionType = TransactionType.PEMBELIAN,
         )
+        val prevMonthStock = invoiceItemRepo.getProductStockOnPreviousMonth(
+            currentMonthBeginning = startMonthPeriod,
+            productId = productId,
+        )
 
         emit(ResponseWrapper.Succeed(
             ProductDetail(
@@ -47,6 +51,7 @@ class GetProductDetailUseCase(
                 inProductTransactions = inTransactions,
                 outProductTransactions = outTransactions,
                 productName = currentProduct.name,
+                prevMonthStock = prevMonthStock,
             )
         ))
     }.catch { emit(ResponseWrapper.Failed()) }

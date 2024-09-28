@@ -10,6 +10,7 @@ data class ProductDetail(
     val productName: String,
     val outProductTransactions : List<ProductTransaction>,
     val inProductTransactions : List<ProductTransaction>,
+    val prevMonthStock: QuantityPerUnitType,
 ){
     val totalOutPrice = outProductTransactions.sumOf {
         it.price.toLong()
@@ -17,17 +18,9 @@ data class ProductDetail(
     val totalInPrice = inProductTransactions.sumOf {
         it.price.toLong()
     }
-    val totalOutUnit = outProductTransactions
-        .groupBy { it.unitType }
-        .entries.associateBy(
-            {it.key}, {it.value.sumOf { item -> item.quantity }}
-        )
+    val totalOutUnit = outProductTransactions.getQuantityPerUnit()
 
-    val totalInUnit = inProductTransactions
-        .groupBy { it.unitType }
-        .entries.associateBy(
-            {it.key}, {it.value.sumOf { item -> item.quantity }}
-        )
+    val totalInUnit = inProductTransactions.getQuantityPerUnit()
 }
 
 data class ProductTransaction(
@@ -53,4 +46,33 @@ data class ProductTransaction(
             quantity = quantity,
             totalPrice = price,
         ).roundToInt()
+}
+
+private operator fun QuantityPerUnitType.minus(other: QuantityPerUnitType) : QuantityPerUnitType {
+    return QuantityPerUnitType(
+        cartonQuantity = cartonQuantity - other.cartonQuantity,
+        pieceQuantity = pieceQuantity - other.pieceQuantity,
+    )
+}
+
+private operator fun QuantityPerUnitType.plus(other: QuantityPerUnitType) : QuantityPerUnitType {
+    return QuantityPerUnitType(
+        cartonQuantity = cartonQuantity + other.cartonQuantity,
+        pieceQuantity = pieceQuantity + other.pieceQuantity,
+    )
+}
+
+fun List<ProductTransaction>.getQuantityPerUnit() : QuantityPerUnitType {
+    return fold(QuantityPerUnitType(0, 0)){ prevQuantity, productTransaction ->
+        when(productTransaction.unitType){
+            UnitType.PIECE ->
+                prevQuantity.copy(
+                    pieceQuantity = productTransaction.quantity + prevQuantity.pieceQuantity
+                )
+            UnitType.CARTON ->
+                prevQuantity.copy(
+                    cartonQuantity = productTransaction.quantity + prevQuantity.cartonQuantity
+                )
+        }
+    }
 }

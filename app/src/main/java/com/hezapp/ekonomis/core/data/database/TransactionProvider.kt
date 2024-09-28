@@ -6,8 +6,8 @@ import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 class TransactionProvider(
     private val db : EkonomisDatabase
 ) : ITransactionProvider {
-    override suspend fun <R> withTransaction(block: suspend () -> R) {
-        db.withTransaction {
+    override suspend fun <R> withTransaction(block: suspend () -> R) : R {
+        return db.withTransaction {
             block()
         }
     }

@@ -45,6 +45,7 @@ val UseCaseModule = module {
     factory { GetProductDetailUseCase(
         productRepo = get(),
         invoiceItemRepo = get(),
-        getStockOfAMonthPerUnitTypeUseCase = get(),
+        monthlyStockRepo = get(),
+        transactionProvider = get(),
     ) }
 }

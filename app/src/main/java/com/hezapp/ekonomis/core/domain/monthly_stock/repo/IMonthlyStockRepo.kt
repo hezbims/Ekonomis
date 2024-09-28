@@ -7,4 +7,6 @@ interface IMonthlyStockRepo {
         startMonthPeriod: Long,
         productId: Int,
     ) : MonthlyStockEntity?
+
+    suspend fun upsertMonthlyStock(monthlyStockEntity: MonthlyStockEntity)
 }

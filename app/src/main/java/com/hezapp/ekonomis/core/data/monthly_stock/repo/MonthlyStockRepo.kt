@@ -23,4 +23,8 @@ class MonthlyStockRepo(
             productId = productId,
         )
     }
+
+    override suspend fun upsertMonthlyStock(monthlyStockEntity: MonthlyStockEntity) {
+        dao.upsert(monthlyStockEntity)
+    }
 }

@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
+import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
@@ -218,7 +219,7 @@ private fun PreviewProductDetailScreen(){
                 productDetail = ProductDetail(
                     id = 0,
                     productName = "White Heinz Vinegar",
-                    firstDayOfMonthStock = null,
+                    firstDayOfMonthStock = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0),
                     inProductTransactions = listOf(
                         ProductTransaction(
                                 id = 4,

@@ -18,8 +18,7 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
     ],
     tableName = "monthly_stock",
     indices = [
-        Index("month_year_period", unique = true),
-        Index("product_id")
+        Index("product_id", "month_year_period", unique = true)
     ]
 )
 data class MonthlyStockEntity(

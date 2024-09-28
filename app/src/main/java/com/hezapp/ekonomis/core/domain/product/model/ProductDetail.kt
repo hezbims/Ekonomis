@@ -6,26 +6,38 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.PriceUtils
 import kotlin.math.roundToInt
 
-data class ProductDetail(
+class ProductDetail(
     val id: Int,
     val productName: String,
-    val outProductTransactions : List<ProductTransaction>,
-    val inProductTransactions : List<ProductTransaction>,
-    val firstDayOfMonthStock: QuantityPerUnitType?,
-){
+    outProductTransactions : List<ProductTransaction>,
+    inProductTransactions : List<ProductTransaction>,
+    firstDayOfMonthStock: QuantityPerUnitType,
+)  : TransactionSummary(
+    outProductTransactions = outProductTransactions,
+    inProductTransactions = inProductTransactions,
+    firstDayOfMonthStock = firstDayOfMonthStock,
+) {
     val totalOutPrice = outProductTransactions.sumOf {
         it.price.toLong()
     }
     val totalInPrice = inProductTransactions.sumOf {
         it.price.toLong()
     }
+}
+
+open class TransactionSummary(
+    val outProductTransactions : List<ProductTransaction>,
+    val inProductTransactions : List<ProductTransaction>,
+    val firstDayOfMonthStock: QuantityPerUnitType?,
+){
     val totalOutUnit : QuantityPerUnitType = outProductTransactions.getQuantityPerUnit()
 
     val totalInUnit : QuantityPerUnitType = inProductTransactions.getQuantityPerUnit()
 
-    val currentStock : QuantityPerUnitType? = firstDayOfMonthStock?.let {
-        it - totalOutUnit + totalInUnit
-    }
+    val latestDayOfMonthStock : QuantityPerUnitType =
+        (firstDayOfMonthStock ?: QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0)) -
+        totalOutUnit +
+        totalInUnit
 }
 
 data class ProductTransaction(
@@ -53,14 +65,14 @@ data class ProductTransaction(
         ).roundToInt()
 }
 
-private operator fun QuantityPerUnitType.minus(other: QuantityPerUnitType) : QuantityPerUnitType {
+operator fun QuantityPerUnitType.minus(other: QuantityPerUnitType) : QuantityPerUnitType {
     return QuantityPerUnitType(
         cartonQuantity = cartonQuantity - other.cartonQuantity,
         pieceQuantity = pieceQuantity - other.pieceQuantity,
     )
 }
 
-private operator fun QuantityPerUnitType.plus(other: QuantityPerUnitType) : QuantityPerUnitType {
+operator fun QuantityPerUnitType.plus(other: QuantityPerUnitType) : QuantityPerUnitType {
     return QuantityPerUnitType(
         cartonQuantity = cartonQuantity + other.cartonQuantity,
         pieceQuantity = pieceQuantity + other.pieceQuantity,

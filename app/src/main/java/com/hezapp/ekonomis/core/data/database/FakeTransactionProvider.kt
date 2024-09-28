@@ -8,8 +8,8 @@ import kotlinx.coroutines.withContext
 
 class FakeTransactionProvider : ITransactionProvider {
 
-    override suspend fun <R> withTransaction(block: suspend () -> R) {
-        mutex.withLock {
+    override suspend fun <R> withTransaction(block: suspend () -> R) : R {
+        return mutex.withLock {
             withContext(Dispatchers.IO){
                 block()
             }

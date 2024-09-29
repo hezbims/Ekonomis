@@ -8,6 +8,7 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.dialog
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
@@ -21,7 +22,10 @@ import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.koinNavGraphViewModel
 import com.hezapp.ekonomis.core.presentation.utils.navGraphViewModel
+import com.hezapp.ekonomis.product_detail.presentation.EditCurrentMonthlyStockDialog
+import com.hezapp.ekonomis.product_detail.presentation.ProductDetailEvent
 import com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen
+import com.hezapp.ekonomis.product_detail.presentation.ProductDetailViewModel
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
@@ -143,18 +147,55 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
+                    navigation<MyRoutes.NavGraph.ProductDetail>(
+                        startDestination = MyRoutes.DetailProduct(0)
+                    ){
+                        composable<MyRoutes.DetailProduct> { backStack ->
+                            val productId = backStack.toRoute<MyRoutes.DetailProduct>().productId
+                            val viewModel = backStack.koinNavGraphViewModel<ProductDetailViewModel>(
+                                navController = navController,
+                                countParent = 1,
+                                parameters = { parametersOf(productId) }
+                            )
+
+                            viewModel?.let {
+                                ProductDetailScreen(
+                                    productId = productId,
+                                    navController = navController,
+                                    viewModel = it,
+                                )
+                            }
+                        }
+
+                        dialog<MyRoutes.EditMonthlyStock> {
+                            val viewModel = it.koinNavGraphViewModel<ProductDetailViewModel>(
+                                navController = navController,
+                                countParent = 1,
+                            )
+
+                            val args = it.toRoute<MyRoutes.EditMonthlyStock>()
+
+                            viewModel?.let {
+                                EditCurrentMonthlyStockDialog(
+                                    args = args,
+                                    onDismissRequest = {
+                                        navController.goBackSafely()
+                                    },
+                                    onMonthlyStockEdited = {
+                                        it.onEvent(ProductDetailEvent.LoadDetailProduct)
+                                        navController.goBackSafely()
+                                    }
+                                )
+                            }
+                        }
+                    }
+
                     composable<MyRoutes.ProductPreview> {
                         ProductPreviewScreen(
                             navController = navController,
                         )
                     }
 
-                    composable<MyRoutes.DetailProduct> {
-                        ProductDetailScreen(
-                            productId = it.toRoute<MyRoutes.DetailProduct>().productId,
-                            navController = navController,
-                        )
-                    }
 
                 }
 

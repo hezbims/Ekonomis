@@ -66,4 +66,13 @@
     <string name="register_new_product_here_label">Daftarkan barang baru disini</string>
     <string name="product_name_not_found_question">Nama barang tidak ketemu?\n</string>
     <string name="transaction_summary">Rangkuman Transaksi</string>
+    <string name="save_label">Simpan</string>
+    <string name="transaction_histories_doesnt_exists">Belum ada catatan transaksi</string>
+    <string name="use_previous_month_calculation">Gunakan perhitungan stock bulan sebelumnya</string>
+    <string name="edit_first_day_of_month_stock">Edit Stock Awal Bulan</string>
+    <string name="latest_stock_label">Stock terakhir</string>
+    <string name="beginning_of_month_stock_label">Stock awal bulan</string>
+    <string name="in_product_label">Barang masuk</string>
+    <string name="out_product_label">Barang keluar</string>
+    <string name="product_amount_label">Jumlah barang</string>
 </resources>

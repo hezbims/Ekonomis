@@ -24,7 +24,10 @@ import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 
 @Composable
-fun CurrentPeriodTransactionSummary(productDetail: ProductDetail){
+fun CurrentPeriodTransactionSummary(
+    productDetail: ProductDetail,
+    onClickEditMonthlyStock: () -> Unit,
+){
     Text(
         stringResource(R.string.transaction_summary),
         style = MaterialTheme.typography.titleMedium
@@ -47,7 +50,10 @@ fun CurrentPeriodTransactionSummary(productDetail: ProductDetail){
 
         Spacer(Modifier.height(10.dp))
 
-        FirstDayOfMonthStock(firstDayOfMonthStock = productDetail.firstDayOfMonthStock!!)
+        FirstDayOfMonthStock(
+            firstDayOfMonthStock = productDetail.firstDayOfMonthStock,
+            onClickEditMontlyStock = onClickEditMonthlyStock
+        )
 
         CurrentStock(currentStock = productDetail.latestDayOfMonthStock)
     }
@@ -59,21 +65,21 @@ private fun SummaryPerTransactionType(
     totalPrice: Long,
     transactionType: TransactionType,
 ){
-    val transactionString = when(transactionType){
-        TransactionType.PEMBELIAN -> "masuk"
-        TransactionType.PENJUALAN -> "keluar"
+    val transactionProductString = when(transactionType){
+        TransactionType.PEMBELIAN -> stringResource(R.string.in_product_label)
+        TransactionType.PENJUALAN -> stringResource(R.string.out_product_label)
     }
 
     Column {
         Text(
-            text = "\u2022 Barang $transactionString",
+            text = "\u2022 $transactionProductString",
             style = MaterialTheme.typography.bodyMedium,
         )
 
         Row(modifier = Modifier.padding(start = 20.dp)) {
             Column {
                 Text(
-                    text = "Jumlah barang",
+                    text = stringResource(R.string.product_amount_label),
                     style = MaterialTheme.typography.bodySmall,
                 )
                 Text(
@@ -100,13 +106,16 @@ private fun SummaryPerTransactionType(
 }
 
 @Composable
-private fun FirstDayOfMonthStock(firstDayOfMonthStock: QuantityPerUnitType){
+private fun FirstDayOfMonthStock(
+    firstDayOfMonthStock: QuantityPerUnitType,
+    onClickEditMontlyStock: () -> Unit,
+){
     Row(
         verticalAlignment = Alignment.Top,
     ) {
         Column {
             Text(
-                text = "\u2022 Stock awal bulan",
+                text = "\u2022 ${stringResource(R.string.beginning_of_month_stock_label)}",
                 style = MaterialTheme.typography.bodyMedium
             )
 
@@ -119,7 +128,7 @@ private fun FirstDayOfMonthStock(firstDayOfMonthStock: QuantityPerUnitType){
         Spacer(Modifier.width(8.dp))
 
         TextButton(
-            onClick = {},
+            onClick = onClickEditMontlyStock,
             contentPadding = PaddingValues(vertical = 0.dp)
         ) {
             Text(stringResource(R.string.change_label))
@@ -131,7 +140,7 @@ private fun FirstDayOfMonthStock(firstDayOfMonthStock: QuantityPerUnitType){
 private fun CurrentStock(currentStock: QuantityPerUnitType){
     Column {
         Text(
-            text = "\u2022 Stock sekarang",
+            text = "\u2022 ${stringResource(R.string.latest_stock_label)}",
             style = MaterialTheme.typography.bodyMedium
         )
 

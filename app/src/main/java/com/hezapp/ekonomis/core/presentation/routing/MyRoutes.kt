@@ -39,7 +39,18 @@ sealed class MyRoutes {
     @Serializable
     class DetailProduct(val productId: Int) : MyRoutes()
 
+    @Serializable
+    class EditMonthlyStock(
+        val period: Long,
+        val pieceQuantity: Int,
+        val cartonQuantity: Int,
+        val productId: Int,
+        val monthlyStockId: Int,
+    ) : MyRoutes()
+
     object NavGraph {
+        @Serializable
+        data object ProductDetail
         @Serializable
         data object AddOrUpdateTransaction
         @Serializable

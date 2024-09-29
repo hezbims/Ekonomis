@@ -22,5 +22,5 @@ interface MonthlyStockDao {
     ) : MonthlyStockEntity?
 
     @Upsert
-    suspend fun upsert(monthlyStockEntity: MonthlyStockEntity)
+    suspend fun upsert(monthlyStockEntity: MonthlyStockEntity) : Long
 }

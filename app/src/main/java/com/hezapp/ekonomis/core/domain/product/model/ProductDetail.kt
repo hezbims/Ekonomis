@@ -6,17 +6,26 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.PriceUtils
 import kotlin.math.roundToInt
 
-class ProductDetail(
+data class ProductDetail(
     val id: Int,
     val productName: String,
-    outProductTransactions : List<ProductTransaction>,
-    inProductTransactions : List<ProductTransaction>,
-    firstDayOfMonthStock: QuantityPerUnitType,
-)  : TransactionSummary(
-    outProductTransactions = outProductTransactions,
-    inProductTransactions = inProductTransactions,
-    firstDayOfMonthStock = firstDayOfMonthStock,
+    val transactionSummary: TransactionSummary,
 ) {
+    val outProductTransactions : List<ProductTransaction>
+        get() = transactionSummary.outProductTransactions
+    val inProductTransactions : List<ProductTransaction>
+        get() = transactionSummary.inProductTransactions
+    val firstDayOfMonthStock : QuantityPerUnitType
+        get() = transactionSummary.firstDayOfMonthStock!!
+    val monthlyStockId : Int
+        get() = transactionSummary.monthlyStockId
+    val totalOutUnit : QuantityPerUnitType
+        get() = transactionSummary.totalOutUnit
+    val totalInUnit : QuantityPerUnitType
+        get() = transactionSummary.totalInUnit
+    val latestDayOfMonthStock : QuantityPerUnitType
+        get() = transactionSummary.latestDayOfMonthStock
+
     val totalOutPrice = outProductTransactions.sumOf {
         it.price.toLong()
     }
@@ -25,10 +34,11 @@ class ProductDetail(
     }
 }
 
-open class TransactionSummary(
+data class TransactionSummary(
     val outProductTransactions : List<ProductTransaction>,
     val inProductTransactions : List<ProductTransaction>,
     val firstDayOfMonthStock: QuantityPerUnitType?,
+    val monthlyStockId: Int,
 ){
     val totalOutUnit : QuantityPerUnitType = outProductTransactions.getQuantityPerUnit()
 

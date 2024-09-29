@@ -9,6 +9,7 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCas
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -46,7 +47,7 @@ class ProductDetailViewModel(
             getProductDetail(
                 productId = productId,
                 monthYearPeriod = _state.value.currentPeriod,
-            ).collect { response ->
+            ).filter { !it.isLoading() }.collect { response ->
                 _state.update { it.copy(detailProductResponse = response) }
             }
         }

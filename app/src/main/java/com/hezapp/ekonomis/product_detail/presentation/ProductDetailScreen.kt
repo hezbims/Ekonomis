@@ -30,24 +30,23 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
+import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toFullMonthYearString
 import com.hezapp.ekonomis.product_detail.presentation.component.ChangePeriodDialog
 import com.hezapp.ekonomis.product_detail.presentation.component.CurrentPeriodTransactionSummary
 import com.hezapp.ekonomis.product_detail.presentation.component.DetailTransactionCardListItem
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import java.util.Calendar
 
 @Composable
 fun ProductDetailScreen(
     productId: Int,
     navController: NavHostController,
-    viewModel: ProductDetailViewModel = koinViewModel(
-        parameters = { parametersOf(productId) }
-    ),
+    viewModel: ProductDetailViewModel,
 ){
     val context = LocalContext.current
     val scaffoldState = remember {
@@ -74,6 +73,17 @@ fun ProductDetailScreen(
                 currentPeriod = state.currentPeriod,
                 onClickChangePeriodButton = {
                     viewModel.onEvent(ProductDetailEvent.ShowChangePeriodDialog)
+                },
+                onClickEditMonthlyStock = {
+                    navController.navigateOnce(
+                        MyRoutes.EditMonthlyStock(
+                            cartonQuantity = it.firstDayOfMonthStock.cartonQuantity,
+                            pieceQuantity = it.firstDayOfMonthStock.pieceQuantity,
+                            monthlyStockId = it.monthlyStockId,
+                            period = state.currentPeriod,
+                            productId = productId
+                        )
+                    )
                 }
             )
         }
@@ -96,6 +106,7 @@ private fun ProductDetailScreen(
     productDetail: ProductDetail,
     currentPeriod: Long,
     onClickChangePeriodButton: () -> Unit,
+    onClickEditMonthlyStock: () -> Unit,
 ){
     LazyColumn(
         contentPadding = PaddingValues(vertical = 24.dp, horizontal = 24.dp),
@@ -143,7 +154,10 @@ private fun ProductDetailScreen(
         }
 
         item {
-            CurrentPeriodTransactionSummary(productDetail = productDetail)
+            CurrentPeriodTransactionSummary(
+                productDetail = productDetail,
+                onClickEditMonthlyStock = onClickEditMonthlyStock,
+            )
 
             Spacer(Modifier.height(36.dp))
         }
@@ -193,7 +207,7 @@ private fun LazyListScope.renderListProductTransaction(
     if (productTransactions.isEmpty())
         item {
             Text(
-                text = "Belum ada catatan transaksi",
+                text = stringResource(R.string.transaction_histories_doesnt_exists),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -219,9 +233,10 @@ private fun PreviewProductDetailScreen(){
                 productDetail = ProductDetail(
                     id = 0,
                     productName = "White Heinz Vinegar",
-                    firstDayOfMonthStock = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0),
-                    inProductTransactions = listOf(
-                        ProductTransaction(
+                    TransactionSummary(
+                        firstDayOfMonthStock = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0),
+                        inProductTransactions = listOf(
+                            ProductTransaction(
                                 id = 4,
                                 date = listDate[0],
                                 ppn = null,
@@ -229,8 +244,8 @@ private fun PreviewProductDetailScreen(){
                                 price = (324_000_000).toInt(),
                                 unitType = UnitType.CARTON,
                                 profileName = "Bu Mega"
-                        ),
-                        ProductTransaction(
+                            ),
+                            ProductTransaction(
                                 id = 5,
                                 date = listDate[1],
                                 ppn = null,
@@ -238,47 +253,50 @@ private fun PreviewProductDetailScreen(){
                                 price = (500_000).toInt(),
                                 unitType = UnitType.PIECE,
                                 profileName = "Bu Mega"
+                            ),
+                            ProductTransaction(
+                                id = 6,
+                                date = listDate[2],
+                                ppn = null,
+                                quantity = 1,
+                                price = (45_000).toInt(),
+                                unitType = UnitType.CARTON,
+                                profileName = "Bu Mega"
+                            )
                         ),
-                        ProductTransaction(
-                            id = 6,
-                            date = listDate[2],
-                            ppn = null,
-                            quantity = 1,
-                            price = (45_000).toInt(),
-                            unitType = UnitType.CARTON,
-                            profileName = "Bu Mega"
-                        )
-                    ),
-                    outProductTransactions = listOf(
-                        ProductTransaction(
-                            id = 0,
-                            date = listDate[0],
-                            ppn = 12,
-                            quantity = 12,
-                            price = (500_000_000).toInt(),
-                            unitType = UnitType.CARTON,
-                            profileName = "Bu Mega"
+                        outProductTransactions = listOf(
+                            ProductTransaction(
+                                id = 0,
+                                date = listDate[0],
+                                ppn = 12,
+                                quantity = 12,
+                                price = (500_000_000).toInt(),
+                                unitType = UnitType.CARTON,
+                                profileName = "Bu Mega"
+                            ),
+                            ProductTransaction(
+                                id = 1,
+                                date = listDate[1],
+                                ppn = null,
+                                quantity = 150,
+                                price = (500_000).toInt(),
+                                unitType = UnitType.PIECE,
+                                profileName = "Bu Mega"
+                            ),
+                            ProductTransaction(
+                                id = 2,
+                                date = listDate[2],
+                                ppn = null,
+                                quantity = 1,
+                                price = (45_000).toInt(),
+                                unitType = UnitType.CARTON,
+                                profileName = "Bu Mega"
+                            ),
                         ),
-                        ProductTransaction(
-                            id = 1,
-                            date = listDate[1],
-                            ppn = null,
-                            quantity = 150,
-                            price = (500_000).toInt(),
-                            unitType = UnitType.PIECE,
-                            profileName = "Bu Mega"
-                        ),
-                        ProductTransaction(
-                            id = 2,
-                            date = listDate[2],
-                            ppn = null,
-                            quantity = 1,
-                            price = (45_000).toInt(),
-                            unitType = UnitType.CARTON,
-                            profileName = "Bu Mega"
-                        ),
-                    ),
-                )
+                        monthlyStockId = 1,
+                    )
+                ),
+                onClickEditMonthlyStock = {}
             )
         }
     }

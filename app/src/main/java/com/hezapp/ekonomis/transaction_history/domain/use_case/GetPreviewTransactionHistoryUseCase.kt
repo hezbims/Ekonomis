@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.transaction_history.domain.use_case
 
+import android.util.Log
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
@@ -19,6 +20,7 @@ class GetPreviewTransactionHistoryUseCase(
         emit(ResponseWrapper.Loading())
         emit(ResponseWrapper.Succeed(repo.getPreviewInvoices(filter)))
     }.catch {
+        Log.e("qqq get preview transaction ","${it.message}\n${it.stackTrace}")
         emit(ResponseWrapper.Failed())
     }
 }

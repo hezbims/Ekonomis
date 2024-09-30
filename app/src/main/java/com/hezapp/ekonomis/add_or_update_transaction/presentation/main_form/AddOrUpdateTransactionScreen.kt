@@ -61,6 +61,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.util
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
@@ -73,7 +74,6 @@ import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 @Composable
 fun AddOrUpdateTransactionScreen(
@@ -438,7 +438,7 @@ private fun ChooseDateField(
 
     if (showDatePicker){
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = value ?: Calendar.getInstance().timeInMillis
+            initialSelectedDateMillis = value ?: calendarProvider.getCalendar().timeInMillis
         )
         DatePickerDialog (
             onDismissRequest = { showDatePicker = false },

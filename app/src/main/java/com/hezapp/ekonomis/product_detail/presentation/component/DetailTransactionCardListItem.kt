@@ -27,11 +27,11 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
-import java.util.Calendar
 
 @Composable
 fun DetailTransactionCardListItem(
@@ -169,7 +169,7 @@ private fun PreviewExpandedOutTransactionCard(){
             DetailTransactionCardListItem(
                 item = ProductTransaction(
                     id = 0,
-                    date = Calendar.getInstance().timeInMillis,
+                    date = PreviewCalendarProvider().getCalendar().timeInMillis,
                     ppn = 11,
                     profileName = "Feni",
                     quantity = 5,

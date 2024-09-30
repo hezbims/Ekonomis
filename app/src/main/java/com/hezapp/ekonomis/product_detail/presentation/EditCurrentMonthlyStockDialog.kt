@@ -31,6 +31,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
@@ -40,7 +41,6 @@ import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldErro
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
-import java.util.Calendar
 
 @Composable
 fun EditCurrentMonthlyStockDialog(
@@ -231,7 +231,7 @@ private fun SetCurrentMonthlyStockDialogPreview(){
                     )
                 ),
                 onDismissRequest = {},
-                period = Calendar.getInstance().timeInMillis,
+                period = PreviewCalendarProvider().getCalendar().timeInMillis,
                 onEvent = {}
             )
         }

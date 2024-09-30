@@ -21,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
@@ -74,7 +75,7 @@ fun TransactionHistoryListView(
 @Composable
 @Preview
 fun PreviewTransactionHistoryListView(){
-    val initialDate = Calendar.getInstance().apply {
+    val initialDate = PreviewCalendarProvider().getCalendar().apply {
         set(Calendar.MONTH, 1)
         set(Calendar.YEAR , 2023)
     }

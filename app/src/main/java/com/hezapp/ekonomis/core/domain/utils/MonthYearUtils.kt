@@ -3,7 +3,7 @@ package com.hezapp.ekonomis.core.domain.utils
 import java.util.Calendar
 
 fun Calendar.toBeginningOfMonth() : Calendar {
-    return Calendar.getInstance().apply {
+    return calendarProvider.getCalendar().apply {
         timeInMillis = this@toBeginningOfMonth.timeInMillis
         set(Calendar.DAY_OF_MONTH, 1)
         set(Calendar.HOUR_OF_DAY, 0)
@@ -32,7 +32,7 @@ fun Long.getPreviousMonthYear() : Long {
 
 fun Long.isInAMonthYearPeriod(monthYearPeriod: Long) : Boolean {
     val currentMonthYearPeriodCalendar = monthYearPeriod.toCalendar().toBeginningOfMonth()
-    val nextMonthYearPeriod = Calendar.getInstance().apply {
+    val nextMonthYearPeriod = calendarProvider.getCalendar().apply {
         timeInMillis = currentMonthYearPeriodCalendar.timeInMillis
         add(Calendar.MONTH, 1)
     }
@@ -42,7 +42,7 @@ fun Long.isInAMonthYearPeriod(monthYearPeriod: Long) : Boolean {
 }
 
 fun Long.toCalendar() : Calendar {
-    return Calendar.getInstance().apply {
+    return calendarProvider.getCalendar().apply {
         timeInMillis = this@toCalendar
     }
 }

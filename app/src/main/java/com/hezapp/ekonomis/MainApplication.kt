@@ -1,6 +1,7 @@
 package com.hezapp.ekonomis
 
 import android.app.Application
+import com.hezapp.ekonomis.koin_module.CalendarModule
 import com.hezapp.ekonomis.koin_module.DaoModule
 import com.hezapp.ekonomis.koin_module.DatabaseModule
 import com.hezapp.ekonomis.koin_module.RepositoryModule
@@ -14,17 +15,18 @@ class MainApplication : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@MainApplication)
-            modules(
-                DatabaseModule,
-                DaoModule,
-                RepositoryModule,
-                UseCaseModule,
-                ViewModelModule,
-            )
+            modules(koinModules)
         }
     }
 
     companion object {
-        lateinit var currentApplication: Application
+        val koinModules = listOf(
+            DatabaseModule,
+            CalendarModule,
+            DaoModule,
+            RepositoryModule,
+            UseCaseModule,
+            ViewModelModule,
+        )
     }
 }

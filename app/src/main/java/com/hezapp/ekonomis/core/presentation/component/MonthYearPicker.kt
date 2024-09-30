@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.core.presentation.component
 
-import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +15,15 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
+import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import com.hezapp.ekonomis.core.presentation.utils.toShortMonthYearString
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
@@ -58,10 +60,14 @@ fun MonthYearPicker(
                     )
                 }
 
-                Text(
-                    Calendar.getInstance().apply {
+                val monthYearText = remember(monthYear) {
+                    calendarProvider.getCalendar().apply {
                         timeInMillis = monthYear
-                    }.timeInMillis.toShortMonthYearString(),
+                    }.timeInMillis.toShortMonthYearString()
+                }
+
+                Text(
+                    monthYearText,
                     modifier = Modifier.padding(
                         vertical = 10.dp, horizontal = 12.dp,
                     ),
@@ -86,7 +92,7 @@ fun PreviewMonthYearPicker(){
     EkonomisTheme {
         Surface {
             MonthYearPicker(
-                monthYear = Calendar.getInstance().timeInMillis,
+                monthYear = PreviewCalendarProvider().getCalendar().timeInMillis,
                 onDecrementMonthYear = {},
                 onIncrementMonthYear = {},
                 modifier = Modifier.padding(24.dp)

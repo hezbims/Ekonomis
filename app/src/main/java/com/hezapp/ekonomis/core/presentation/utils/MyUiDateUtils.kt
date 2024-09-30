@@ -1,28 +1,28 @@
 package com.hezapp.ekonomis.core.presentation.utils
 
 import android.annotation.SuppressLint
-import android.icu.util.Calendar
+import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 fun Long.toMyDateString() : String {
-    val currentDate = Calendar.getInstance().also { it.timeInMillis = this }
+    val currentDate = calendarProvider.getCalendar().also{ it.timeInMillis = this }
     return myDateFormatter.format(currentDate.time)
 }
 
 fun Long.toShortDateString() : String {
-    val currentDate = Calendar.getInstance().also { it.timeInMillis = this }
+    val currentDate = calendarProvider.getCalendar().also { it.timeInMillis = this }
     return myShortDateFormatter.format(currentDate.time)
 }
 
 fun Long.toFullMonthYearString() : String =
     myFullMonthYearFormatter.format(
-        Calendar.getInstance().also { it.timeInMillis = this }.time
+        calendarProvider.getCalendar().also { it.timeInMillis = this }.time
     )
 
 fun Long.toShortMonthYearString() : String =
     myShortMonthYearFormatter.format(
-        Calendar.getInstance().also { it.timeInMillis = this }.time
+        calendarProvider.getCalendar().also { it.timeInMillis = this }.time
     )
 
 

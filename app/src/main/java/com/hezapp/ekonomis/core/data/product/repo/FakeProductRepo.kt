@@ -21,7 +21,9 @@ class FakeProductRepo : IProductRepo {
         listProduct.add(newProduct.copy(id = id++))
     }
 
-    override suspend fun getPreviewProductSummaries(): List<PreviewProductSummary> {
+    override suspend fun getPreviewProductSummaries(
+        searchQuery: String,
+    ): List<PreviewProductSummary> {
         return listProduct.map { product ->
 
             val invoiceItemsOut = FakeInvoiceItemRepo.listItem.mapNotNull { invoiceItem ->
@@ -51,7 +53,7 @@ class FakeProductRepo : IProductRepo {
                 quantity = hargaPokokItem?.invoiceItem?.quantity,
                 unitType = hargaPokokItem?.invoiceItem?.unitType,
             )
-        }
+        }.filter { it.name.contains(searchQuery, ignoreCase = true) }
     }
 
     override suspend fun getProduct(productId: Int): ProductEntity {

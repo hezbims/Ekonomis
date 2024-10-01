@@ -11,9 +11,13 @@ import kotlinx.coroutines.flow.flow
 class GetPreviewProductSummariesUseCase(
     private val repo : IProductRepo
 ) {
-    operator fun invoke() : Flow<ResponseWrapper<List<PreviewProductSummary>, MyBasicError>> =
+    operator fun invoke(
+        searchQuery: String,
+    ) : Flow<ResponseWrapper<List<PreviewProductSummary>, MyBasicError>> =
     flow<ResponseWrapper<List<PreviewProductSummary>, MyBasicError>> {
         emit(ResponseWrapper.Loading())
-        emit(ResponseWrapper.Succeed(repo.getPreviewProductSummaries()))
+        emit(ResponseWrapper.Succeed(repo.getPreviewProductSummaries(
+            searchQuery = searchQuery,
+        )))
     }.catch { emit(ResponseWrapper.Failed()) }
 }

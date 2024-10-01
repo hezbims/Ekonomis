@@ -44,8 +44,10 @@ interface ProductDao {
         FROM products
         LEFT JOIN latestSalePerProduct
             ON  product_id = id
+        WHERE name LIKE '%' || :searchQuery || '%'
+        ORDER BY LOWER(name)
     """)
-    suspend fun getPreviewProductSummaries() : List<PreviewProductSummary>
+    suspend fun getPreviewProductSummaries(searchQuery: String) : List<PreviewProductSummary>
 
     @Insert
     suspend fun insertNewProduct(newProduct: ProductEntity)

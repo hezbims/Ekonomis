@@ -14,8 +14,12 @@ class ProductRepo(
     override suspend fun insertProduct(newProduct: ProductEntity) =
         dao.insertNewProduct(newProduct)
 
-    override suspend fun getPreviewProductSummaries(): List<PreviewProductSummary> {
-        return dao.getPreviewProductSummaries()
+    override suspend fun getPreviewProductSummaries(
+        searchQuery: String,
+    ): List<PreviewProductSummary> {
+        return dao.getPreviewProductSummaries(
+            searchQuery = searchQuery,
+        )
     }
 
     override suspend fun getProduct(productId: Int): ProductEntity {

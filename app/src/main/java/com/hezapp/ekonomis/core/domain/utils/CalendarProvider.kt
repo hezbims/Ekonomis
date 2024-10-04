@@ -12,7 +12,7 @@ open class CalendarProvider {
     }
 
     open fun getTimezone() : TimeZone {
-        return TimeZone.getTimeZone("UTC+8")
+        return TimeZone.getTimeZone("GMT+8")
     }
 }
 

@@ -18,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,9 +32,8 @@ import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
-import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
-import com.hezapp.ekonomis.core.presentation.utils.toRupiah
+import com.hezapp.ekonomis.product_preview.presentation.utils.ProductPreviewUiUtils
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -124,13 +124,11 @@ private fun PreviewCardItem(
         },
         supportingContent = {
             Text(
-                "Harga pokok : ${
-                    item.costOfGoodsSold?.let { costOfGoodsSold ->
-                        item.unitType?.let { unitType ->
-                            "${costOfGoodsSold.toRupiah()}/${stringResource(unitType.getStringId())}"
-                        } ?: "-"
-                    } ?: "-"
-                }"
+                ProductPreviewUiUtils.getCostOfGoodsText(
+                    costOfGoodsSold = item.costOfGoodsSold,
+                    unitType = item.unitType,
+                    context = LocalContext.current,
+                )
             )
         },
         trailingContent = {

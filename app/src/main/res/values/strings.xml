@@ -75,4 +75,5 @@
     <string name="in_product_label">Barang masuk</string>
     <string name="out_product_label">Barang keluar</string>
     <string name="product_amount_label">Jumlah barang</string>
+    <string name="cost_of_goods_label">Harga pokok : %1$s</string>
 </resources>

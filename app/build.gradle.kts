@@ -27,7 +27,7 @@ android {
         versionCode = 5
         versionName = "1.2.1"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.hezapp.ekonomis.test_application.MyTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }

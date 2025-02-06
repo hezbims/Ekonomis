@@ -49,22 +49,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.DeleteTransactionDialog
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.LoadingOverlay
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.utils.toFormErrorUiModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
+import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
@@ -74,6 +81,7 @@ import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 @Composable
 fun AddOrUpdateTransactionScreen(
@@ -530,4 +538,44 @@ private fun PpnField(
         supportingText = MyErrorText(error),
         modifier = Modifier.fillMaxWidth()
     )
+}
+
+@Preview
+@Composable
+private fun PreviewAddOrUpdateTransactionScreen(){
+    val navController = rememberNavController()
+    val transactionFormData = TransactionUiFormDataModel(
+        id = 1,
+        transactionType = TransactionType.PEMBELIAN,
+        profile = ProfileEntity(id = 1, name = "Penjual 1", type = ProfileType.SUPPLIER),
+        transactionDateMillis = Calendar.getInstance().timeInMillis,
+        ppn = 11,
+        invoiceItems = listOf(
+            InvoiceItemUiModel(
+                id = 1,
+                productId = 1,
+                productName = "Gula",
+                quantity = 1,
+                price = 1_000_000,
+                unitType = UnitType.PIECE,
+                listId = ""
+            )
+        )
+    )
+    PreviewKoin  {
+        MyScaffold(
+            navController = navController,
+            scaffoldState = MyScaffoldState()
+                .withTitleText("Update Transaction")
+        ) {
+            AddOrUpdateTransactionScreen(
+                navController = navController,
+                state = AddOrUpdateTransactionUiState(
+                    curFormData = transactionFormData,
+                    prevFormData = ResponseWrapper.Succeed(transactionFormData),
+                ),
+                onEvent = {}
+            )
+        }
+    }
 }

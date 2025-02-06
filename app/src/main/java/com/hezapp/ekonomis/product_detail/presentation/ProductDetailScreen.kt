@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -129,8 +131,12 @@ private fun ProductDetailScreen(
                     )
                 }
 
+                val context = LocalContext.current
                 OutlinedButton(
                     onClick = onClickChangePeriodButton,
+                    modifier = Modifier.semantics {
+                        contentDescription = context.getString(R.string.change_period_button)
+                    }
                 ) {
                     Text(stringResource(R.string.change_label))
                 }

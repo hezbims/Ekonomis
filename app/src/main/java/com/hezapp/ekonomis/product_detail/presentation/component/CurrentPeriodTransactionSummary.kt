@@ -13,6 +13,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
@@ -22,6 +23,7 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
+import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
 
 @Composable
 fun CurrentPeriodTransactionSummary(
@@ -94,11 +96,25 @@ private fun SummaryPerTransactionType(
             }
 
             Column {
-                TotalUnitText(totalPerUnit = totalPerUnit)
+                TotalUnitText(
+                    totalPerUnit = totalPerUnit,
+                    modifier = Modifier.testTag(
+                        when(transactionType){
+                            TransactionType.PEMBELIAN -> ProductDetailTestTag.inQuantity
+                            TransactionType.PENJUALAN -> ProductDetailTestTag.outQuantity
+                        }
+                    )
+                )
 
                 Text(
                     text = totalPrice.toRupiah(),
                     style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.testTag(
+                        when(transactionType){
+                            TransactionType.PEMBELIAN -> ProductDetailTestTag.totalInPrice
+                            TransactionType.PENJUALAN -> ProductDetailTestTag.totalOutPrice
+                        }
+                    )
                 )
             }
         }
@@ -121,7 +137,9 @@ private fun FirstDayOfMonthStock(
 
             TotalUnitText(
                 totalPerUnit = firstDayOfMonthStock,
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier
+                    .padding(start = 20.dp)
+                    .testTag(ProductDetailTestTag.beginningOfMonthStock)
             )
         }
 
@@ -146,7 +164,9 @@ private fun CurrentStock(currentStock: QuantityPerUnitType){
 
         TotalUnitText(
             totalPerUnit = currentStock,
-            modifier = Modifier.padding(start = 20.dp)
+            modifier = Modifier
+                .padding(start = 20.dp)
+                .testTag(ProductDetailTestTag.latestStock)
         )
     }
 }

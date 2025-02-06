@@ -1,7 +1,9 @@
 package com.hezapp.ekonomis.robot
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.R
@@ -19,7 +21,7 @@ class ProductPreviewRobot(
         costOfGoods: Int,
         unitType: UnitType,
     ){
-        val nodeInteraction = composeRule.onNode(
+        val nodeInteraction = composeRule.onAllNodes(
         hasText(productName)
                 and
                 hasText(
@@ -30,6 +32,12 @@ class ProductPreviewRobot(
                 )
         )
 
-        nodeInteraction.assertExists()
+        nodeInteraction.assertCountEquals(1)
+    }
+
+    fun toDetailProduct(productName: String){
+        composeRule.onNode(
+            hasText(productName)
+        ).performClick()
     }
 }

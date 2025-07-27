@@ -47,6 +47,10 @@ inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
     } ?: return null
 }
 
+/**
+ * Membuat Koin View Model, dimana [ViewModel]-nya akan di host pada
+ * parent ke-[countParent] agar bisa digunakan antar composable
+ */
 @Composable
 inline fun <reified T: ViewModel> NavBackStackEntry.koinNavGraphViewModel(
     navController: NavHostController,

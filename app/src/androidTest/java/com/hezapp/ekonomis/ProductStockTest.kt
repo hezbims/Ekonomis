@@ -17,6 +17,9 @@ import org.koin.core.context.stopKoin
 
 @RunWith(AndroidJUnit4::class)
 class ProductStockTest {
+    /**
+     * Memastikan harga pokok tampil dengan benar
+     */
     @Test
     fun ensureCostOfGoodsCalculatedCorrectly(){
         transactionHistoryRobot.navigateToProductPreview()
@@ -32,6 +35,9 @@ class ProductStockTest {
         )
     }
 
+    /**
+     * Memastikan data-data yang ditampilkan pada detail stock benar
+     */
     @Test
     fun ensureStockDetailCalculatedCorrectly(){
         transactionHistoryRobot.navigateToProductPreview()

@@ -73,7 +73,6 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
-import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
@@ -372,7 +371,15 @@ private fun ChooseProfileField(
     error: String?,
     state: AddOrUpdateTransactionUiState,
 ){
-    val personTypeString = stringResource(state.curFormData.transactionType!!.getProfileStringId())
+
+    val textFieldLabelString = stringResource(
+        remember(state.curFormData.transactionType!!) {
+            when (state.curFormData.transactionType) {
+                TransactionType.PEMBELIAN -> R.string.seller_name_label
+                TransactionType.PENJUALAN -> R.string.buyer_name_label
+            }
+        }
+    )
 
     val textFieldInteractionSource =
         remember(state.curFormData.transactionType.id) { MutableInteractionSource() }.also { interactionSource ->
@@ -393,9 +400,7 @@ private fun ChooseProfileField(
         onValueChange = { },
         readOnly = true,
         label = {
-            Text(
-                "Nama $personTypeString"
-            )
+            Text(textFieldLabelString)
         },
         isError = error != null,
         supportingText = MyErrorText(error),
@@ -445,8 +450,10 @@ private fun ChooseDateField(
     )
 
     if (showDatePicker){
+        val currentYear = calendarProvider.getCalendar().get(Calendar.YEAR)
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = value ?: calendarProvider.getCalendar().timeInMillis
+            initialSelectedDateMillis = value ?: calendarProvider.getCalendar().timeInMillis,
+            yearRange = (currentYear - 5)..(currentYear + 5)
         )
         DatePickerDialog (
             onDismissRequest = { showDatePicker = false },

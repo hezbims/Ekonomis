@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,10 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
+import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
+import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import java.util.Calendar
 
 @Composable
@@ -63,24 +62,22 @@ fun TransactionHistoryCardItem(
 @Preview
 @Composable
 fun PreviewTransactionHistoryCardItem(){
-    EkonomisTheme {
-        Surface {
-            val date = PreviewCalendarProvider().getCalendar().apply {
-                set(Calendar.MONTH, 1)
-                set(Calendar.YEAR, 2023)
-                set(Calendar.DAY_OF_MONTH, 5)
-            }
-            TransactionHistoryCardItem(
-                data = PreviewTransactionHistory(
-                    profileName = "Cik Feni",
-                    date = date.timeInMillis,
-                    profileType = ProfileType.CUSTOMER,
-                    id = 1,
-                    totalPrice = 1_000_000_000
-                ),
-                onClick = {},
+    PreviewKoin {
+        val date = PreviewTimeService().getCalendar().apply {
+            set(Calendar.MONTH, 1)
+            set(Calendar.YEAR, 2023)
+            set(Calendar.DAY_OF_MONTH, 5)
+        }
+        TransactionHistoryCardItem(
+            data = PreviewTransactionHistory(
+                profileName = "Cik Feni",
+                date = date.timeInMillis,
+                profileType = ProfileType.CUSTOMER,
+                id = 1,
+                totalPrice = 1_000_000_000
+            ),
+            onClick = {},
 
             )
-        }
     }
 }

@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
+import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import com.hezapp.ekonomis.core.presentation.utils.toShortMonthYearString
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
@@ -92,7 +92,7 @@ fun PreviewMonthYearPicker(){
     EkonomisTheme {
         Surface {
             MonthYearPicker(
-                monthYear = PreviewCalendarProvider().getCalendar().timeInMillis,
+                monthYear = PreviewTimeService().getCalendar().timeInMillis,
                 onDecrementMonthYear = {},
                 onIncrementMonthYear = {},
                 modifier = Modifier.padding(24.dp)

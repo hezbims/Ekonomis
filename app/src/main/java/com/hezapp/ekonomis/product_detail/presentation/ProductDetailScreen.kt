@@ -32,7 +32,7 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
-import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
+import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
@@ -225,7 +225,7 @@ private fun LazyListScope.renderListProductTransaction(
 private fun PreviewProductDetailScreen(){
     PreviewKoin {
         val listDate = List(3){
-            PreviewCalendarProvider().getCalendar().apply {
+            PreviewTimeService().getCalendar().apply {
                 set(Calendar.YEAR, 2020)
                 set(Calendar.MONTH, 1)
                 set(Calendar.DAY_OF_MONTH, 25 + it)
@@ -234,7 +234,7 @@ private fun PreviewProductDetailScreen(){
 
         ProductDetailScreen(
             onClickChangePeriodButton = {},
-            currentPeriod = PreviewCalendarProvider().getCalendar().timeInMillis,
+            currentPeriod = PreviewTimeService().getCalendar().timeInMillis,
             productDetail = ProductDetail(
                 id = 0,
                 productName = "White Heinz Vinegar",

@@ -77,4 +77,6 @@
     <string name="product_amount_label">Jumlah barang</string>
     <string name="cost_of_goods_label">Harga pokok : %1$s</string>
     <string name="change_period_button">Tombol Ubah Periode</string>
+    <string name="seller_name_label">Nama Penjual</string>
+    <string name="buyer_name_label">Nama Pembeli</string>
 </resources>

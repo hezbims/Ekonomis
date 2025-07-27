@@ -4,18 +4,18 @@ import org.koin.core.context.GlobalContext
 import java.util.Calendar
 import java.util.TimeZone
 
-open class CalendarProvider {
-    open fun getCalendar() : Calendar {
+class TimeService : ITimeService {
+    override fun getCalendar() : Calendar {
         return Calendar.getInstance(
             getTimezone()
         )
     }
 
-    open fun getTimezone() : TimeZone {
+    override fun getTimezone() : TimeZone {
         return TimeZone.getTimeZone("GMT+8")
     }
 }
 
-val calendarProvider : CalendarProvider by lazy {
+val calendarProvider : ITimeService by lazy {
     GlobalContext.get().get()
 }

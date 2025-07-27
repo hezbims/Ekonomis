@@ -31,7 +31,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.core.domain.utils.PreviewCalendarProvider
+import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
@@ -231,7 +231,7 @@ private fun SetCurrentMonthlyStockDialogPreview(){
                     )
                 ),
                 onDismissRequest = {},
-                period = PreviewCalendarProvider().getCalendar().timeInMillis,
+                period = PreviewTimeService().getCalendar().timeInMillis,
                 onEvent = {}
             )
         }

@@ -79,4 +79,7 @@
     <string name="change_period_button">Tombol Ubah Periode</string>
     <string name="seller_name_label">Nama Penjual</string>
     <string name="buyer_name_label">Nama Pembeli</string>
+    <string name="create_new_here_label">Buat baru disini</string>
+    <string name="profile_name_not_found">Tidak ada nama %1$s yang ditemukan.</string>
+    <string name="there_is_no_profile_registered">Belum ada nama %1$s yang terdaftar.\n;</string>
 </resources>

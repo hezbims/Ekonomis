@@ -20,6 +20,10 @@ android {
     namespace = "com.hezapp.ekonomis"
     compileSdk = 36
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
     defaultConfig {
         applicationId = "com.hezapp.ekonomis"
         minSdk = 24
@@ -30,10 +34,6 @@ android {
         testInstrumentationRunner = "com.hezapp.ekonomis.test_application.MyTestRunner"
         vectorDrawables {
             useSupportLibrary = true
-        }
-
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
         }
     }
 

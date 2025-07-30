@@ -308,7 +308,7 @@ private fun AddOrUpdateTransactionScreen(
                         start = 24.dp, end = 24.dp
                     )
             ) {
-                Text("Simpan")
+                Text(stringResource(R.string.save_label))
             }
         }
     }

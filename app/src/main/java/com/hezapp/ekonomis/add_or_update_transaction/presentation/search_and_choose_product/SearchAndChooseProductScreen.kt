@@ -21,9 +21,11 @@ import androidx.compose.material.icons.outlined.CheckCircleOutline
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,21 +47,25 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet_AddNewItem
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.component.RegisterNewProductNameBottomSheet
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
+import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -101,7 +107,7 @@ fun SearchAndChooseProductScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchAndChooseProductScreen(
     state: SearchAndChooseProductUiState,
@@ -242,16 +248,18 @@ private fun SearchAndChooseProductScreen(
         ) {
             Icon(
                 Icons.Outlined.CheckCircleOutline,
-                contentDescription = stringResource(R.string.confirm_label)
+                contentDescription = stringResource(R.string.confirm_selected_product)
             )
 
             Spacer(Modifier.width(4.dp))
 
-            Text("Konfirmasi Pilihan ($totalSelectedProduct barang)")
+            Text(stringResource(
+                R.string.confirm_selection_with_total_product_selected,
+                totalSelectedProduct))
         }
     }
 
-    SpecifyProductQuantityAndPriceBottomSheet(
+    SpecifyProductQuantityAndPriceBottomSheet_AddNewItem(
         product = state.currentChoosenProduct,
         onDismissRequest = {
             onEvent(SearchAndChooseProductEvent.DoneSelectProductSpecification)
@@ -265,7 +273,8 @@ private fun SearchAndChooseProductScreen(
         onDismiss = { showRegisterNewProductNameBottomSheet = false },
         isShowing = showRegisterNewProductNameBottomSheet,
         onEvent = onEvent,
-        state = state,
+        initialProductName = state.searchQuery,
+        registerNewProductResponse = state.registerNewProductResponse,
     )
 }
 
@@ -285,6 +294,55 @@ private fun ListAvailableProductCardItem(
                 style = MaterialTheme.typography.labelLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SearchAndChooseProductScreen_ProductFound_Preview(){
+    EkonomisTheme {
+        Surface {
+            SearchAndChooseProductScreen(
+                state = SearchAndChooseProductUiState(
+                    searchQuery = "Tuna",
+                    availableProductsResponse = ResponseWrapper.Succeed(
+                        listOf(
+                            ProductEntity(id = 1, name = "Tuna kaleng"),
+                            ProductEntity(id = 2, name = "Tuna plastik"),
+                        )
+                    ),
+                    registerNewProductResponse = null,
+                    currentChoosenProduct = null,
+                ),
+                onEvent = {},
+                onProductSpecificationConfirmed = {},
+                totalSelectedProduct = 1,
+                navController = rememberNavController(),
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+fun SearchAndChooseProductScreen_ProductNotFound_Preview(){
+    EkonomisTheme {
+        Surface {
+            SearchAndChooseProductScreen(
+                state = SearchAndChooseProductUiState(
+                    searchQuery = "Tuna",
+                    availableProductsResponse = ResponseWrapper.Succeed(
+                        listOf()
+                    ),
+                    registerNewProductResponse = null,
+                    currentChoosenProduct = null,
+                ),
+                onEvent = {},
+                onProductSpecificationConfirmed = {},
+                totalSelectedProduct = 0,
+                navController = rememberNavController(),
             )
         }
     }

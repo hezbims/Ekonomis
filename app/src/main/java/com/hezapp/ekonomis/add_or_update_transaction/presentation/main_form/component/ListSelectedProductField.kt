@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.R
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.component.SpecifyProductQuantityAndPriceBottomSheet_EditExistingItem
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionEvent
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionUiState
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
@@ -140,7 +140,7 @@ fun ListSelectedProductField(
     }
 
     state.editInvoiceItem?.let { editItem ->
-        SpecifyProductQuantityAndPriceBottomSheet(
+        SpecifyProductQuantityAndPriceBottomSheet_EditExistingItem(
             invoiceItem = editItem,
             onDismissRequest = {
                 onEvent(AddOrUpdateTransactionEvent.CancelEditInvoiceItem)

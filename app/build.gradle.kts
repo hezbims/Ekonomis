@@ -18,7 +18,7 @@ rootProject.file("key.properties").let {
 
 android {
     namespace = "com.hezapp.ekonomis"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hezapp.ekonomis"

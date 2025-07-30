@@ -15,9 +15,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,10 +25,14 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,6 +49,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
@@ -55,9 +60,10 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.RupiahVi
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
+import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 @Composable
-fun SpecifyProductQuantityAndPriceBottomSheet(
+fun SpecifyProductQuantityAndPriceBottomSheet_AddNewItem(
     product: ProductEntity?,
     onDismissRequest: () -> Unit,
     onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
@@ -74,8 +80,7 @@ fun SpecifyProductQuantityAndPriceBottomSheet(
 }
 
 @Composable
-
-fun SpecifyProductQuantityAndPriceBottomSheet(
+fun SpecifyProductQuantityAndPriceBottomSheet_EditExistingItem(
     invoiceItem: InvoiceItemUiModel,
     onDismissRequest: () -> Unit,
     onProductSpecificationConfirmed: (InvoiceItemUiModel) -> Unit,
@@ -90,6 +95,12 @@ fun SpecifyProductQuantityAndPriceBottomSheet(
     )
 }
 
+/**
+ * Ini untuk menghandle datanya kalau udah valid dan user mengkonfirmasi.
+ * Kalau datanya valid, maka [onProductSpecificationConfirmed] bakalan dipanggil
+ * dengan [LaunchedEffect]
+ */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SpecifyProductQuantityAndPriceBottomSheet(
     viewModel: SpecifyProductQuantityViewModel,
@@ -122,6 +133,9 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
     )
 }
 
+/**
+ * Ini komponen UI utamanya untuk menampilkan bottom sheetnya
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SpecifyProductQuantityAndPriceBottomSheet(
@@ -129,8 +143,8 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
     state: SpecifyProductQuantityUiState,
     onEvent: (SpecifyProductQuantityEvent) -> Unit,
     onDeleteConfirmed: (() -> Unit)?,
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ){
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismissRequest
@@ -149,7 +163,7 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                 IconButton(
                     onClick = onDismissRequest,
                 ) {
-                    Icon(Icons.Rounded.Close, contentDescription = "Close")
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Close")
                 }
 
                 Text(
@@ -286,7 +300,7 @@ private fun DropdownUnitType(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor()
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
 
         ExposedDropdownMenu(
@@ -377,4 +391,28 @@ private fun QuantityField(
 
         modifier = modifier,
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun SpecifyProductQuantityAndPriceBottomSheet_Preview(){
+    EkonomisTheme { 
+        Surface {
+            SpecifyProductQuantityAndPriceBottomSheet(
+                onDismissRequest = {},
+                state = SpecifyProductQuantityUiState(
+                    unitType = UnitType.CARTON,
+                    price = 25_000,
+                    product = ProductEntity(id = 1, name = "Tuna"),
+                    listId = "abcdx",
+                    quantity = 24,
+                    id = 1,
+                ),
+                onEvent = { },
+                onDeleteConfirmed = {},
+                sheetState = rememberStandardBottomSheetState()
+            )
+        }
+    }
 }

@@ -82,4 +82,6 @@
     <string name="create_new_here_label">Buat baru disini</string>
     <string name="profile_name_not_found">Tidak ada nama %1$s yang ditemukan.</string>
     <string name="there_is_no_profile_registered">Belum ada nama %1$s yang terdaftar.\n;</string>
+    <string name="confirm_selected_product">Konfirmasi Barang Pilihan</string>
+    <string name="confirm_selection_with_total_product_selected">Konfirmasi Pilihan (%1$s barang)</string>
 </resources>

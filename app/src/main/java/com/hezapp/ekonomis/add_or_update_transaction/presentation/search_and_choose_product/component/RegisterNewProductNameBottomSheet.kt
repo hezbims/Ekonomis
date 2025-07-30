@@ -18,9 +18,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,31 +37,32 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductEvent
-import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductUiState
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
+import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterNewProductNameBottomSheet(
     onDismiss: () -> Unit,
-    state: SearchAndChooseProductUiState,
+    initialProductName: String,
+    registerNewProductResponse: ResponseWrapper<Any?, InsertProductError>?,
     onEvent: (SearchAndChooseProductEvent) -> Unit,
     isShowing: Boolean,
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ){
     if (isShowing){
-        val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = onDismiss,
         ) {
-            var productName by rememberSaveable { mutableStateOf(state.searchQuery) }
+            var productName by rememberSaveable { mutableStateOf(initialProductName) }
 
             val context = LocalContext.current
-            val registerNewProductResponse = state.registerNewProductResponse
             var textFieldError by rememberSaveable { mutableStateOf<String?>(null) }
             LaunchedEffect(registerNewProductResponse) {
                 when(registerNewProductResponse){
@@ -154,9 +159,29 @@ fun RegisterNewProductNameBottomSheet(
                     },
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text("Simpan")
+                    Text(stringResource(R.string.save_label))
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun RegisterNewProductNameBottomSheet_Preview(){
+    EkonomisTheme {
+        Surface {
+            RegisterNewProductNameBottomSheet(
+                onEvent = {},
+                onDismiss = {},
+                registerNewProductResponse = null,
+                initialProductName = "Tuna",
+                isShowing = true,
+                sheetState = rememberStandardBottomSheetState(
+                    initialValue = SheetValue.Expanded,
+                )
+            )
         }
     }
 }

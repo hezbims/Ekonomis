@@ -103,6 +103,11 @@ class SpecifyProductQuantityViewModel private constructor(
     }
 }
 
+/**
+ * @property id id dari entity `InvoiceItemEntity`
+ * @property listId untuk menentukan item list mana yang di edit,
+ * `null` jika kita tidak sedang mengedit list namun mengadd item baru
+ */
 data class SpecifyProductQuantityUiState(
     val unitType: UnitType?,
     val unitTypeHasError: Boolean = false,

@@ -79,6 +79,13 @@ class SearchAndChooseProductViewModel(
     }
 }
 
+/**
+ * @property registerNewProductResponse Nunjukin response apakah user berhasil menambahkan nama produk baru. Kalau sukses
+ * maka [availableProductsResponse] bakal di refresh.
+ *
+ * @property currentChoosenProduct Produk yang sekarang sedang dipencet atau dipilih sama user untuk masuk ke bottom sheet.
+ * Kalau ini bukan null, maka bottom sheet kebuka
+ */
 data class SearchAndChooseProductUiState(
     val searchQuery: String,
     val availableProductsResponse : ResponseWrapper<List<ProductEntity> , MyBasicError>,

@@ -110,6 +110,7 @@ private fun SearchAndChooseProfileScreen(
             append(context.getString(
                 R.string.profile_name_not_found,
                 personTypeString.lowercase()))
+            append(" ")
             withLink(
                 link = LinkAnnotation.Clickable(
                     tag = "create-new-person",

@@ -3,9 +3,12 @@ package com.hezapp.ekonomis.transaction_history.presentation.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -15,7 +18,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -37,19 +39,18 @@ fun TransactionFilterBottomSheet(
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val configuration = LocalConfiguration.current
 
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismiss,
-        modifier = Modifier.height(
-            height =  (configuration.screenHeightDp / 5 * 3).dp,
-        )
     ) {
         Column(
-            modifier = Modifier.padding(
-                start = 24.dp, end = 24.dp, top = 6.dp, bottom = 48.dp,
-            )
+            modifier = Modifier
+                .fillMaxHeight(0.6f)
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    start = 24.dp, end = 24.dp, top = 6.dp, bottom = 48.dp,
+                )
         ) {
             Text(
                 "Filter Transaksi",

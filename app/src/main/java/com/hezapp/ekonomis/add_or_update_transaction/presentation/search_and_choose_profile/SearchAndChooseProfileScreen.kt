@@ -133,6 +133,7 @@ private fun SearchAndChooseProfileScreen(
             append(context.getString(
                 R.string.there_is_no_profile_registered,
                 personTypeString.lowercase()))
+            append(".\n")
             withLink(
                 link = LinkAnnotation.Clickable(
                     tag = "create-new-person",
@@ -279,3 +280,5 @@ fun PreviewSearchAndChooseProfileScreenWithNoProfileFound(){
         )
     }
 }
+
+// TODO: buat preview ketika melakukan search tapi enggak ada nama yang ketemu

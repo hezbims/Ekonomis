@@ -2,9 +2,10 @@ package com.hezapp.ekonomis.core.domain.utils
 
 import org.koin.core.context.GlobalContext
 import java.util.Calendar
+import java.util.Locale
 import java.util.TimeZone
 
-class TimeService : ITimeService {
+class TimeService : ITimeService() {
     override fun getCalendar() : Calendar {
         return Calendar.getInstance(
             getTimezone()
@@ -13,6 +14,10 @@ class TimeService : ITimeService {
 
     override fun getTimezone() : TimeZone {
         return TimeZone.getTimeZone("GMT+8")
+    }
+
+    override fun getLocale(): Locale {
+        return Locale.forLanguageTag("id-ID")
     }
 }
 

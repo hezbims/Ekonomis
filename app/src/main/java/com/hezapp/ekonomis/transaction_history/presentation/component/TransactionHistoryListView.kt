@@ -19,9 +19,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
+import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
@@ -34,6 +37,7 @@ fun TransactionHistoryListView(
     navController : NavHostController,
     state : TransactionHistoryUiState,
     onEvent : (TransactionHistoryEvent) -> Unit,
+    timeService : ITimeService,
     modifier : Modifier = Modifier,
 ){
     ResponseLoader(
@@ -58,7 +62,8 @@ fun TransactionHistoryListView(
                             navController.navigateOnce(
                                 MyRoutes.AddOrUpdateTransactionForm(id = item.id)
                             )
-                        }
+                        },
+                        timeService = timeService,
                     )
                 }
             }
@@ -102,11 +107,14 @@ fun PreviewTransactionHistoryListView(){
             TransactionHistoryListView(
                 navController = rememberNavController(),
                 onEvent = {_ ->},
-                state = TransactionHistoryUiState().copy(
+                state = TransactionHistoryUiState(
+                    filterState = PreviewTransactionFilter(initialDate.timeInMillis),
+                ).copy(
                     transactionHistoryResponse = ResponseWrapper.Succeed(
                         data = listTransaksi
                     )
-                )
+                ),
+                timeService = TimeService()
             )
         }
     }

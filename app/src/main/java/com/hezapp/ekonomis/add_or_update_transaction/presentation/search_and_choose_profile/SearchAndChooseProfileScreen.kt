@@ -280,5 +280,3 @@ fun PreviewSearchAndChooseProfileScreenWithNoProfileFound(){
         )
     }
 }
-
-// TODO: buat preview ketika melakukan search tapi enggak ada nama yang ketemu

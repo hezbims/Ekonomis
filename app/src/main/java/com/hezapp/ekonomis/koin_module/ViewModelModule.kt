@@ -23,7 +23,8 @@ val ViewModelModule = module {
     ) }
 
     viewModel { TransactionHistoryViewModel(
-        getPreviewTransactionHistory = get()
+        getPreviewTransactionHistory = get(),
+        timeService = get(),
     ) }
 
     viewModel { (invoiceId: Int?) -> AddOrUpdateTransactionViewModel(

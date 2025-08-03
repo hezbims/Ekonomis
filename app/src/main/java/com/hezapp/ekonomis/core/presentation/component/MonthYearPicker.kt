@@ -22,10 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
-import com.hezapp.ekonomis.core.domain.utils.calendarProvider
-import com.hezapp.ekonomis.core.presentation.utils.toShortMonthYearString
+import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import org.koin.core.context.GlobalContext
 
 @Composable
 fun MonthYearPicker(
@@ -34,6 +35,7 @@ fun MonthYearPicker(
     onIncrementMonthYear: () -> Unit,
     modifier: Modifier = Modifier,
     label: String? = stringResource(R.string.period_label),
+    timeService: ITimeService = GlobalContext.get().get(),
 ){
     Column(
         modifier = modifier,
@@ -61,9 +63,9 @@ fun MonthYearPicker(
                 }
 
                 val monthYearText = remember(monthYear) {
-                    calendarProvider.getCalendar().apply {
+                    timeService.toMMMyyyy(timeService.getCalendar().apply {
                         timeInMillis = monthYear
-                    }.timeInMillis.toShortMonthYearString()
+                    }.timeInMillis)
                 }
 
                 Text(
@@ -95,7 +97,8 @@ fun PreviewMonthYearPicker(){
                 monthYear = PreviewTimeService().getCalendar().timeInMillis,
                 onDecrementMonthYear = {},
                 onIncrementMonthYear = {},
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier.padding(24.dp),
+                timeService = TimeService(),
             )
         }
     }

@@ -14,9 +14,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
+import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
-import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import java.util.Calendar
 
@@ -24,6 +25,7 @@ import java.util.Calendar
 fun TransactionHistoryCardItem(
     data : PreviewTransactionHistory,
     onClick : () -> Unit,
+    timeService : ITimeService,
     modifier : Modifier = Modifier,
 ){
     ListItem(
@@ -50,7 +52,7 @@ fun TransactionHistoryCardItem(
             )
         },
         overlineContent = {
-            Text(data.date.toMyDateString())
+            Text(timeService.toEddMMMyyyy(data.date))
         },
         headlineContent = {
             Text(data.profileName)
@@ -77,7 +79,7 @@ fun PreviewTransactionHistoryCardItem(){
                 totalPrice = 1_000_000_000
             ),
             onClick = {},
-
-            )
+            timeService = TimeService()
+        )
     }
 }

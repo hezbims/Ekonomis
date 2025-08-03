@@ -30,7 +30,7 @@ class MyKoinTestApplication : Application() {
                     ).build()
                 }
                 single<ITimeService> {
-                    TestTimeService()
+                    TestTimeService.get()
                 }
             }
         )

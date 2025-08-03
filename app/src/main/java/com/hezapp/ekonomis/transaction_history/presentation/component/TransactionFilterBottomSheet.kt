@@ -13,20 +13,29 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.MonthYearPicker
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionFilterEvent
 import com.hezapp.ekonomis.transaction_history.presentation.rememberTransactionFilterViewModel
+import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,11 +43,11 @@ fun TransactionFilterBottomSheet(
     initialState: PreviewTransactionFilter,
     onDismiss: () -> Unit,
     onConfirmFilter: (PreviewTransactionFilter) -> Unit,
+    timeService : ITimeService,
+    sheetState : SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ){
     val viewModel = rememberTransactionFilterViewModel(initialState)
     val state by viewModel.state.collectAsStateWithLifecycle()
-
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     ModalBottomSheet(
         sheetState = sheetState,
@@ -71,7 +80,8 @@ fun TransactionFilterBottomSheet(
                     },
                     onIncrementMonthYear = {
                         viewModel.onEvent(TransactionFilterEvent.IncrementMonthYear)
-                    }
+                    },
+                    timeService = timeService,
                 )
             }
 
@@ -84,6 +94,27 @@ fun TransactionFilterBottomSheet(
             ) {
                 Text(stringResource(R.string.apply_label))
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun TransactionFilterBottomSheet_Preview(){
+    EkonomisTheme {
+        Surface {
+            TransactionFilterBottomSheet(
+                initialState = PreviewTransactionFilter(
+                    monthYear = Calendar.getInstance().timeInMillis,
+                ),
+                onDismiss = { },
+                onConfirmFilter = { },
+                sheetState = rememberStandardBottomSheetState(
+                    initialValue = SheetValue.Expanded,
+                ),
+                timeService = TimeService(),
+            )
         }
     }
 }

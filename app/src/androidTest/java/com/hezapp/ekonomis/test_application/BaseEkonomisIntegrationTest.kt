@@ -5,7 +5,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainActivity
-import com.hezapp.ekonomis.robot.TransactionFormRobot
+import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
 import com.hezapp.ekonomis.test_data.TestTimeService
 import org.junit.After
@@ -47,8 +47,8 @@ abstract class BaseEkonomisIntegrationTest {
         }
     }
 
-    protected val transactionHistoryRobot = TransactionHistoryRobot(composeRule)
-    protected val transactionFormRobot = TransactionFormRobot(composeRule)
+    protected val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule) }
+    protected val transactionFormRobot by lazy { TransactionFormRobot(composeRule) }
 
 
     @After

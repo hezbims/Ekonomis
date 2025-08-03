@@ -2,7 +2,7 @@ package com.hezapp.ekonomis.feature.transaction
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.robot.ProductFormAssertData
+import com.hezapp.ekonomis.robot.transaction_form.ProductFormAssertData
 import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
 import org.junit.Test
 import java.time.LocalDate
@@ -24,10 +24,10 @@ class AddNewTransaction : BaseEkonomisIntegrationTest() {
                 year = 2021,
             )
 
-            navigateToChooseStakeholder()
+            navigateToChooseProfile()
         }
 
-        transactionFormRobot.chooseStakeholderRobot.apply {
+        transactionFormRobot.chooseProfileRobot.apply {
             val profileName = "profile-1"
             registerNewProfile(profileName)
 

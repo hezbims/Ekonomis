@@ -68,6 +68,8 @@ import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
@@ -78,9 +80,9 @@ import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
-import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
+import org.koin.core.context.GlobalContext
 import java.util.Calendar
 
 @Composable
@@ -237,6 +239,7 @@ private fun AddOrUpdateTransactionScreen(
     navController: NavHostController,
     state : AddOrUpdateTransactionUiState,
     onEvent : (AddOrUpdateTransactionEvent) -> Unit,
+    timeService: ITimeService = GlobalContext.get().get(),
 ){
     Column (
         modifier = Modifier
@@ -265,6 +268,7 @@ private fun AddOrUpdateTransactionScreen(
                         onEvent(AddOrUpdateTransactionEvent.ChangeTransactionDate(selectedDate))
                     },
                     error = state.formError.transactionDateError,
+                    timeService = timeService,
                 )
 
                 ChooseProfileField(
@@ -418,6 +422,7 @@ private fun ChooseDateField(
     value : Long?,
     onValueChange: (Long) -> Unit,
     error: String?,
+    timeService: ITimeService,
 ){
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     val textFieldInteractionSource =
@@ -431,7 +436,9 @@ private fun ChooseDateField(
         }
 
     TextField(
-        value = value?.toMyDateString() ?: "",
+        value = value?.let {
+            timeService.toEddMMMyyyy(it)
+        } ?: "",
         onValueChange = {},
         readOnly = true,
         label = {
@@ -582,7 +589,8 @@ private fun PreviewAddOrUpdateTransactionScreen(){
                     curFormData = transactionFormData,
                     prevFormData = ResponseWrapper.Succeed(transactionFormData),
                 ),
-                onEvent = {}
+                onEvent = {},
+                timeService = TimeService(),
             )
         }
     }

@@ -1,17 +1,14 @@
 package com.hezapp.ekonomis.core.presentation.utils
 
-import java.util.Locale
+import kotlin.math.abs
 
-fun Int.toShortRupiah() : String {
-    if (this >= 1_000_000_000)
-        return String.format(Locale.US, "Rp%.1f Juta", this.toDouble() / 1_000_000_000)
-    else if (this < 10000)
-        return "Rp${this}"
-    return String.format(Locale.US, "Rp%d Ribu", this / 1_000)
-}
-
+@Deprecated(message = "Method ini tidak bisa menghandle negative number", replaceWith = ReplaceWith("toRupiahV2"))
 fun Long.toRupiah() : String = toString().toRupiah()
+@Deprecated(message = "Method ini tidak bisa menghandle negative number", replaceWith = ReplaceWith("toRupiahV2"))
 fun Int.toRupiah() : String = toString().toRupiah()
+
+fun Int.toRupiahV2() : String =
+    "${if (this < 0) "-" else ""}${abs(this).toString().toRupiah()}"
 
 fun CharSequence.toRupiah() : String {
     if (isEmpty())

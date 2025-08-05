@@ -33,7 +33,7 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 )
 data class InvoiceItemEntity(
     @PrimaryKey(autoGenerate = true)
-    val id : Int,
+    val id : Int = 0,
 
     @ColumnInfo(name = "product_id")
     val productId : Int,

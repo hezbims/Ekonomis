@@ -24,7 +24,7 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 )
 data class InvoiceEntity(
     @PrimaryKey(autoGenerate = true)
-    val id : Int,
+    val id : Int = 0,
 
     val date : Long,
 

@@ -36,15 +36,15 @@ inline fun <reified T : ViewModel> NavBackStackEntry.navGraphViewModel(
     for (i in 2..countParent)
         graph = graph?.parent
 
-    graph?.route?.let {
+    return graph?.route?.let {
         val backStackEntry = remember(this) { navController.getBackStackEntry(it) }
 
-        return viewModel(
+        viewModel(
             viewModelStoreOwner = backStackEntry,
             key = key,
             factory = factory,
         )
-    } ?: return null
+    }
 }
 
 /**
@@ -62,12 +62,12 @@ inline fun <reified T: ViewModel> NavBackStackEntry.koinNavGraphViewModel(
     for (i in 2..countParent)
         graph = graph?.parent
 
-    graph?.route?.let {
+    return graph?.route?.let {
         val backStackEntry = remember(this) { navController.getBackStackEntry(it) }
 
-        return koinViewModel(
+        koinViewModel(
             viewModelStoreOwner = backStackEntry,
             parameters = parameters,
         )
-    } ?: return null
+    }
 }

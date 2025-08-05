@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.test_application
 
+import android.content.Context
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.printToLog
@@ -7,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
+import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_data.TestTimeService
 import org.junit.After
 import org.junit.Rule
@@ -37,6 +39,8 @@ abstract class BaseEkonomisIntegrationTest {
     }
     @get:Rule(order = 2)
     val composeRule = createAndroidComposeRule<MainActivity>()
+    private val context : Context
+        get() = composeRule.activity
     @get:Rule(order = 3)
     val logErrorRule = object : TestWatcher() {
         override fun failed(e: Throwable?, description: Description?) {
@@ -47,8 +51,14 @@ abstract class BaseEkonomisIntegrationTest {
         }
     }
 
-    protected val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule) }
-    protected val transactionFormRobot by lazy { TransactionFormRobot(composeRule) }
+    //region ROBOT
+    protected val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule, context) }
+    protected val transactionFormRobot by lazy { TransactionFormRobot(composeRule, context) }
+    //endregion
+
+    //region STEPS
+    protected val filltransactionSteps by lazy { FillTransactionFormSteps(transactionFormRobot) }
+    //endregion
 
 
     @After

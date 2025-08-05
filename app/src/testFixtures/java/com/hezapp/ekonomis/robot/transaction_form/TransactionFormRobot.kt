@@ -1,12 +1,13 @@
 package com.hezapp.ekonomis.robot.transaction_form
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.isFocusable
-import androidx.compose.ui.test.junit4.AndroidComposeTestRule
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.hezapp.ekonomis.MainActivity
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
@@ -22,10 +23,9 @@ import java.time.LocalDate
 import java.util.Calendar
 
 class TransactionFormRobot(
-    private val composeRule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>
+    private val composeRule: ComposeTestRule,
+    private val context: Context,
 ) {
-    val context = composeRule.activity
-
     private val transactionTypeField = TransactionTypeDropdownInteractor(composeRule, hasText(context.getString(R.string.choose_transaction_type_label)), context)
     private val dateField = ComponentInteractor(composeRule, hasText(context.getString(R.string.transaction_date_label), ignoreCase = true) and isFocusable())
     private val calendarPopup = CalendarPopupInteractor(composeRule, confirmLabel = context.getString(R.string.choose_label))
@@ -69,6 +69,7 @@ class TransactionFormRobot(
 
     fun submitTransactionForm() : Unit = submitButton.click()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun assertFormContent(
         transactionType: TransactionType,
         date: LocalDate,

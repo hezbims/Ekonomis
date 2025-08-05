@@ -134,7 +134,7 @@ class ProductStockTest {
 
     @get:Rule
     val composeRule = createAndroidComposeRule<MainActivity>()
-    private val transactionHistoryRobot = TransactionHistoryRobot(composeRule)
-    private val productPreviewRobot = ProductPreviewRobot(composeRule)
-    private val productDetailRobot = ProductDetailRobot(composeRule)
+    private val transactionHistoryRobot = TransactionHistoryRobot(composeRule, composeRule.activity)
+    private val productPreviewRobot = ProductPreviewRobot(composeRule, composeRule.activity)
+    private val productDetailRobot = ProductDetailRobot(composeRule, composeRule.activity)
 }

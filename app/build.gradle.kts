@@ -20,6 +20,11 @@ android {
     namespace = "com.hezapp.ekonomis"
     compileSdk = 36
 
+    @Suppress("UnstableApiUsage")
+    testFixtures {
+        enable = true
+    }
+
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
@@ -108,8 +113,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.kotlin.stdlib)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesImplementation(libs.androidx.ui.test.junit4)
+    testFixturesImplementation(libs.kotlin.stdlib)
 }

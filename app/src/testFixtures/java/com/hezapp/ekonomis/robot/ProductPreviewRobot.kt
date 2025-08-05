@@ -1,20 +1,19 @@
 package com.hezapp.ekonomis.robot
 
+import android.content.Context
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.performClick
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 
 class ProductPreviewRobot(
-    private val composeRule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>
+    private val composeRule: ComposeTestRule,
+    private val context: Context,
 ) {
-    private val context by lazy { composeRule.activity }
 
     fun assertProductCostOfGoods(
         productName: String,

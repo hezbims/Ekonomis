@@ -1,13 +1,14 @@
 package com.hezapp.ekonomis.robot
 
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.junit4.AndroidComposeTestRule
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.ext.junit.rules.ActivityScenarioRule
-import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.test_data.TestTimeService
@@ -16,9 +17,9 @@ import java.time.LocalDate
 import java.util.Calendar
 
 class TransactionHistoryRobot(
-    private val composeRule: AndroidComposeTestRule<ActivityScenarioRule<MainActivity>, MainActivity>
+    private val composeRule: ComposeTestRule,
+    private val context: Context,
 ) {
-    private val context by lazy { composeRule.activity }
    fun navigateToProductPreview(){
        composeRule.onNodeWithText(
             context.getString(R.string.product_stock_label),
@@ -31,6 +32,7 @@ class TransactionHistoryRobot(
         ).performClick()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalTestApi::class)
     fun clickTransactionCard(
         profileName: String,

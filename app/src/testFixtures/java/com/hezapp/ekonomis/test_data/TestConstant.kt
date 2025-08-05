@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis
+package com.hezapp.ekonomis.test_data
 
 object TestConstant {
     const val MEDIUM_TIMEOUT = 3000L

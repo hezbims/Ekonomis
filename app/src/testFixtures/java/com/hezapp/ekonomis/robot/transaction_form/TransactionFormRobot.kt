@@ -42,12 +42,12 @@ class TransactionFormRobot(
         transactionTypeField.openAndSelectTransactionType(type)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalTestApi::class)
     fun chooseTransactionDate(
         day: Int,
         month: Int,
         year: Int,
-        expectedCurrentMonth : Int = TestTimeService.get().getCalendar().get(Calendar.MONTH) + 1,
     ){
         composeRule.apply {
             dateField.click()
@@ -55,7 +55,7 @@ class TransactionFormRobot(
             waitUntilExactlyOneExists(isDialog(), timeoutMillis = 5000L)
 
             calendarPopup.changeYear(year)
-            calendarPopup.changeMonth(month, expectedCurrentMonth)
+            calendarPopup.changeMonth(month)
             calendarPopup.changeDayOfMonth(day, month, year)
             calendarPopup.confirmDateSelection()
         }

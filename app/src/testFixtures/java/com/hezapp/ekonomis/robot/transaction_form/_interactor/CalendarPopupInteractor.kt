@@ -1,5 +1,8 @@
 package com.hezapp.ekonomis.robot.transaction_form._interactor
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -8,6 +11,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.test_data.TestTimeService
 import java.text.SimpleDateFormat
+import java.time.YearMonth
+import java.time.format.DateTimeFormatterBuilder
 import java.util.Calendar
 import java.util.Locale
 
@@ -29,8 +34,19 @@ class CalendarPopupInteractor(
         }
     }
 
-    fun changeMonth(targetMonth: Int, expectedCurrentMonth: Int){
-        var currentMonth = expectedCurrentMonth
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun changeMonth(targetMonth: Int){
+        val monthYearString = composeRule.onNodeWithContentDescription("Switch to selecting a year", substring = true)
+            .fetchSemanticsNode()
+            .config[SemanticsProperties.Text]
+            .single()
+            .toString()
+
+        val monthYearFormatter = DateTimeFormatterBuilder()
+            .appendPattern("MMMM yyyy")
+            .toFormatter(Locale.ENGLISH)
+
+        var currentMonth = YearMonth.parse(monthYearString, monthYearFormatter).monthValue
         while (currentMonth > targetMonth){
             composeRule.onNodeWithContentDescription("Change to previous month")
                 .performClick()

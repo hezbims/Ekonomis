@@ -10,13 +10,15 @@ import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_data.TestTimeService
+import com.hezapp.ekonomis.test_data.seeder.InvoiceSeeder
+import com.hezapp.ekonomis.test_data.seeder.ProductSeeder
+import com.hezapp.ekonomis.test_data.seeder.ProfileSeeder
 import org.junit.After
 import org.junit.Rule
 import org.junit.rules.ExternalResource
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runner.RunWith
-import org.koin.core.context.stopKoin
 import java.util.Locale
 import java.util.TimeZone
 
@@ -60,10 +62,14 @@ abstract class BaseEkonomisIntegrationTest {
     protected val filltransactionSteps by lazy { FillTransactionFormSteps(transactionFormRobot) }
     //endregion
 
+    //region SEEDER
+    protected val invoiceSeeder = InvoiceSeeder()
+    protected val productSeeder = ProductSeeder()
+    protected val profileSeeder = ProfileSeeder()
+    //endregion
 
     @After
     fun after(){
-        stopKoin()
         TestTimeService.reset()
     }
 }

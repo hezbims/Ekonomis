@@ -1,7 +1,10 @@
 package com.hezapp.ekonomis.test_data
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
@@ -50,6 +53,9 @@ class TestTimeService private constructor() : ITimeService()  {
     override fun getCalendar(): Calendar = testCalendar.clone() as Calendar
     override fun getTimezone(): TimeZone = testTimeZone.clone() as TimeZone
     override fun getLocale(): Locale = productionTimeService.getLocale()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getZoneId() : ZoneId = getTimezone().toZoneId()
 }
 
 val testCalendarProvider = TestTimeService.get()

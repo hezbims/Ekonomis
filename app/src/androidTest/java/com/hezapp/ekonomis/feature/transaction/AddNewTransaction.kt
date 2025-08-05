@@ -58,7 +58,7 @@ class AddNewTransaction : BaseEkonomisIntegrationTest() {
                 targetYear = 2021,
             )
 
-            clickTransactionCard(
+            waitAndClickTransactionCard(
                 profileName = "profile-1",
                 totalPrice = -250_000,
                 date = LocalDate.now()

@@ -34,22 +34,26 @@ class TransactionHistoryRobot(
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalTestApi::class)
-    fun clickTransactionCard(
+    fun waitAndClickTransactionCard(
         profileName: String,
-        totalPrice: Int,
-        date: LocalDate
+        totalPrice: Int? = null,
+        date: LocalDate? = null
     ){
-        val dateString = testCalendarProvider.toEddMMMyyyy(
-            testCalendarProvider.getCalendar().apply {
-                set(Calendar.YEAR, date.year)
-                set(Calendar.MONTH, date.monthValue - 1)
-                set(Calendar.DAY_OF_MONTH, date.dayOfMonth)
-            }.timeInMillis
-        )
+        val dateString = date?.let {
+            testCalendarProvider.toEddMMMyyyy(
+                it.atStartOfDay(testCalendarProvider.getZoneId())
+                    .toInstant()
+                    .toEpochMilli()
+            )
+        }
 
-        val targetSemanticMatcher = hasText(profileName) and
-                hasText(totalPrice.toRupiahV2()) and
-                hasText(dateString)
+        var targetSemanticMatcher = hasText(profileName)
+        totalPrice?.let {
+            targetSemanticMatcher = targetSemanticMatcher and hasText(it.toRupiahV2())
+        }
+        dateString?.let {
+            targetSemanticMatcher = targetSemanticMatcher and hasText(it)
+        }
 
         composeRule.waitUntilExactlyOneExists(targetSemanticMatcher)
         composeRule.onNode(targetSemanticMatcher).performClick()

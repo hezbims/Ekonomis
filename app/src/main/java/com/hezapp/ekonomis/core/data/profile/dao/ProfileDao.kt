@@ -20,4 +20,11 @@ interface ProfileDao {
 
     @Insert
     suspend fun insertProfile(newProfile: ProfileEntity) : Long
+    @Insert
+    suspend fun insertProfiles(newProfiles: List<ProfileEntity>) : List<Long>
+    @Query("""
+        SELECT * FROM profiles
+        WHERE id IN (:ids)
+    """)
+    suspend fun getProfilesByIds(ids: List<Int>) : List<ProfileEntity>
 }

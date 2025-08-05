@@ -52,6 +52,16 @@ interface ProductDao {
     @Insert
     suspend fun insertNewProduct(newProduct: ProductEntity)
 
+    @Insert
+    suspend fun insertNewProducts(newProducts: List<ProductEntity>) : List<Long>
+
+    @Query("""
+        SELECT *
+        FROM products
+        WHERE id IN (:ids)
+    """)
+    suspend fun getProductsByIds(ids: List<Int>) : List<ProductEntity>
+
     @Query("""
         SELECT * 
         FROM products

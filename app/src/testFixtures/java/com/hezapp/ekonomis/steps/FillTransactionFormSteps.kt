@@ -15,14 +15,18 @@ class FillTransactionFormSteps(
      */
     @RequiresApi(Build.VERSION_CODES.O)
     fun fillForm(
-        transactionType: TransactionType,
+        transactionType: TransactionType? = null,
         profileName: String,
         date: LocalDate,
-        products: List<FormProductItem>,
+        chooseProductActions: List<FormProductItem> = emptyList(),
+        modifyChoosenProductActions: List<ModifyChoosenProduct> = emptyList(),
         ppn: Int? = null,
+        isRegisterNewProfile: Boolean = true,
     ){
         transactionFormRobot.apply {
-            chooseTransactionType(transactionType)
+            transactionType?.let {
+                chooseTransactionType(it)
+            }
 
             chooseTransactionDate(
                 day = date.dayOfMonth,
@@ -34,37 +38,57 @@ class FillTransactionFormSteps(
         }
 
         transactionFormRobot.chooseProfileRobot.apply {
-            registerNewProfile(profileName)
+            if (isRegisterNewProfile)
+                registerNewProfile(profileName)
 
             chooseProfile(profileName)
         }
 
-        transactionFormRobot.navigateToChooseProduct()
+        if (transactionFormRobot.formTransactionType == TransactionType.PEMBELIAN)
+            transactionFormRobot.fillPpn(ppn ?: throw IllegalArgumentException(
+                "PPN harus diisi ketika tipe transaksi adalah pembelian"))
 
-        transactionFormRobot.chooseProductRobot.apply {
-            for (product in products) {
-                if (product.newRegistration)
-                    registerNewProduct(product.name)
+        if (chooseProductActions.isNotEmpty()) {
+            transactionFormRobot.navigateToChooseProduct()
 
-                chooseProductForTransaction(
-                    productName = product.name,
-                    quantity = product.quantity,
-                    unitType = product.unitType,
-                    totalPrice = product.totalPrice
-                )
+            transactionFormRobot.chooseProductRobot.apply {
+                for (product in chooseProductActions) {
+                    if (product.newRegistration)
+                        registerNewProduct(product.name)
 
-                confirmAllSelectedProducts(products.size)
+                    chooseProductForTransaction(
+                        productName = product.name,
+                        quantity = product.quantity,
+                        unitType = product.unitType,
+                        totalPrice = product.totalPrice
+                    )
+
+                    confirmAllSelectedProducts(chooseProductActions.size)
+                }
             }
         }
 
-        if (transactionType == TransactionType.PEMBELIAN) {
-            transactionFormRobot.fillPpn(ppn ?: throw NullPointerException(
-                "PPN harus diisi ketika tipe transaksi adalah pembelian"))
-        }
+        if (modifyChoosenProductActions.isNotEmpty())
+            transactionFormRobot.apply {
+                for (action in modifyChoosenProductActions)
+                    when (action) {
+                        is DeleteProduct ->
+                            deleteProduct(productName = action.targetName)
+                        is EditProduct ->
+                            editProduct(
+                                productName = action.targetName,
+                                quantity = action.quantity,
+                                unitType = action.unitType,
+                                totalPrice = action.totalPrice,
+                            )
+                    }
+            }
 
         transactionFormRobot.submitTransactionForm()
     }
 }
+
+sealed interface ModifyChoosenProduct
 
 data class FormProductItem(
     val name: String,
@@ -73,3 +97,15 @@ data class FormProductItem(
     val totalPrice: Int,
     val newRegistration : Boolean = false,
 )
+
+data class EditProduct(
+    val targetName: String,
+    val quantity: Int?,
+    val unitType: UnitType?,
+    val totalPrice: Int?,
+) : ModifyChoosenProduct
+
+
+data class DeleteProduct(
+    val targetName: String,
+) : ModifyChoosenProduct

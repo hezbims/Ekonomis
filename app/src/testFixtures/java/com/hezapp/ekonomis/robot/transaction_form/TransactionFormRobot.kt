@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.robot.transaction_form
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
@@ -17,6 +18,7 @@ import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
 import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.CalendarPopupInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.ChoosenProductCardInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.TransactionTypeDropdownInteractor
 import com.hezapp.ekonomis.test_data.TestTimeService
 import java.time.LocalDate
@@ -26,6 +28,21 @@ class TransactionFormRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,
 ) {
+    val formTransactionType : TransactionType?
+        get(){
+            val inputText = composeRule.onNode(transactionTypeField.matcher)
+                .fetchSemanticsNode()
+                .config[SemanticsProperties.InputText]
+                .toString()
+            if (inputText.isEmpty())
+                return null
+
+            for (transactionType in TransactionType.entries)
+                if (context.getString(transactionType.getTransactionStringId()) ==
+                    inputText)
+                    return transactionType
+            throw RuntimeException("Transaction type value in this form is not recognized")
+        }
     private val transactionTypeField = TransactionTypeDropdownInteractor(composeRule, hasText(context.getString(R.string.choose_transaction_type_label)), context)
     private val dateField = ComponentInteractor(composeRule, hasText(context.getString(R.string.transaction_date_label), ignoreCase = true) and isFocusable())
     private val calendarPopup = CalendarPopupInteractor(composeRule, confirmLabel = context.getString(R.string.choose_label))
@@ -37,6 +54,9 @@ class TransactionFormRobot(
     private val chooseProductButton = ComponentInteractor(composeRule, context.getString(R.string.select_product_label))
     private val ppnField = TextFieldInteractor(composeRule, context.getString(R.string.ppn_label))
     private val submitButton = ComponentInteractor(composeRule, context.getString(R.string.save_label))
+
+    private fun productCardWithName(productName: String) =
+        ChoosenProductCardInteractor(composeRule, hasText(productName), context)
 
     fun chooseTransactionType(type: TransactionType){
         transactionTypeField.openAndSelectTransactionType(type)
@@ -65,7 +85,7 @@ class TransactionFormRobot(
 
     fun navigateToChooseProduct() : Unit = chooseProductButton.click()
 
-    fun fillPpn(ppn : Int) : Unit = ppnField.inputText(ppn.toString())
+    fun fillPpn(ppn : Int) : Unit = ppnField.inputText(ppn.toString(), fresh = true)
 
     fun submitTransactionForm() : Unit = submitButton.click()
 
@@ -107,6 +127,23 @@ class TransactionFormRobot(
                     hasText(product.price.toRupiahV2(), substring = true)
                 ).assertExists()
         }
+    }
+
+    fun editProduct(
+        productName: String,
+        unitType: UnitType?,
+        quantity: Int?,
+        totalPrice: Int?,
+    ){
+        productCardWithName(productName).performEdit(
+            unitType = unitType,
+            quantity = quantity,
+            totalPrice = totalPrice
+        )
+    }
+
+    fun deleteProduct(productName: String){
+        productCardWithName(productName).performDelete()
     }
 
     val chooseProfileRobot = ChooseProfileRobot(composeRule, context)

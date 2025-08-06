@@ -3,8 +3,9 @@ package com.hezapp.ekonomis.robot._interactor
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performTextReplacement
+import androidx.test.espresso.Espresso
 
 open class TextFieldInteractor(
     composeRule: ComposeTestRule,
@@ -16,8 +17,11 @@ open class TextFieldInteractor(
     ) : this(composeRule, hasText(label))
 
     fun inputText(text: String, fresh: Boolean = false){
+        val node = composeRule.onNode(matcher)
         if (fresh)
-            composeRule.onNode(matcher).performTextClearance()
-        composeRule.onNode(matcher).performTextInput(text)
+            node.performTextReplacement(text)
+        else
+            node.performTextInput(text)
+        Espresso.closeSoftKeyboard()
     }
 }

@@ -173,7 +173,9 @@ fun SelectedProductCardItem(
             IconButton(
                 onClick = onClickEdit
             ) {
-                Icon(Icons.Outlined.Edit, contentDescription = "Edit")
+                Icon(
+                    Icons.Outlined.Edit,
+                    contentDescription = stringResource(R.string.edit))
             }
         },
         modifier = modifier.fillMaxWidth()
@@ -270,7 +272,7 @@ private fun PreviewListSelectedProductFieldWithItem(){
                                 quantity = 500,
                                 unitType = UnitType.PIECE,
                                 id = 0,
-                                price = (1_000_000_000).toInt(),
+                                price = 1_000_000_000,
                             ),
                             InvoiceItemUiModel.new(
                                 productId = 0,
@@ -278,7 +280,7 @@ private fun PreviewListSelectedProductFieldWithItem(){
                                 quantity = 10,
                                 unitType = UnitType.CARTON,
                                 id = 1,
-                                price = (54_000).toInt(),
+                                price = 54_000,
                             ),
                         )
                         it.copy(

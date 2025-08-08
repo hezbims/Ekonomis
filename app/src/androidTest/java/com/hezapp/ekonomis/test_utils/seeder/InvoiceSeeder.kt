@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_data.seeder
+package com.hezapp.ekonomis.test_utils.seeder
 
 import androidx.room.withTransaction
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase

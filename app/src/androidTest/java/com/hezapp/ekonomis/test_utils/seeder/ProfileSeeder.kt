@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_data.seeder
+package com.hezapp.ekonomis.test_utils.seeder
 
 import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity

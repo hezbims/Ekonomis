@@ -7,7 +7,7 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.robot.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
-import com.hezapp.ekonomis.test_data.MySeederUtils
+import com.hezapp.ekonomis.test_utils.MySeederUtils
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

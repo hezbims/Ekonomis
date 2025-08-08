@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_data
+package com.hezapp.ekonomis.test_utils
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
@@ -9,7 +9,6 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.getNextMonthYear
 import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
-import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.util.Calendar
 
 private val curMonth = testCalendarProvider.getCalendar().timeInMillis

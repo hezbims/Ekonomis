@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_data
+package com.hezapp.ekonomis.test_utils
 
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao

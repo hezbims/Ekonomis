@@ -10,9 +10,9 @@ import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_utils.TestTimeService
-import com.hezapp.ekonomis.test_data.seeder.InvoiceSeeder
-import com.hezapp.ekonomis.test_data.seeder.ProductSeeder
-import com.hezapp.ekonomis.test_data.seeder.ProfileSeeder
+import com.hezapp.ekonomis.test_utils.seeder.InvoiceSeeder
+import com.hezapp.ekonomis.test_utils.seeder.ProductSeeder
+import com.hezapp.ekonomis.test_utils.seeder.ProfileSeeder
 import org.junit.After
 import org.junit.Rule
 import org.junit.rules.ExternalResource

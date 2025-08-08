@@ -8,7 +8,7 @@ import com.hezapp.ekonomis.robot.transaction_form.ProductFormAssertData
 import com.hezapp.ekonomis.steps.DeleteProduct
 import com.hezapp.ekonomis.steps.EditProduct
 import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
-import com.hezapp.ekonomis.test_data.seeder.InvoiceItemSeed
+import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test

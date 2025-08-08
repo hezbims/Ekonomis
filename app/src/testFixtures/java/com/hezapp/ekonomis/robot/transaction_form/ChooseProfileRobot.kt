@@ -12,7 +12,7 @@ import androidx.compose.ui.test.performTextInput
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
-import com.hezapp.ekonomis.test_data.TestConstant
+import com.hezapp.ekonomis.test_utils.TestConstant
 
 class ChooseProfileRobot(
     private val composeRule: ComposeTestRule,

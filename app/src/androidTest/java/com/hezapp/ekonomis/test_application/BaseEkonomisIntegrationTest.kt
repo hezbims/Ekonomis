@@ -9,7 +9,7 @@ import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
-import com.hezapp.ekonomis.test_data.TestTimeService
+import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_data.seeder.InvoiceSeeder
 import com.hezapp.ekonomis.test_data.seeder.ProductSeeder
 import com.hezapp.ekonomis.test_data.seeder.ProfileSeeder

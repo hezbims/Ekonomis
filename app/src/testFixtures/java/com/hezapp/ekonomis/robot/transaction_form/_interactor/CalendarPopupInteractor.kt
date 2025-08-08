@@ -9,7 +9,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.hezapp.ekonomis.test_data.TestTimeService
+import com.hezapp.ekonomis.test_utils.TestTimeService
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 import java.time.format.DateTimeFormatterBuilder

@@ -11,7 +11,7 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.test_data.TestTimeService
+import com.hezapp.ekonomis.test_utils.TestTimeService
 import org.koin.core.context.GlobalContext
 import java.time.LocalDate
 

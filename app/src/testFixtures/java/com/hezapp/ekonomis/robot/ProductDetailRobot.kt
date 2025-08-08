@@ -15,7 +15,7 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
-import com.hezapp.ekonomis.test_data.testCalendarProvider
+import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale

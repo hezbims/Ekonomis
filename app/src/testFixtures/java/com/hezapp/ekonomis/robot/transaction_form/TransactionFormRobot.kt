@@ -20,7 +20,7 @@ import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.CalendarPopupInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.ChoosenProductCardInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.TransactionTypeDropdownInteractor
-import com.hezapp.ekonomis.test_data.TestTimeService
+import com.hezapp.ekonomis.test_utils.TestTimeService
 import java.time.LocalDate
 import java.util.Calendar
 

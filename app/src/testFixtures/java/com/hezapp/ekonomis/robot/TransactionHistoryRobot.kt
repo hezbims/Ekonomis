@@ -11,8 +11,8 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
-import com.hezapp.ekonomis.test_data.TestTimeService
-import com.hezapp.ekonomis.test_data.testCalendarProvider
+import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.time.LocalDate
 import java.util.Calendar
 

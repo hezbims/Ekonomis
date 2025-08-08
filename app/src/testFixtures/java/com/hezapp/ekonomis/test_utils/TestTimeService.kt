@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_data
+package com.hezapp.ekonomis.test_utils
 
 import android.os.Build
 import androidx.annotation.RequiresApi

@@ -56,18 +56,22 @@ abstract class EkonomisDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE : EkonomisDatabase? = null
 
-        fun getInstance(context: Context) : EkonomisDatabase {
+        fun <T : EkonomisDatabase> getInstance(
+            context: Context,
+            kclass: Class<T>,
+        ) : T {
             synchronized(this){
                 var instance = INSTANCE
                 if (instance == null){
                     instance = Room.databaseBuilder(
                         context.applicationContext,
-                        EkonomisDatabase::class.java,
+                        kclass,
                         DB_NAME
                     ).build()
                     INSTANCE = instance
                 }
-                return instance
+                @Suppress("UNCHECKED_CAST")
+                return instance as T
             }
         }
     }

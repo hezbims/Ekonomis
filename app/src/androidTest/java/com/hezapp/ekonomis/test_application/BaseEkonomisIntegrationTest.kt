@@ -6,19 +6,22 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainActivity
+import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDbAssertion
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceSeeder
 import com.hezapp.ekonomis.test_utils.seeder.ProductSeeder
 import com.hezapp.ekonomis.test_utils.seeder.ProfileSeeder
-import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.ExternalResource
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runner.RunWith
+import org.koin.core.context.GlobalContext
 import java.util.Locale
 import java.util.TimeZone
 
@@ -68,8 +71,13 @@ abstract class BaseEkonomisIntegrationTest {
     protected val profileSeeder = ProfileSeeder()
     //endregion
 
-    @After
-    fun after(){
+    //region DB ASSERTION
+    protected val transactionDbAssertion by lazy { TransactionDbAssertion() }
+    //endregion
+
+    @Before
+    fun reset(){
+        GlobalContext.get().get<EkonomisDatabase>().clearAllTables()
         TestTimeService.reset()
     }
 }

@@ -1,7 +1,6 @@
 package com.hezapp.ekonomis.test_application
 
 import android.app.Application
-import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hezapp.ekonomis.MainApplication
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
@@ -23,12 +22,21 @@ class MyKoinTestApplication : Application() {
         }
         loadKoinModules(
             module = module {
+                val testDb = EkonomisTestDatabase.getInstance(appContext)
                 single<EkonomisDatabase> {
-                    Room.inMemoryDatabaseBuilder(
-                        appContext,
-                        EkonomisDatabase::class.java,
-                    ).build()
+                    testDb
                 }
+                //region TEST DAO
+                single {
+                    testDb.productTestDao
+                }
+                single {
+                    testDb.profileTestDao
+                }
+                single {
+                    testDb.transactionTestDao
+                }
+                //endregion
                 single<ITimeService> {
                     TestTimeService.get()
                 }

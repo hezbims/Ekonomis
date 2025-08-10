@@ -20,6 +20,7 @@ import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.CalendarPopupInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.ChoosenProductCardInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.TransactionTypeDropdownInteractor
+import com.hezapp.ekonomis.test_utils.TestConstant
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import java.time.LocalDate
 import java.util.Calendar
@@ -72,7 +73,7 @@ class TransactionFormRobot(
         composeRule.apply {
             dateField.click()
 
-            waitUntilExactlyOneExists(isDialog(), timeoutMillis = 5000L)
+            waitUntilExactlyOneExists(isDialog(), timeoutMillis = TestConstant.LARGE_TIMEOUT)
 
             calendarPopup.changeYear(year)
             calendarPopup.changeMonth(month)

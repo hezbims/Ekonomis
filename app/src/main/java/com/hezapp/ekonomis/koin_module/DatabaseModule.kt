@@ -6,6 +6,6 @@ import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import org.koin.dsl.module
 
 val DatabaseModule = module {
-    single { EkonomisDatabase.getInstance(get()) }
+    single { EkonomisDatabase.getInstance(get(), EkonomisDatabase::class.java) }
     single<ITransactionProvider> { TransactionProvider(db = get()) }
 }

@@ -8,6 +8,8 @@ import com.hezapp.ekonomis.robot.transaction_form.ProductFormAssertData
 import com.hezapp.ekonomis.steps.DeleteProduct
 import com.hezapp.ekonomis.steps.EditProduct
 import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
+import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
+import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -62,7 +64,7 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
                 .withDayOfMonth(12),
             profileName = "penjual-2",
             isRegisterNewProfile = false,
-            ppn = 11,
+            ppn = 14,
             modifyChoosenProductActions = listOf(
                 EditProduct(
                     targetName = "product-1",
@@ -83,7 +85,7 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
                 .withMonth(6)
                 .withDayOfMonth(12),
             profileName = "penjual-2",
-            ppn = 11,
+            ppn = 14,
             products = listOf(
                 ProductFormAssertData(
                     name = "product-1",
@@ -93,5 +95,23 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
                 )
             )
         )
+
+        transactionDbAssertion.assertCountInvoices(1)
+        transactionDbAssertion.assertCountTransactionDetails(TransactionDetailsAssertionDto(
+            date = LocalDate.now()
+                .withYear(2020).withMonth(6).withDayOfMonth(12),
+            profileName = "penjual-2",
+            transactionType = TransactionType.PEMBELIAN,
+            ppn = 14,
+            items = listOf(
+                TransactionDetailsItemAssertionDto(
+                    productName = "product-1",
+                    quantity = 3,
+                    unitType = UnitType.PIECE,
+                    price = 2000,
+                )
+            )
+        ), 1)
+        transactionDbAssertion.assertCountInvoiceItems(1)
     }
 }

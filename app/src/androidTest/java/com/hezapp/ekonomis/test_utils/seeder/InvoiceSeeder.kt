@@ -26,8 +26,11 @@ class InvoiceSeeder(
         invoiceItems: List<InvoiceItemSeed>,
         ppn: Int?,
     ){
-        val isPenjualan = profile.type == ProfileType.CUSTOMER
-        if (ppn == null && !isPenjualan)
+        val transactionType = when(profile.type){
+            ProfileType.SUPPLIER -> TransactionType.PEMBELIAN
+            ProfileType.CUSTOMER -> TransactionType.PENJUALAN
+        }
+        if (ppn == null && transactionType == TransactionType.PEMBELIAN)
             throw IllegalArgumentException("Transaksi pembelian harus memiliki ppn")
 
         database.withTransaction {
@@ -35,9 +38,9 @@ class InvoiceSeeder(
                 date = date.atStartOfDay(
                     TestTimeService.get().getZoneId()
                 ).toInstant().toEpochMilli(),
-                ppn = if (isPenjualan) ppn!! else null,
+                ppn = if (transactionType == TransactionType.PENJUALAN) null else ppn!!,
                 profileId = profile.id,
-                transactionType = if (isPenjualan) TransactionType.PENJUALAN else TransactionType.PEMBELIAN,
+                transactionType = transactionType,
             )).toInt()
 
             invoiceItems.forEach {

@@ -21,6 +21,7 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
     fun setupTestData() = runTest {
         val penjual1 = profileSeeder.run("penjual-1", ProfileType.SUPPLIER)
         profileSeeder.run("penjual-2", ProfileType.SUPPLIER)
+        val pembeli = profileSeeder.run("pembali-1", ProfileType.CUSTOMER)
 
         val products = productSeeder.run(listOf(
             ProductEntity(name = "product-0"),
@@ -48,6 +49,22 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
             ),
             ppn = 14,
         )
+        invoiceSeeder.run(
+            pembeli,
+            LocalDate.now()
+                .withYear(2020)
+                .withMonth(6)
+                .withDayOfMonth(13),
+            listOf(
+                InvoiceItemSeed(
+                    quantity = 51,
+                    unitType = UnitType.CARTON,
+                    product = products[1],
+                    price = 25_000
+                ),
+            ),
+            ppn = null,
+        )
     }
 
     @Test(timeout = 60_000L)
@@ -61,7 +78,7 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
             date = LocalDate.now()
                 .withYear(2020)
                 .withMonth(6)
-                .withDayOfMonth(12),
+                .withDayOfMonth(15),
             profileName = "penjual-2",
             isRegisterNewProfile = false,
             ppn = 14,
@@ -83,7 +100,7 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
             date = LocalDate.now()
                 .withYear(2020)
                 .withMonth(6)
-                .withDayOfMonth(12),
+                .withDayOfMonth(15),
             profileName = "penjual-2",
             ppn = 14,
             products = listOf(
@@ -96,10 +113,10 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
             )
         )
 
-        transactionDbAssertion.assertCountInvoices(1)
+        transactionDbAssertion.assertCountInvoices(2)
         transactionDbAssertion.assertCountTransactionDetails(TransactionDetailsAssertionDto(
             date = LocalDate.now()
-                .withYear(2020).withMonth(6).withDayOfMonth(12),
+                .withYear(2020).withMonth(6).withDayOfMonth(15),
             profileName = "penjual-2",
             transactionType = TransactionType.PEMBELIAN,
             ppn = 14,
@@ -112,6 +129,6 @@ class EditTransaction : BaseEkonomisIntegrationTest() {
                 )
             )
         ), 1)
-        transactionDbAssertion.assertCountInvoiceItems(1)
+        transactionDbAssertion.assertCountInvoiceItems(2)
     }
 }

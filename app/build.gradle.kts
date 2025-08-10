@@ -18,7 +18,7 @@ rootProject.file("key.properties").let {
 
 android {
     namespace = "com.hezapp.ekonomis"
-    compileSdk = 36
+    compileSdk = 35
 
     @Suppress("UnstableApiUsage")
     testFixtures {
@@ -54,6 +54,7 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
+            kotlin.compilerOptions.freeCompilerArgs.add("-Xdebug")
         }
 
         release {

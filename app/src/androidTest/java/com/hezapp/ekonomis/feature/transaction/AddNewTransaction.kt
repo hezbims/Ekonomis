@@ -4,6 +4,8 @@ import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.robot.transaction_form.ProductFormAssertData
 import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
+import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
+import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
 import org.junit.Test
 import java.time.LocalDate
 
@@ -85,5 +87,27 @@ class AddNewTransaction : BaseEkonomisIntegrationTest() {
                 )
             ),
         )
+
+        transactionDbAssertion.assertCountInvoices(1)
+        transactionDbAssertion.assertCountTransactionDetails(
+            expected = TransactionDetailsAssertionDto(
+                date = LocalDate.now()
+                    .withYear(2021)
+                    .withMonth(1)
+                    .withDayOfMonth(1),
+                profileName = "profile-1",
+                transactionType = TransactionType.PEMBELIAN,
+                ppn = 11,
+                items = listOf(
+                    TransactionDetailsItemAssertionDto(
+                        productName = "Tuna kaleng",
+                        quantity = 3,
+                        unitType = UnitType.PIECE,
+                        price = 250_000
+                    )
+                )
+            ),
+        )
+        transactionDbAssertion.assertCountInvoiceItems(1)
     }
 }

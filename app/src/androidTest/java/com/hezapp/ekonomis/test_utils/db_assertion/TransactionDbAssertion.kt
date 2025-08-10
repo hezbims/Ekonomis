@@ -21,7 +21,7 @@ class TransactionDbAssertion(
 ) {
     fun assertCountTransactionDetails(
         expected : TransactionDetailsAssertionDto,
-        expectedCount : Int,
+        expectedCount : Int = 1,
     ) : Unit = runBlocking {
         val invoices = transactionTestDao.getAll()
         val expectedDateInMillis = ZonedDateTime.of(

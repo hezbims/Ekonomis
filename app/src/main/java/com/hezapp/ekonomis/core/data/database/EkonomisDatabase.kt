@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.hezapp.ekonomis.core.data.invoice.converter.LocalDateConverter
 import com.hezapp.ekonomis.core.data.invoice.converter.TransactionTypeConverter
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.converter.UnitTypeConverter
@@ -14,6 +15,8 @@ import com.hezapp.ekonomis.core.data.monthly_stock.dao.MonthlyStockDao
 import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.data.profile.converter.ProfileTypeConverter
 import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
+import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
+import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
@@ -27,12 +30,18 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
         InvoiceEntity::class,
         InvoiceItemEntity::class,
         MonthlyStockEntity::class,
+        Installment::class,
+        InstallmentItem::class,
     ],
-    version = 2,
+    version = 3,
     autoMigrations = [
         AutoMigration(
             from = 1,
             to = 2,
+        ),
+        AutoMigration( // menambahkan kolom tipe pembayaran di tabel invoice (cash atau cicilan)
+            from = 2,
+            to = 3,
         ),
     ],
     exportSchema = true,
@@ -40,7 +49,8 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 @TypeConverters(
     ProfileTypeConverter::class,
     TransactionTypeConverter::class,
-    UnitTypeConverter::class
+    LocalDateConverter::class,
+    UnitTypeConverter::class,
 )
 abstract class EkonomisDatabase : RoomDatabase() {
 
@@ -51,7 +61,7 @@ abstract class EkonomisDatabase : RoomDatabase() {
     abstract val monthlyStockDao: MonthlyStockDao
 
     companion object {
-        private const val DB_NAME = "ekonomis_db"
+        const val DB_NAME = "ekonomis_db"
 
         @Volatile
         private var INSTANCE : EkonomisDatabase? = null

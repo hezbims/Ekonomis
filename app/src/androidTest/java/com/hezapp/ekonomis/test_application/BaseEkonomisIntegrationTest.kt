@@ -7,6 +7,8 @@ import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
+import com.hezapp.ekonomis.robot.ProductDetailRobot
+import com.hezapp.ekonomis.robot.ProductPreviewRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
@@ -59,6 +61,8 @@ abstract class BaseEkonomisIntegrationTest {
     //region ROBOT
     protected val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule, context) }
     protected val transactionFormRobot by lazy { TransactionFormRobot(composeRule, context) }
+    protected val productPreviewRobot by lazy { ProductPreviewRobot(composeRule, context) }
+    protected val productDetailRobot by lazy { ProductDetailRobot(composeRule, context) }
     //endregion
 
     //region STEPS

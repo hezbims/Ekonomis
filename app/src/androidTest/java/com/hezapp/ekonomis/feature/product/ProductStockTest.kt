@@ -1,22 +1,13 @@
-package com.hezapp.ekonomis
+package com.hezapp.ekonomis.feature.product
 
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.robot.ProductDetailRobot
-import com.hezapp.ekonomis.robot.ProductPreviewRobot
-import com.hezapp.ekonomis.robot.TransactionHistoryRobot
+import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
 import com.hezapp.ekonomis.test_utils.MySeederUtils
-import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.koin.core.context.stopKoin
 
-@RunWith(AndroidJUnit4::class)
-class ProductStockTest {
+class ProductStockTest : BaseEkonomisIntegrationTest() {
     /**
      * Memastikan harga pokok tampil dengan benar
      */
@@ -79,7 +70,7 @@ class ProductStockTest {
                 year = 2019,
             )
             assertInStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0 , pieceQuantity = 50),
+                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 50),
                 price = 250000
             )
             assertOutStock(
@@ -124,17 +115,6 @@ class ProductStockTest {
 
     @Before
     fun before(){
-        MySeederUtils.seedTigaBulanTransaksi()
+        MySeederUtils.Companion.seedTigaBulanTransaksi()
     }
-
-    @After
-    fun after(){
-        stopKoin()
-    }
-
-    @get:Rule
-    val composeRule = createAndroidComposeRule<MainActivity>()
-    private val transactionHistoryRobot = TransactionHistoryRobot(composeRule, composeRule.activity)
-    private val productPreviewRobot = ProductPreviewRobot(composeRule, composeRule.activity)
-    private val productDetailRobot = ProductDetailRobot(composeRule, composeRule.activity)
 }

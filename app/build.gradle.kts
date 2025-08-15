@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.room)
     id("kotlin-parcelize")
 }
 
@@ -16,6 +17,10 @@ rootProject.file("key.properties").let {
         keystoreProperties.load(FileInputStream(it))
 }
 
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
 android {
     namespace = "com.hezapp.ekonomis"
     compileSdk = 35
@@ -23,10 +28,6 @@ android {
     @Suppress("UnstableApiUsage")
     testFixtures {
         enable = true
-    }
-
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
     }
 
     defaultConfig {
@@ -72,6 +73,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "21"
@@ -88,6 +91,8 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
@@ -113,6 +118,7 @@ dependencies {
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.room.testing.android)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)

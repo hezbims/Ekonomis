@@ -23,12 +23,12 @@ class TransactionDbAssertion(
         expected : TransactionDetailsAssertionDto,
         expectedCount : Int = 1,
     ) : Unit = runBlocking {
-        val invoices = transactionTestDao.getAll()
+        val allInvoicesFromDb = transactionTestDao.getAll()
         val expectedDateInMillis = ZonedDateTime.of(
             expected.date.atStartOfDay(), ZoneId.of("UTC")
         ).toInstant().toEpochMilli()
 
-        val actualCount = invoices.count {
+        val expectedCriteriaMatchCount = allInvoicesFromDb.count {
             val currentTransactionProfileName = profileTestDao.getById(it.profileId).name
 
             if (
@@ -48,7 +48,7 @@ class TransactionDbAssertion(
                 currentTransactionItems.contains { actualItem ->
                     runBlocking {
                         val actualItemProductName = productTestDao
-                            .getById(actualItem.id).name
+                            .getById(actualItem.productId).name
 
                         actualItem.quantity == expectedItem.quantity &&
                                 actualItem.unitType == expectedItem.unitType &&
@@ -59,7 +59,7 @@ class TransactionDbAssertion(
             }
         }
 
-        assertThat(actualCount, equalTo(expectedCount))
+        assertThat(expectedCriteriaMatchCount, equalTo(expectedCount))
     }
 
     fun assertCountInvoices(expectedCount: Int) = runBlocking {

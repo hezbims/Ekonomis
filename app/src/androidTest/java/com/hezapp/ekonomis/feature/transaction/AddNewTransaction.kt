@@ -3,13 +3,13 @@ package com.hezapp.ekonomis.feature.transaction
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.steps.FormProductItem
-import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
+import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
 import org.junit.Test
 import java.time.LocalDate
 
-class AddNewTransaction : BaseEkonomisIntegrationTest() {
+class AddNewTransaction : BaseEkonomisUiTest() {
     /**
      * Memastikan data yang dibuat tampil dengan akurat.
      */

@@ -2,12 +2,12 @@ package com.hezapp.ekonomis.feature.product
 
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
+import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
 import com.hezapp.ekonomis.test_utils.MySeederUtils
 import org.junit.Before
 import org.junit.Test
 
-class ProductStockTest : BaseEkonomisIntegrationTest() {
+class ProductStockTest : BaseEkonomisUiTest() {
     /**
      * Memastikan harga pokok tampil dengan benar
      */

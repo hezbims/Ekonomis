@@ -1,10 +1,10 @@
 package com.hezapp.ekonomis.test_application
 
-import android.content.Context
 import androidx.compose.ui.test.isRoot
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.printToLog
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.robot.ProductDetailRobot
@@ -28,7 +28,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 @RunWith(AndroidJUnit4::class)
-abstract class BaseEkonomisIntegrationTest {
+abstract class BaseEkonomisUiTest {
     @get:Rule(order = 1)
     val timeConfigSetup = object : ExternalResource(){
         override fun before() {
@@ -46,8 +46,7 @@ abstract class BaseEkonomisIntegrationTest {
     }
     @get:Rule(order = 2)
     val composeRule = createAndroidComposeRule<MainActivity>()
-    private val context : Context
-        get() = composeRule.activity
+    private val context = InstrumentationRegistry.getInstrumentation().targetContext
     @get:Rule(order = 3)
     val logErrorRule = object : TestWatcher() {
         override fun failed(e: Throwable?, description: Description?) {

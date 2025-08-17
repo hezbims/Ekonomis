@@ -7,7 +7,7 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.robot.transaction_form.ProductFormAssertData
 import com.hezapp.ekonomis.steps.DeleteProduct
 import com.hezapp.ekonomis.steps.EditProduct
-import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
+import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 
-class EditTransaction : BaseEkonomisIntegrationTest() {
+class EditTransaction : BaseEkonomisUiTest() {
     @Before
     fun setupTestData() = runTest {
         val penjual1 = profileSeeder.run("penjual-1", ProfileType.SUPPLIER)

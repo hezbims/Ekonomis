@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.feature.db_migration
+package com.hezapp.ekonomis.db_migration
 
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType

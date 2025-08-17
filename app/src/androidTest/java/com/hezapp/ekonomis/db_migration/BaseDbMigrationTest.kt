@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.feature.db_migration
+package com.hezapp.ekonomis.db_migration
 
 import android.content.Context
 import androidx.room.testing.MigrationTestHelper

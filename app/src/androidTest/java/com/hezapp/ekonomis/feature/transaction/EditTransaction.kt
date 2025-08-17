@@ -1,7 +1,6 @@
 package com.hezapp.ekonomis.feature.transaction
 
 import androidx.test.core.app.ActivityScenario
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType

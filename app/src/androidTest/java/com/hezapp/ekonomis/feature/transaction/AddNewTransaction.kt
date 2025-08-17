@@ -2,7 +2,7 @@ package com.hezapp.ekonomis.feature.transaction
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.robot.transaction_form.ProductFormAssertData
+import com.hezapp.ekonomis.steps.FormProductItem
 import com.hezapp.ekonomis.test_application.BaseEkonomisIntegrationTest
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
@@ -17,75 +17,24 @@ class AddNewTransaction : BaseEkonomisIntegrationTest() {
     fun insertedDataShouldDisplayedCorrectly() {
         transactionHistoryRobot.navigateToAddNewTransaction()
 
-        transactionFormRobot.apply {
-            chooseTransactionType(TransactionType.PEMBELIAN)
-
-            chooseTransactionDate(
-                day = 1,
-                month = 1,
-                year = 2021,
-            )
-
-            navigateToChooseProfile()
-        }
-
-        transactionFormRobot.chooseProfileRobot.apply {
-            val profileName = "profile-1"
-            registerNewProfile(profileName)
-
-            chooseProfile(profileName)
-        }
-
-        transactionFormRobot.navigateToChooseProduct()
-
-        transactionFormRobot.chooseProductRobot.apply {
-            registerNewProduct("Tuna kaleng")
-
-            chooseProductForTransaction(
-                productName = "Tuna kaleng",
-                quantity = 3,
-                unitType = UnitType.PIECE,
-                totalPrice = 250_000)
-
-            confirmAllSelectedProducts(1)
-        }
-
-        transactionFormRobot.fillPpn(11)
-
-        transactionFormRobot.submitTransactionForm()
-
-        transactionHistoryRobot.apply {
-            openAndApplyFilter(
-                targetMonth = 1,
-                targetYear = 2021,
-            )
-
-            waitAndClickTransactionCard(
-                profileName = "profile-1",
-                totalPrice = -250_000,
-                date = LocalDate.now()
-                    .withYear(2021)
-                    .withMonth(1)
-                    .withDayOfMonth(1)
-            )
-        }
-
-        transactionFormRobot.assertFormContent(
+        filltransactionSteps.fillForm(
             transactionType = TransactionType.PEMBELIAN,
-            date = LocalDate.now()
-                .withYear(2021)
-                .withMonth(1)
-                .withDayOfMonth(1),
             profileName = "profile-1",
-            ppn = 11,
-            products = listOf(
-                ProductFormAssertData(
+            isRegisterNewProfile = true,
+            date = LocalDate.now()
+                .withDayOfMonth(1)
+                .withMonth(1)
+                .withYear(2021),
+            chooseProductActions = listOf(
+                FormProductItem(
                     name = "Tuna kaleng",
-                    price = 250_000,
+                    totalPrice = 250_000,
                     quantity = 3,
                     unitType = UnitType.PIECE,
+                    newRegistration = true,
                 )
             ),
+            ppn = 11,
         )
 
         transactionDbAssertion.assertCountInvoices(1)

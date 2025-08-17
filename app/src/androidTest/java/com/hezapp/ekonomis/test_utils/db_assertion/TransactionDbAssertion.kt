@@ -6,6 +6,7 @@ import com.hezapp.ekonomis.core.domain.utils.contains
 import com.hezapp.ekonomis.test_utils.test_dao.ProductTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.ProfileTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
+import com.hezapp.ekonomis.test_utils.tryUntilSucceed
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
@@ -22,7 +23,7 @@ class TransactionDbAssertion(
     fun assertCountTransactionDetails(
         expected : TransactionDetailsAssertionDto,
         expectedCount : Int = 1,
-    ) : Unit = runBlocking {
+    ) : Unit = tryUntilSucceed {
         val allInvoicesFromDb = transactionTestDao.getAll()
         val expectedDateInMillis = ZonedDateTime.of(
             expected.date.atStartOfDay(), ZoneId.of("UTC")
@@ -62,11 +63,11 @@ class TransactionDbAssertion(
         assertThat(expectedCriteriaMatchCount, equalTo(expectedCount))
     }
 
-    fun assertCountInvoices(expectedCount: Int) = runBlocking {
+    fun assertCountInvoices(expectedCount: Int) = tryUntilSucceed {
         assertThat(transactionTestDao.countInvoices(), equalTo(expectedCount))
     }
 
-    fun assertCountInvoiceItems(expectedCount: Int) = runBlocking {
+    fun assertCountInvoiceItems(expectedCount: Int) = tryUntilSucceed {
         assertThat(transactionTestDao.countInvoiceItems(), equalTo(expectedCount))
     }
 }

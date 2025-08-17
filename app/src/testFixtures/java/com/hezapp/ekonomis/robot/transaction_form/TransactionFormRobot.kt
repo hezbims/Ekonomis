@@ -5,10 +5,13 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.isFocusable
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
@@ -55,6 +58,15 @@ class TransactionFormRobot(
     private val chooseProductButton = ComponentInteractor(composeRule, context.getString(R.string.select_product_label))
     private val ppnField = TextFieldInteractor(composeRule, context.getString(R.string.ppn_label))
     private val submitButton = ComponentInteractor(composeRule, context.getString(R.string.save_label))
+    private val deleteTransactionIcon = ComponentInteractor(composeRule, hasContentDescription(context.getString(R.string.delete_transaction_label)))
+    @OptIn(ExperimentalTestApi::class)
+    private val confirmDeleteTransactionDialog = object {
+        fun confirmDeletion(){
+            composeRule.waitUntilExactlyOneExists(isDialog())
+            composeRule.onNodeWithText(context.getString(R.string.yes_label))
+                .performClick()
+        }
+    }
 
     private fun productCardWithName(productName: String) =
         ChoosenProductCardInteractor(composeRule, hasText(productName), context)
@@ -145,6 +157,11 @@ class TransactionFormRobot(
 
     fun deleteProduct(productName: String){
         productCardWithName(productName).performDelete()
+    }
+
+    fun deleteCurrentTransaction() {
+        deleteTransactionIcon.click()
+        confirmDeleteTransactionDialog.confirmDeletion()
     }
 
     val chooseProfileRobot = ChooseProfileRobot(composeRule, context)

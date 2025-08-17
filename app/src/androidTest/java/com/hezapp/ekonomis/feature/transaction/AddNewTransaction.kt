@@ -9,7 +9,7 @@ import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAsserti
 import org.junit.Test
 import java.time.LocalDate
 
-class AddNewTransaction : BaseEkonomisUiTest() {
+class AddNewTransaction : BaseEkonomisUiTest(immediatelyLaunchMainActivity = true) {
     /**
      * Memastikan data yang dibuat tampil dengan akurat.
      */

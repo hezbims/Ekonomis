@@ -21,10 +21,12 @@ class InvoiceRepo(
 
     override suspend fun getPreviewInvoices(filter: PreviewTransactionFilter): List<PreviewTransactionHistory> {
         val firstDayOfCurrentPeriod = filter.monthYear.toCalendar().toBeginningOfMonth().timeInMillis
-        return dao.getPreviewTransactionHistory(
+        val nextMonthYear = firstDayOfCurrentPeriod.getNextMonthYear()
+        val result = dao.getPreviewTransactionHistory(
             firstDayOfMonth = firstDayOfCurrentPeriod,
-            lastDayOfMonth = firstDayOfCurrentPeriod.getNextMonthYear()
+            lastDayOfMonth = nextMonthYear,
         )
+        return result
     }
 
     override suspend fun getFullInvoiceDetails(id: Int): FullInvoiceDetails {

@@ -118,4 +118,11 @@ class TransactionHistoryRobot(
 
         return currentCalendar.timeInMillis
     }
+
+    @OptIn(ExperimentalTestApi::class)
+    fun assertTransactionCardNotExist(
+        profileName: String,
+    ) {
+        composeRule.waitUntilDoesNotExist(hasText(profileName))
+    }
 }

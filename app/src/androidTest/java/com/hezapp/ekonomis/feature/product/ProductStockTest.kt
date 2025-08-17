@@ -1,5 +1,7 @@
 package com.hezapp.ekonomis.feature.product
 
+import androidx.test.core.app.ActivityScenario
+import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
@@ -116,5 +118,6 @@ class ProductStockTest : BaseEkonomisUiTest() {
     @Before
     fun before(){
         MySeederUtils.Companion.seedTigaBulanTransaksi()
+        ActivityScenario.launch(MainActivity::class.java)
     }
 }

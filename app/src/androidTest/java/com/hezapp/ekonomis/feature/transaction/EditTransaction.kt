@@ -1,5 +1,8 @@
 package com.hezapp.ekonomis.feature.transaction
 
+import androidx.test.core.app.ActivityScenario
+import androidx.test.ext.junit.rules.ActivityScenarioRule
+import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
@@ -65,6 +68,7 @@ class EditTransaction : BaseEkonomisUiTest() {
             ),
             ppn = null,
         )
+        ActivityScenario.launch(MainActivity::class.java)
     }
 
     @Test(timeout = 60_000L)

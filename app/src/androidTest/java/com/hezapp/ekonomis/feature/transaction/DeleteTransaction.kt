@@ -23,22 +23,24 @@ class DeleteTransaction : BaseEkonomisUiTest() {
             ProductEntity(name = "product-2")
         ))
 
-        invoiceSeeder.run(
-            profile = profiles.first(),
-            date = LocalDate.now()
-                .withYear(2020)
-                .withMonth(2)
-                .withDayOfMonth(15),
-            invoiceItems = products.mapIndexed { index, product ->
-                InvoiceItemSeed(
-                    quantity = index,
-                    unitType = UnitType.PIECE,
-                    product = product,
-                    price = 25_000 * (index + 1)
-                )
-            },
-            ppn = 13,
-        )
+        // generate 2 invoices, make sure only one deleted
+        for (invoiceIndex in 1..2)
+            invoiceSeeder.run(
+                profile = profiles[invoiceIndex - 1],
+                date = LocalDate.now()
+                    .withYear(2020)
+                    .withMonth(2)
+                    .withDayOfMonth(15 + invoiceIndex),
+                invoiceItems = products.mapIndexed { productIndex, product ->
+                    InvoiceItemSeed(
+                        quantity = productIndex,
+                        unitType = UnitType.PIECE,
+                        product = product,
+                        price = 25_000 * (productIndex + 1)
+                    )
+                },
+                ppn = 13,
+            )
         ActivityScenario.launch(MainActivity::class.java)
     }
 
@@ -48,8 +50,8 @@ class DeleteTransaction : BaseEkonomisUiTest() {
 
         transactionFormRobot.deleteCurrentTransaction()
 
-        transactionDbAssertion.assertCountInvoices(0)
-        transactionDbAssertion.assertCountInvoiceItems(0)
+        transactionDbAssertion.assertCountInvoices(1)
+        transactionDbAssertion.assertCountInvoiceItems(2)
         masterDataDbAssertion.assertCount(
             expectedProductCount = 2,
             expectedProfileCount = 3,

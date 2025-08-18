@@ -4,8 +4,8 @@ import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
-import com.hezapp.ekonomis.core.domain.transaction.entity.TransactionEntity
-import com.hezapp.ekonomis.core.domain.transaction.entity.TransactionItemEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionItemEntity
 
 data class InvoiceFormModel(
     val id: Int,

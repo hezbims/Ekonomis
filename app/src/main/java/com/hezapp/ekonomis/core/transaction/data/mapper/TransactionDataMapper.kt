@@ -1,8 +1,8 @@
-package com.hezapp.ekonomis.core.data.transaction.mapper
+package com.hezapp.ekonomis.core.transaction.data.mapper
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
-import com.hezapp.ekonomis.core.domain.transaction.entity.TransactionEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionEntity
 
 fun TransactionEntity.toRoomInvoiceEntity() : InvoiceEntity {
     return InvoiceEntity(

@@ -1,11 +1,11 @@
-package com.hezapp.ekonomis.core.data.transaction.repo
+package com.hezapp.ekonomis.core.transaction.data.repo
 
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
-import com.hezapp.ekonomis.core.data.transaction.mapper.getRoomInvoiceItemEntities
-import com.hezapp.ekonomis.core.data.transaction.mapper.toRoomInvoiceEntity
-import com.hezapp.ekonomis.core.domain.transaction.entity.TransactionEntity
-import com.hezapp.ekonomis.core.domain.transaction.repo.ITransactionRepository
+import com.hezapp.ekonomis.core.transaction.data.mapper.getRoomInvoiceItemEntities
+import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInvoiceEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionEntity
+import com.hezapp.ekonomis.core.transaction.domain.repo.ITransactionRepository
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 
 class TransactionRepository(

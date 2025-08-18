@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.core.domain.transaction.entity
+package com.hezapp.ekonomis.core.transaction.domain.entity
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType

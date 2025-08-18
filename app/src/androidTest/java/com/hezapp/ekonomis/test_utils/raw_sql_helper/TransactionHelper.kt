@@ -1,6 +1,7 @@
 package com.hezapp.ekonomis.test_utils.raw_sql_helper
 
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.hezapp.ekonomis.core.data.database.TableNames
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import java.time.LocalDate
@@ -59,3 +60,47 @@ fun SupportSQLiteDatabase.createNewInvoice(
 
     return getLastInsertedId()
 }
+
+fun SupportSQLiteDatabase.deleteInvoice(
+    id: Int
+) : Int {
+    val totalDeletedRows = delete(
+        TableNames.INVOICE,
+        "id = ?",
+        arrayOf(id))
+    return totalDeletedRows
+}
+
+fun SupportSQLiteDatabase.createInstallments(
+    installment: CreateInstallmentRawSqlDto,
+){
+    beginTransaction()
+    execSQL("""
+        INSERT INTO ${TableNames.INSTALLMENT}(invoice_id, is_paid_off)
+        VALUES (?, ?)
+    """.trimIndent(),
+        arrayOf<Any>(installment.invoiceId, installment.isPaidOff))
+
+    val installmentId = getLastInsertedId()
+
+    for (item in installment.items)
+        execSQL("""
+        INSERT INTO ${TableNames.INSTALLMENT_ITEMS}(installment_id, payment_date, amount)
+        VALUES (?, ?, ?)
+    """.trimIndent(),
+            arrayOf<Any>(installmentId, item.paymentDate, item.amount))
+
+    setTransactionSuccessful()
+    endTransaction()
+}
+
+data class CreateInstallmentRawSqlDto(
+    val invoiceId : Int,
+    val isPaidOff: Boolean,
+    val items: List<CreateInstallmentItemRawSqlDto>
+)
+
+data class CreateInstallmentItemRawSqlDto(
+    val paymentDate: String,
+    val amount: Int,
+)

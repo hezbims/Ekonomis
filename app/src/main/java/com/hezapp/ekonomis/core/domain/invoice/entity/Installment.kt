@@ -13,7 +13,7 @@ import androidx.room.PrimaryKey
             entity = InvoiceEntity::class,
             parentColumns = ["id"],
             childColumns = ["invoice_id"],
-            onDelete = ForeignKey.RESTRICT,
+            onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.RESTRICT,
         )
     ],

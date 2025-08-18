@@ -6,6 +6,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hezapp.ekonomis.core.data.invoice.converter.LocalDateConverter
 import com.hezapp.ekonomis.core.data.invoice.converter.TransactionTypeConverter
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
@@ -33,7 +34,7 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
         Installment::class,
         InstallmentItem::class,
     ],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(
             from = 1,
@@ -43,6 +44,10 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
             from = 2,
             to = 3,
         ),
+        AutoMigration(
+            from = 3,
+            to = 4,
+        )
     ],
     exportSchema = true,
 )
@@ -77,7 +82,14 @@ abstract class EkonomisDatabase : RoomDatabase() {
                         context.applicationContext,
                         kclass,
                         DB_NAME
-                    ).build()
+                    )
+                        .addCallback(object : Callback() {
+                            override fun onCreate(db: SupportSQLiteDatabase) {
+                                db.setForeignKeyConstraintsEnabled(true)
+                                super.onCreate(db)
+                            }
+                        })
+                        .build()
                     INSTANCE = instance
                 }
                 @Suppress("UNCHECKED_CAST")

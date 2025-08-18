@@ -30,7 +30,7 @@ import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
         Installment::class,
         InstallmentItem::class,
     ],
-    version = 3,
+    version = 4,
     autoMigrations = [
         AutoMigration(
             from = 1,
@@ -40,14 +40,18 @@ import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
             from = 2,
             to = 3,
         ),
+        AutoMigration(
+            from = 3,
+            to = 4,
+        )
     ],
     exportSchema = true,
 )
 @TypeConverters(
     ProfileTypeConverter::class,
     TransactionTypeConverter::class,
-    UnitTypeConverter::class,
     LocalDateConverter::class,
+    UnitTypeConverter::class,
 )
 abstract class EkonomisTestDatabase : EkonomisDatabase() {
     abstract val transactionTestDao : TransactionTestDao

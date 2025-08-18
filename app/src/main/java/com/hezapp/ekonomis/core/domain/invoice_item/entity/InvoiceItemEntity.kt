@@ -23,7 +23,7 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
             parentColumns = arrayOf("id"),
             childColumns = arrayOf("invoice_id"),
             onUpdate = ForeignKey.RESTRICT,
-            onDelete = ForeignKey.RESTRICT
+            onDelete = ForeignKey.CASCADE,
         ),
     ],
     indices = [

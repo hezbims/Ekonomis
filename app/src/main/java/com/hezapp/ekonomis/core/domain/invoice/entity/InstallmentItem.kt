@@ -14,7 +14,7 @@ import java.time.LocalDate
             entity = Installment::class,
             parentColumns = ["id"],
             childColumns = ["installment_id"],
-            onDelete = ForeignKey.RESTRICT,
+            onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.RESTRICT,
         )
     ],

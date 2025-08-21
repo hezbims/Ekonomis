@@ -24,4 +24,10 @@ val DaoModule = module {
     single<MonthlyStockDao>{
         get<EkonomisDatabase>().monthlyStockDao
     }
+    single {
+        get<EkonomisDatabase>().installmentDao
+    }
+    single {
+        get<EkonomisDatabase>().installmentItemDao
+    }
 }

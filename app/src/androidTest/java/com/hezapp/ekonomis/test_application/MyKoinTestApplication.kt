@@ -5,6 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.hezapp.ekonomis.MainApplication
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.test_utils.EkonomisTestDatabase
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.loadKoinModules
@@ -35,6 +36,12 @@ class MyKoinTestApplication : Application() {
                 }
                 single {
                     testDb.transactionTestDao
+                }
+                single {
+                    testDb.installmentTestDao
+                }
+                single {
+                    testDb.installmentItemTestDao
                 }
                 //endregion
                 single<ITimeService> {

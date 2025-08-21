@@ -2,8 +2,12 @@ package com.hezapp.ekonomis.test_utils.seeder
 
 import androidx.room.withTransaction
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
+import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
+import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
+import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
+import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
@@ -18,6 +22,8 @@ import java.time.LocalDate
 class InvoiceSeeder(
     private val invoiceDao: InvoiceDao = GlobalContext.get().get(),
     private val invoiceItemDao: InvoiceItemDao = GlobalContext.get().get(),
+    private val installmentDao: InstallmentDao = GlobalContext.get().get(),
+    private val installmentItemDao: InstallmentItemDao = GlobalContext.get().get(),
     private val database: EkonomisDatabase = GlobalContext.get().get(),
 ) {
     suspend fun run(
@@ -25,6 +31,7 @@ class InvoiceSeeder(
         date: LocalDate,
         invoiceItems: List<InvoiceItemSeed>,
         ppn: Int?,
+        installmentSeed: InstallmentSeed? = null,
     ){
         val transactionType = when(profile.type){
             ProfileType.SUPPLIER -> TransactionType.PEMBELIAN
@@ -54,6 +61,23 @@ class InvoiceSeeder(
                     )
                 )
             }
+
+            installmentSeed?.let { installmentSeed ->
+                val installmentId = installmentDao.insert(Installment(
+                    invoiceId = invoiceId,
+                    isPaidOff = installmentSeed.isPaidOff,
+                ))
+
+                val mappedItems = installmentSeed.items.map { item ->
+                    InstallmentItem(
+                        installmentId = installmentId.toInt(),
+                        paymentDate = item.paymentDate,
+                        amount = item.amount,
+                    )
+                }
+
+                installmentItemDao.insert(mappedItems)
+            }
         }
     }
 }
@@ -63,4 +87,14 @@ data class InvoiceItemSeed(
     val unitType: UnitType,
     val product: ProductEntity,
     val price: Int,
+)
+
+data class InstallmentSeed(
+    val isPaidOff: Boolean,
+    val items: List<InstallmentItemSeed>,
+)
+
+data class InstallmentItemSeed(
+    val amount: Int,
+    val paymentDate: LocalDate,
 )

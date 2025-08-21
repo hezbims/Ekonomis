@@ -6,6 +6,8 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
+import com.hezapp.ekonomis.test_utils.seeder.InstallmentItemSeed
+import com.hezapp.ekonomis.test_utils.seeder.InstallmentSeed
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -40,6 +42,18 @@ class DeleteTransaction : BaseEkonomisUiTest() {
                     )
                 },
                 ppn = 13,
+                installmentSeed = InstallmentSeed(
+                    isPaidOff = true,
+                    items = List(2){ index ->
+                        InstallmentItemSeed(
+                            amount = 2000,
+                            paymentDate = LocalDate.now()
+                                .withYear(2020)
+                                .withMonth(2)
+                                .withDayOfMonth(16),
+                        )
+                    }
+                )
             )
         ActivityScenario.launch(MainActivity::class.java)
     }
@@ -52,6 +66,8 @@ class DeleteTransaction : BaseEkonomisUiTest() {
 
         transactionDbAssertion.assertCountInvoices(1)
         transactionDbAssertion.assertCountInvoiceItems(2)
+        transactionDbAssertion.assertCountInstallment(1)
+        transactionDbAssertion.assertCountInstallmentItem(2)
         masterDataDbAssertion.assertCount(
             expectedProductCount = 2,
             expectedProfileCount = 3,

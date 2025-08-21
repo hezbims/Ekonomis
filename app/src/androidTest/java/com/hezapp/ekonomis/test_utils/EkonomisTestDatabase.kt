@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_application
+package com.hezapp.ekonomis.test_utils
 
 import android.content.Context
 import androidx.room.AutoMigration
@@ -16,6 +16,8 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.test_utils.test_dao.InstallmentItemTestDao
+import com.hezapp.ekonomis.test_utils.test_dao.InstallmentTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.ProductTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.ProfileTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
@@ -36,7 +38,8 @@ import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
             from = 1,
             to = 2,
         ),
-        AutoMigration( // menambahkan kolom tipe pembayaran di tabel invoice (cash atau cicilan)
+        AutoMigration(
+            // menambahkan kolom tipe pembayaran di tabel invoice (cash atau cicilan)
             from = 2,
             to = 3,
         ),
@@ -57,6 +60,8 @@ abstract class EkonomisTestDatabase : EkonomisDatabase() {
     abstract val transactionTestDao : TransactionTestDao
     abstract val productTestDao : ProductTestDao
     abstract val profileTestDao : ProfileTestDao
+    abstract val installmentTestDao : InstallmentTestDao
+    abstract val installmentItemTestDao : InstallmentItemTestDao
 
     companion object {
         fun getInstance(context: Context) =

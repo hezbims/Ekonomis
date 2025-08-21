@@ -3,6 +3,8 @@ package com.hezapp.ekonomis.test_utils.db_assertion
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.utils.contains
+import com.hezapp.ekonomis.test_utils.test_dao.InstallmentItemTestDao
+import com.hezapp.ekonomis.test_utils.test_dao.InstallmentTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.ProductTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.ProfileTestDao
 import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
@@ -19,6 +21,8 @@ class TransactionDbAssertion(
     private val transactionTestDao: TransactionTestDao = GlobalContext.get().get(),
     private val profileTestDao : ProfileTestDao = GlobalContext.get().get(),
     private val productTestDao : ProductTestDao = GlobalContext.get().get(),
+    private val installmentTestDao: InstallmentTestDao = GlobalContext.get().get(),
+    private val installmentItemTestDao : InstallmentItemTestDao = GlobalContext.get().get(),
 ) {
     fun assertCountTransactionDetails(
         expected : TransactionDetailsAssertionDto,
@@ -69,6 +73,14 @@ class TransactionDbAssertion(
 
     fun assertCountInvoiceItems(expectedCount: Int) = tryUntilSucceed {
         assertThat(transactionTestDao.countInvoiceItems(), equalTo(expectedCount))
+    }
+
+    fun assertCountInstallment(expectedCount: Int) = tryUntilSucceed {
+        assertThat(installmentTestDao.count(), equalTo(expectedCount))
+    }
+
+    fun assertCountInstallmentItem(expectedCount: Int) = tryUntilSucceed {
+        assertThat(installmentItemTestDao.count(), equalTo(expectedCount))
     }
 }
 

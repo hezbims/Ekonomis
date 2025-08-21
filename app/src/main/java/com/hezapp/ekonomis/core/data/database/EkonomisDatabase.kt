@@ -7,6 +7,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
+import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.converter.LocalDateConverter
 import com.hezapp.ekonomis.core.data.invoice.converter.TransactionTypeConverter
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
@@ -64,6 +66,8 @@ abstract class EkonomisDatabase : RoomDatabase() {
     abstract val invoiceDao: InvoiceDao
     abstract val invoiceItemDao: InvoiceItemDao
     abstract val monthlyStockDao: MonthlyStockDao
+    abstract val installmentDao: InstallmentDao
+    abstract val installmentItemDao: InstallmentItemDao
 
     companion object {
         const val DB_NAME = "ekonomis_db"
@@ -84,9 +88,9 @@ abstract class EkonomisDatabase : RoomDatabase() {
                         DB_NAME
                     )
                         .addCallback(object : Callback() {
-                            override fun onCreate(db: SupportSQLiteDatabase) {
+                            override fun onOpen(db: SupportSQLiteDatabase) {
+                                super.onOpen(db)
                                 db.setForeignKeyConstraintsEnabled(true)
-                                super.onCreate(db)
                             }
                         })
                         .build()

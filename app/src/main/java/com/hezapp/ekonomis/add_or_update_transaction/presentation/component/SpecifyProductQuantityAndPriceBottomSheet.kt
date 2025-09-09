@@ -167,7 +167,7 @@ private fun SpecifyProductQuantityAndPriceBottomSheet(
                 }
 
                 Text(
-                    stringResource(R.string.transaction_spesification_label),
+                    stringResource(R.string.transaction_spesification_title),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.weight(1f),

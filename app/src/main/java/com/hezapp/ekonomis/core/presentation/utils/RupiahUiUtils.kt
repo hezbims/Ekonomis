@@ -9,6 +9,8 @@ fun Int.toRupiah() : String = toString().toRupiah()
 
 fun Int.toRupiahV2() : String =
     "${if (this < 0) "-" else ""}${abs(this).toString().toRupiah()}"
+fun Long.toRupiahV2() : String =
+    "${if (this < 0) "-" else ""}${abs(this).toString().toRupiah()}"
 
 fun CharSequence.toRupiah() : String {
     if (isEmpty())

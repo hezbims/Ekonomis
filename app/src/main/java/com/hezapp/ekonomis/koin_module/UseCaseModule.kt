@@ -25,11 +25,7 @@ val UseCaseModule = module {
     factory { GetPreviewTransactionHistoryUseCase(repo = get()) }
 
     factory { CreateOrUpdateInvoiceUseCase(get()) }
-    factory { DeleteInvoiceUseCase(
-        invoiceRepo = get(),
-        invoiceItemRepo = get(),
-        transactionProvider = get()
-    ) }
+    factory { DeleteInvoiceUseCase(get()) }
     factory { GetFullInvoiceUseCase(
         repo = get()
     ) }

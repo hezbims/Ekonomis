@@ -8,13 +8,18 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.DeleteInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetFullInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetValidatedPpnFromInputStringUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.ValidateInvoiceFormSubmission
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.toUiModel
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.InstallmentEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.InstallmentItemEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,19 +35,32 @@ class AddOrUpdateTransactionViewModel(
     private val getFullInvoice : GetFullInvoiceUseCase,
     private val deleteInvoice : DeleteInvoiceUseCase,
 ) : ViewModel() {
+    private val validateInvoiceFormSubmission = ValidateInvoiceFormSubmission()
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()
 
     private val _state = MutableStateFlow(AddOrUpdateTransactionUiState())
     val state : StateFlow<AddOrUpdateTransactionUiState> = _state
         .onStart {
             loadPreviousInvoice(invoiceId = invoiceId)
-        }.stateIn(
+        }
+        .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000L),
             initialValue = AddOrUpdateTransactionUiState().let {
                 it.copy(curFormData = it.curFormData.copy(id = invoiceId ?: 0))
             },
         )
+
+    private fun isTotalNewPaymentsExceedsTotalProductCosts(
+        newPayments: List<InstallmentItemUiDto> = _state.value.curFormData.installmentItems,
+    ) : Boolean {
+        val totalPayments = newPayments.sumOf { it.amount.toLong() }
+        val totalProductCosts = _state.value.curFormData.invoiceItems.sumOf {
+            it.price.toLong()
+        }
+
+        return  totalPayments >= totalProductCosts
+    }
 
     fun onEvent(event: AddOrUpdateTransactionEvent){
         when(event){
@@ -82,14 +100,134 @@ class AddOrUpdateTransactionViewModel(
                 dismissDeleteConfirmationDialog()
             AddOrUpdateTransactionEvent.DoneHandlingDeleteResponse ->
                 doneHandlingDeleteResponse()
+            is AddOrUpdateTransactionEvent.OnSelectPaymentType ->
+                changePaymentType(event.newPaymentType)
+            is AddOrUpdateTransactionEvent.OnChangeInstallmentPaidOf ->
+                changeInstallmentIsPaidOff(event.newIsPaidOff)
+            is AddOrUpdateTransactionEvent.OnInstallmentItemEdited ->
+                handleInstallmentItemEdited(event.index, event.newData)
+            is AddOrUpdateTransactionEvent.OnInstallmentItemDeleted ->
+                handleInstallmentItemDeleted(event.index)
+            is AddOrUpdateTransactionEvent.OnInstallmentItemAdded ->
+                handleInstallmentItemAdded(event.newData)
+            AddOrUpdateTransactionEvent.ConfirmedPaymentAsPaidOff ->
+                handleConfirmPaymentAsPaidOff()
+            AddOrUpdateTransactionEvent.DismissMarkPaymentAsPaidOffDialog ->
+                dismissMarkPaymentAsPaidOffDialog()
+            AddOrUpdateTransactionEvent.DismissUnsafePaymentTypeEditDialog ->
+                dismissPaymentTypeEditedConfirmationDialog()
+            AddOrUpdateTransactionEvent.UnsafePaymentTypeEditConfirmed ->
+                submitData(withoutValidation = true)
         }
     }
 
+    private fun dismissPaymentTypeEditedConfirmationDialog(){
+        _state.update {
+            it.copy(showUnsafePaymentTypeEditConfirmationDialog = false)
+        }
+    }
+
+    private fun showUnsafePaymentTypeEditConfirmationDialog(){
+        _state.update {
+            it.copy(showUnsafePaymentTypeEditConfirmationDialog = true)
+        }
+    }
+
+    private fun dismissMarkPaymentAsPaidOffDialog(){
+        _state.update {
+            it.copy(
+                showTogglePaidOffConfirmationDialog = false,
+            )
+        }
+    }
+
+    private fun handleConfirmPaymentAsPaidOff(){
+        _state.update {
+            it.copy(
+                curFormData = it.curFormData.copy(
+                    isInstallmentPaidOff = true,
+                ),
+                showTogglePaidOffConfirmationDialog = false,
+            )
+        }
+    }
+
+    private fun handleInstallmentItemAdded(newData: InstallmentItemUiDto){
+        val newList = _state.value.curFormData.installmentItems.toMutableList().apply {
+            add(newData)
+        }
+        val isPaidOff = isTotalNewPaymentsExceedsTotalProductCosts(newList)
+        _state.update {
+            it.copy(
+                curFormData = it.curFormData.copy(
+                    installmentItems = newList,
+                    isInstallmentPaidOff = isPaidOff,
+                ),
+            )
+        }
+    }
+
+    private fun handleInstallmentItemDeleted(index: Int){
+        val newList = _state.value.curFormData.installmentItems.toMutableList().apply {
+            removeAt(index)
+        }
+        val isPaidOff = isTotalNewPaymentsExceedsTotalProductCosts(newList)
+        _state.update {
+            it.copy(
+                curFormData = it.curFormData.copy(
+                    installmentItems = newList,
+                    isInstallmentPaidOff = isPaidOff,
+                ),
+            )
+        }
+    }
+
+    private fun handleInstallmentItemEdited(index: Int, newData: InstallmentItemUiDto){
+        if (newData == _state.value.curFormData.installmentItems[index])
+            return
+        val newList = _state.value.curFormData.installmentItems.toMutableList().apply {
+            this[index] = newData
+        }
+        val isPaidOff = isTotalNewPaymentsExceedsTotalProductCosts(newList)
+        _state.update {
+            it.copy(
+                curFormData = _state.value.curFormData.copy(
+                    installmentItems = newList,
+                    isInstallmentPaidOff = isPaidOff
+                ),
+            )
+        }
+    }
+
+    private fun changeInstallmentIsPaidOff(newIsPaidOff: Boolean){
+        if (newIsPaidOff == _state.value.curFormData.isInstallmentPaidOff)
+            return
+        if (newIsPaidOff && !isTotalNewPaymentsExceedsTotalProductCosts()){
+            _state.update {
+                it.copy(showTogglePaidOffConfirmationDialog = true)
+            }
+            return
+        }
+
+        _state.update {
+            it.copy(curFormData = it.curFormData.copy(isInstallmentPaidOff = newIsPaidOff))
+        }
+    }
+
+    private fun changePaymentType(newPaymentType: PaymentType){
+        if (_state.value.curFormData.paymentType == newPaymentType)
+            return
+        _state.update {
+            it.copy(curFormData = it.curFormData.copy(paymentType = newPaymentType))
+        }
+    }
     private fun loadPreviousInvoice(invoiceId: Int?){
         if (invoiceId == null){
-            _state.update { it.copy(prevFormData = ResponseWrapper.Succeed(
-                data = TransactionUiFormDataModel.initNew()
-            )) }
+            _state.update { it.copy(
+                prevFormData = ResponseWrapper.Succeed(
+                    data = TransactionUiFormDataModel.initNew()
+                ),
+            ) }
             return
         }
 
@@ -217,11 +355,33 @@ class AddOrUpdateTransactionViewModel(
         }
     }
 
-    private fun submitData(){
-        viewModelScope.launch(Dispatchers.IO) {
-            createOrUpdateInvoiceUseCase(invoiceForm = _state.value.toInvoiceFormModel()).collect { response ->
-                _state.update { it.copy(submitResponse = response) }
+    private fun submitData(withoutValidation: Boolean = false){
+        val currentState = _state.value
+
+        if (!withoutValidation) {
+            val validationResult = validateInvoiceFormSubmission(
+                currentState.toInvoiceFormModel())
+
+            if (!validationResult.hasNoError) {
+                _state.update {
+                    it.copy(
+                        submitResponse = ResponseWrapper.Failed(validationResult)
+                    )
+                }
+                return
             }
+
+            if (currentState.isUnsafePaymentTypeEditOccurs) {
+                showUnsafePaymentTypeEditConfirmationDialog()
+                return
+            }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            createOrUpdateInvoiceUseCase(invoiceForm = _state.value.toInvoiceFormModel())
+                .collect { response ->
+                    _state.update { it.copy(submitResponse = response) }
+                }
         }
     }
 
@@ -276,20 +436,29 @@ sealed class AddOrUpdateTransactionEvent {
     data object SubmitData : AddOrUpdateTransactionEvent()
     data object DoneHandlingSubmitDataResponse : AddOrUpdateTransactionEvent()
     class UpdateFormError(val newFormError: TransactionFormErrorUiModel) : AddOrUpdateTransactionEvent()
+    class OnSelectPaymentType(val newPaymentType: PaymentType) : AddOrUpdateTransactionEvent()
+    class OnChangeInstallmentPaidOf(val newIsPaidOff: Boolean) : AddOrUpdateTransactionEvent()
+    class OnInstallmentItemEdited(val index: Int, val newData: InstallmentItemUiDto) : AddOrUpdateTransactionEvent()
+    class OnInstallmentItemDeleted(val index: Int) : AddOrUpdateTransactionEvent()
+    class OnInstallmentItemAdded(val newData: InstallmentItemUiDto) : AddOrUpdateTransactionEvent()
     data object ShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
     data object DoneShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
     data object ShowDeleteConfirmationDialog : AddOrUpdateTransactionEvent()
     data object DismissDeleteConfirmationDialog : AddOrUpdateTransactionEvent()
     data object ConfirmDeleteTransaction : AddOrUpdateTransactionEvent()
     data object DoneHandlingDeleteResponse : AddOrUpdateTransactionEvent()
+    object ConfirmedPaymentAsPaidOff : AddOrUpdateTransactionEvent()
+    data object DismissMarkPaymentAsPaidOffDialog : AddOrUpdateTransactionEvent()
+    data object DismissUnsafePaymentTypeEditDialog : AddOrUpdateTransactionEvent()
+    data object UnsafePaymentTypeEditConfirmed : AddOrUpdateTransactionEvent()
 }
 
 data class AddOrUpdateTransactionUiState(
-    val curFormData : TransactionUiFormDataModel = TransactionUiFormDataModel.initNew(),
-    val prevFormData : ResponseWrapper<TransactionUiFormDataModel , MyBasicError> = ResponseWrapper.Loading(),
+    val curFormData: TransactionUiFormDataModel = TransactionUiFormDataModel.initNew(),
+    val prevFormData: ResponseWrapper<TransactionUiFormDataModel, MyBasicError> = ResponseWrapper.Loading(),
     val editInvoiceItem: InvoiceItemUiModel? = null,
     val submitResponse: ResponseWrapper<Any?, InvoiceValidationResult>? = null,
-    val deleteResponse : ResponseWrapper<Any?, MyBasicError>? = null,
+    val deleteResponse: ResponseWrapper<Any?, MyBasicError>? = null,
     val showDeleteConfirmationDialog: Boolean = false,
     val formError: TransactionFormErrorUiModel = TransactionFormErrorUiModel(
         transactionDateError = null,
@@ -297,7 +466,9 @@ data class AddOrUpdateTransactionUiState(
         profileError = null,
         ppnError = null,
     ),
-    val showQuitConfirmationDialog : Boolean = false
+    val showQuitConfirmationDialog: Boolean = false,
+    val showTogglePaidOffConfirmationDialog: Boolean = false,
+    val showUnsafePaymentTypeEditConfirmationDialog: Boolean = false,
 ){
     fun toInvoiceFormModel() : InvoiceFormModel =
         InvoiceFormModel(
@@ -308,8 +479,34 @@ data class AddOrUpdateTransactionUiState(
             profile = curFormData.profile,
             transactionDateMillis = curFormData.transactionDateMillis,
             transactionType = curFormData.transactionType,
+            installment = when(curFormData.paymentType){
+                PaymentType.CASH -> null
+                PaymentType.INSTALLMENT ->
+                    InstallmentEntity(
+                        isPaidOff = curFormData.isInstallmentPaidOff,
+                        items = curFormData.installmentItems.map {
+                            InstallmentItemEntity(
+                                paymentDate = it.date,
+                                amount = it.amount,
+                            )
+                        }
+                    )
+            }
         )
 
+    /**
+     * Data installment items akan berpotensi hilang kalau nilai ini `true`
+     */
+    val isUnsafePaymentTypeEditOccurs: Boolean
+        get() =
+            when(prevFormData){
+                is ResponseWrapper.Failed -> false
+                is ResponseWrapper.Loading -> false
+                is ResponseWrapper.Succeed ->
+                    prevFormData.data.paymentType == PaymentType.INSTALLMENT &&
+                    curFormData.paymentType == PaymentType.CASH &&
+                    prevFormData.data.installmentItems.isNotEmpty()
+            }
     val isFormDataEdited : Boolean
         get() =
             when(prevFormData){
@@ -326,6 +523,9 @@ data class TransactionUiFormDataModel(
     val transactionDateMillis : Long?,
     val ppn : Int?,
     val invoiceItems : List<InvoiceItemUiModel>,
+    val paymentType: PaymentType,
+    val installmentItems: List<InstallmentItemUiDto>,
+    val isInstallmentPaidOff: Boolean,
 ){
     val isEditing : Boolean
         get() = id != 0
@@ -339,10 +539,15 @@ data class TransactionUiFormDataModel(
                 transactionDateMillis = null,
                 ppn = null,
                 invoiceItems = emptyList(),
+                paymentType = PaymentType.CASH,
+                isInstallmentPaidOff = true,
+                installmentItems = emptyList(),
             )
 
-        fun fromFullInvoiceDetails(invoiceDetails : FullInvoiceDetails) : TransactionUiFormDataModel =
-            TransactionUiFormDataModel(
+        fun fromFullInvoiceDetails(invoiceDetails : FullInvoiceDetails) : TransactionUiFormDataModel {
+            val installmentWithItems = invoiceDetails.installmentWithItems
+
+            val formModel = TransactionUiFormDataModel(
                 id = invoiceDetails.invoice.invoice.id,
                 transactionType = invoiceDetails.invoice.invoice.transactionType,
                 profile = invoiceDetails.profile,
@@ -350,8 +555,21 @@ data class TransactionUiFormDataModel(
                 ppn = invoiceDetails.invoice.invoice.ppn,
                 invoiceItems = invoiceDetails.invoice.invoiceItemWithProducts.map {
                     it.toUiModel()
-                }
+                },
+                paymentType = installmentWithItems?.let { PaymentType.INSTALLMENT } ?: PaymentType.CASH,
+                isInstallmentPaidOff = installmentWithItems?.installment?.isPaidOff == true,
+                installmentItems = installmentWithItems?.let { installment ->
+                    installment.installmentItems.map { item ->
+                        InstallmentItemUiDto(
+                            amount = item.amount,
+                            date = item.paymentDate
+                        )
+                    }
+                } ?: emptyList(),
             )
+
+            return formModel
+        }
     }
 }
 

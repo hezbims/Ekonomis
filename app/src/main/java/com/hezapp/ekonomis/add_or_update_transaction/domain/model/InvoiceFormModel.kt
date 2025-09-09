@@ -4,6 +4,7 @@ import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.core.transaction.domain.entity.InstallmentEntity
 import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionEntity
 import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionItemEntity
 
@@ -15,6 +16,7 @@ data class InvoiceFormModel(
     val ppn: Int?,
     val newInvoiceItems: List<InvoiceItemEntity>,
     val prevInvoiceItems: List<InvoiceItemEntity>,
+    val installment: InstallmentEntity?,
 ){
     fun toEntity() : InvoiceEntity =
         InvoiceEntity(
@@ -39,9 +41,7 @@ data class InvoiceFormModel(
                     price = it.price,
                     unitType = it.unitType,
                 )
-            }
+            },
+            installment = installment,
         )
-
-    val isEditing : Boolean
-        get() = id != 0
 }

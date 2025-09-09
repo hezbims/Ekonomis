@@ -12,18 +12,10 @@ import kotlinx.coroutines.flow.flow
 class CreateOrUpdateInvoiceUseCase(
     private val transactionRepository: ITransactionRepository,
 ) {
-    private val validateInvoiceFormSubmission = ValidateInvoiceFormSubmission()
-
     operator fun invoke(invoiceForm : InvoiceFormModel) :
         Flow<ResponseWrapper<Any? , InvoiceValidationResult>> =
     flow<ResponseWrapper<Any? , InvoiceValidationResult>> {
         emit(ResponseWrapper.Loading())
-
-        val validationResult = validateInvoiceFormSubmission(invoiceForm)
-        if (!validationResult.hasNoError){
-            emit(ResponseWrapper.Failed(validationResult))
-            return@flow
-        }
 
         transactionRepository.saveInvoice(invoiceForm.toTransactionEntity())
 

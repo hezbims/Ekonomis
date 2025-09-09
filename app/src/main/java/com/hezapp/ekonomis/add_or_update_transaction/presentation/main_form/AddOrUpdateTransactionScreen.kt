@@ -57,11 +57,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.MyScaffold
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ConfirmMarkPaymentAsPaidOffDialog
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ConfirmUnsafePaymentTypeEditDialog
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.DeleteTransactionDialog
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.ListSelectedProductField
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.LoadingOverlay
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.PaymentField
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.utils.toFormErrorUiModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
@@ -82,7 +86,6 @@ import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
-import org.koin.core.context.GlobalContext
 import java.util.Calendar
 
 @Composable
@@ -91,6 +94,7 @@ fun AddOrUpdateTransactionScreen(
     onSubmitSucceed: () -> Unit,
     onDeleteSucceed: () -> Unit,
     viewModel : AddOrUpdateTransactionViewModel,
+    timeService: ITimeService,
 ) {
     val state = viewModel.state.collectAsStateWithLifecycle().value
     val submitResponse = state.submitResponse
@@ -212,6 +216,7 @@ fun AddOrUpdateTransactionScreen(
                     navController = navController,
                     state = state,
                     onEvent = viewModel::onEvent,
+                    timeService = timeService,
                 )
             }
 
@@ -239,7 +244,7 @@ private fun AddOrUpdateTransactionScreen(
     navController: NavHostController,
     state : AddOrUpdateTransactionUiState,
     onEvent : (AddOrUpdateTransactionEvent) -> Unit,
-    timeService: ITimeService = GlobalContext.get().get(),
+    timeService: ITimeService,
 ){
     Column (
         modifier = Modifier
@@ -293,6 +298,30 @@ private fun AddOrUpdateTransactionScreen(
                     modifier = Modifier.padding(top = 12.dp),
                     error = state.formError.invoiceItemsError,
                 )
+
+                PaymentField(
+                    selectedPaymentType = state.curFormData.paymentType,
+                    installmentItems = state.curFormData.installmentItems,
+                    onSelectPaymentType = {
+                        onEvent(AddOrUpdateTransactionEvent.OnSelectPaymentType(it))
+                    },
+                    installmentPaidOff = state.curFormData.isInstallmentPaidOff,
+                    onChangeInstallmentPaidOff = {
+                        onEvent(AddOrUpdateTransactionEvent.OnChangeInstallmentPaidOf(it))
+                    },
+                    onInstallmentItemEdited = { index, item ->
+                        onEvent(AddOrUpdateTransactionEvent
+                            .OnInstallmentItemEdited(index, item))
+                    },
+                    onInstallmentItemDeleted = { index ->
+                        onEvent(AddOrUpdateTransactionEvent.OnInstallmentItemDeleted(index))
+                    },
+                    onInstallmentItemAdded = {
+                        onEvent(AddOrUpdateTransactionEvent.OnInstallmentItemAdded(it))
+                    },
+                    timeService = timeService,
+                    modifier = Modifier.padding(top = 12.dp),
+                )
             }
 
             Spacer(Modifier.height(24.dp))
@@ -316,6 +345,26 @@ private fun AddOrUpdateTransactionScreen(
                 Text(stringResource(R.string.save_label))
             }
         }
+
+        if (state.showTogglePaidOffConfirmationDialog)
+            ConfirmMarkPaymentAsPaidOffDialog(
+                onConfirm = {
+                    onEvent(AddOrUpdateTransactionEvent.ConfirmedPaymentAsPaidOff)
+                },
+                onDismiss = {
+                    onEvent(AddOrUpdateTransactionEvent.DismissMarkPaymentAsPaidOffDialog)
+                }
+            )
+
+        if (state.showUnsafePaymentTypeEditConfirmationDialog)
+            ConfirmUnsafePaymentTypeEditDialog(
+                onConfirm = {
+                    onEvent(AddOrUpdateTransactionEvent.UnsafePaymentTypeEditConfirmed)
+                },
+                onDismiss = {
+                    onEvent(AddOrUpdateTransactionEvent.DismissUnsafePaymentTypeEditDialog)
+                }
+            )
     }
 }
 
@@ -478,8 +527,21 @@ private fun ChooseDateField(
                     Text(stringResource(R.string.choose_label))
                 }
             },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDatePicker = false }
+                ) {
+                    Text(stringResource(R.string.cancel_label))
+                }
+            }
         ){
-            DatePicker(state = datePickerState)
+            DatePicker(
+                title = {
+                    Text(stringResource(R.string.choose_date_title),
+                        modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp))
+                },
+                state = datePickerState
+            )
         }
     }
 }
@@ -575,7 +637,10 @@ private fun PreviewAddOrUpdateTransactionScreen(){
                 unitType = UnitType.PIECE,
                 listId = ""
             )
-        )
+        ),
+        paymentType = PaymentType.CASH,
+        installmentItems = listOf(),
+        isInstallmentPaidOff = false,
     )
     PreviewKoin  {
         MyScaffold(

@@ -31,6 +31,7 @@ import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEv
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import org.koin.core.context.GlobalContext
 import org.koin.core.parameter.parametersOf
 
 class MainActivity : ComponentActivity() {
@@ -98,7 +99,8 @@ class MainActivity : ComponentActivity() {
                                                     TransactionHistoryEvent
                                                         .LoadListPreviewTransactionHistory
                                                 )
-                                            }
+                                            },
+                                            timeService = GlobalContext.get().get(),
                                         )
                                     }
                                 }
@@ -175,14 +177,14 @@ class MainActivity : ComponentActivity() {
 
                             val args = it.toRoute<MyRoutes.EditMonthlyStock>()
 
-                            viewModel?.let {
+                            viewModel?.let { viewModel ->
                                 EditCurrentMonthlyStockDialog(
                                     args = args,
                                     onDismissRequest = {
                                         navController.goBackSafely()
                                     },
                                     onMonthlyStockEdited = {
-                                        it.onEvent(ProductDetailEvent.LoadDetailProduct)
+                                        viewModel.onEvent(ProductDetailEvent.LoadDetailProduct)
                                         navController.goBackSafely()
                                     }
                                 )

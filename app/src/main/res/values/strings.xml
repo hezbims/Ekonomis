@@ -21,7 +21,7 @@
     <string name="calendar_icon_content_description">Icon Kalender</string>
     <string name="choose_transaction_date_label">Pilih Tanggal Transaksi</string>
     <string name="choose_label">Pilih</string>
-    <string name="transaction_date_title_label">Tanggal Transaksi</string>
+    <string name="transaction_date_title">Tanggal Transaksi</string>
     <string name="transaction_date_label">Tanggal transaksi</string>
     <string name="ppn_label">PPN</string>
     <string name="select_product_label">Pilih Barang</string>
@@ -39,7 +39,7 @@
     <string name="quantity_label">Jumlah</string>
     <string name="total_price_label">Total Harga</string>
     <string name="product_label">Barang</string>
-    <string name="transaction_spesification_label">Spesifikasi Transaksi</string>
+    <string name="transaction_spesification_title">Spesifikasi Transaksi</string>
     <string name="cant_be_empty">%1$s tidak boleh kosong</string>
     <string name="delete_label">Hapus</string>
     <string name="product_list_title_label">List Barang</string>
@@ -77,8 +77,8 @@
     <string name="product_amount_label">Jumlah barang</string>
     <string name="cost_of_goods_label">Harga pokok : %1$s</string>
     <string name="change_period_button">Tombol Ubah Periode</string>
-    <string name="seller_name_label">Nama Penjual</string>
-    <string name="buyer_name_label">Nama Pembeli</string>
+    <string name="seller_name_title">Nama Penjual</string>
+    <string name="buyer_name_title">Nama Pembeli</string>
     <string name="create_new_here_label">Buat baru disini</string>
     <string name="profile_name_not_found">Tidak ada nama %1$s yang ditemukan? </string>
     <string name="there_is_no_profile_registered">Belum ada nama %1$s yang terdaftar</string>
@@ -86,4 +86,23 @@
     <string name="confirm_selection_with_total_product_selected">Konfirmasi Pilihan (%1$d barang)</string>
     <string name="open_filter_label">Buka Filter</string>
     <string name="edit">Edit</string>
+    <string name="edit_installment_item">Edit data cicilan</string>
+    <string name="delete_installment_item">Hapus data cicilan</string>
+    <string name="payment_date">Tanggal Pembayaran</string>
+    <string name="payment_amount">Jumlah Pembayaran</string>
+    <string name="add_new_installment_title">Tambah Cicilan</string>
+    <string name="payment_type">Tipe Pembayaran</string>
+    <string name="cash">Cash</string>
+    <string name="installment">Cicilan</string>
+    <string name="no_installment_recorded">Belum ada cicilan yang tercatat</string>
+    <string name="cancel_edit">Batalkan edit</string>
+    <string name="payment_amount_cant_be_empty">Jumlah pembayaran tidak boleh kosong</string>
+    <string name="choose_date_title">Pilih Tanggal</string>
+    <string name="no_label">Tidak</string>
+    <string name="edit_installment_title">Edit Cicilan</string>
+    <string name="on_label">Hidup</string>
+    <string name="off_label">Mati</string>
+    <string name="confirm_mark_payment_as_paid_off_paragraph">Total pembayaran masih kurang dibanding total harga produk. Apakah anda yakin ingin menandai bahwa pembayaran ini sudah lunas?</string>
+    <string name="are_you_sure_to_delete_this_installment_data_paragraph">Apakah anda yakin ingin menghapus data cicilan ini?</string>
+    <string name="changing_payment_from_installment_to_cash_confirmation">Apakah anda yakin ingin mengubah tipe pembayaran dari cicilan ke cash?. \nData-data cicilan sebelumnya akan hilang.</string>
 </resources>

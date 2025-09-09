@@ -30,6 +30,12 @@ android {
         enable = true
     }
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
+
     defaultConfig {
         applicationId = "com.hezapp.ekonomis"
         minSdk = 24
@@ -117,14 +123,21 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.room.testing.android)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     testFixturesImplementation(platform(libs.androidx.compose.bom))
-    testFixturesImplementation(libs.androidx.ui.test.junit4)
+    testFixturesImplementation(libs.androidx.compose.ui.test.junit4)
     testFixturesImplementation(libs.androidx.espresso.core)
+    testFixturesImplementation(libs.androidx.room.runtime)
+    testFixturesImplementation(libs.koin.core)
+    testFixturesImplementation(libs.koin.android)
 }

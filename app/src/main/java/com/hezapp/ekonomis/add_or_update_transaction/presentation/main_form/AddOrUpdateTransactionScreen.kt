@@ -380,8 +380,8 @@ private fun ChooseProfileField(
     val textFieldLabelString = stringResource(
         remember(state.curFormData.transactionType!!) {
             when (state.curFormData.transactionType) {
-                TransactionType.PEMBELIAN -> R.string.seller_name_label
-                TransactionType.PENJUALAN -> R.string.buyer_name_label
+                TransactionType.PEMBELIAN -> R.string.seller_name_title
+                TransactionType.PENJUALAN -> R.string.buyer_name_title
             }
         }
     )
@@ -442,7 +442,7 @@ private fun ChooseDateField(
         onValueChange = {},
         readOnly = true,
         label = {
-            Text(stringResource(R.string.transaction_date_title_label))
+            Text(stringResource(R.string.transaction_date_title))
         },
         isError = error != null,
         supportingText = MyErrorText(error),

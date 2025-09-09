@@ -1,5 +1,7 @@
 package com.hezapp.ekonomis.test_utils.seeder
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.withTransaction
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
@@ -16,23 +18,26 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.test_utils.TestTimeService
+import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import java.time.LocalDate
 
 class InvoiceSeeder(
-    private val invoiceDao: InvoiceDao = GlobalContext.get().get(),
-    private val invoiceItemDao: InvoiceItemDao = GlobalContext.get().get(),
-    private val installmentDao: InstallmentDao = GlobalContext.get().get(),
-    private val installmentItemDao: InstallmentItemDao = GlobalContext.get().get(),
-    private val database: EkonomisDatabase = GlobalContext.get().get(),
+    koin: Koin = GlobalContext.get(),
 ) {
+    private val invoiceDao: InvoiceDao = koin.get()
+    private val invoiceItemDao: InvoiceItemDao = koin.get()
+    private val installmentDao: InstallmentDao = koin.get()
+    private val installmentItemDao: InstallmentItemDao = koin.get()
+    private val database: EkonomisDatabase = koin.get()
+    @RequiresApi(Build.VERSION_CODES.O)
     suspend fun run(
         profile: ProfileEntity,
         date: LocalDate,
         invoiceItems: List<InvoiceItemSeed>,
         ppn: Int?,
         installmentSeed: InstallmentSeed? = null,
-    ){
+    ) : Int {
         val transactionType = when(profile.type){
             ProfileType.SUPPLIER -> TransactionType.PEMBELIAN
             ProfileType.CUSTOMER -> TransactionType.PENJUALAN
@@ -40,7 +45,7 @@ class InvoiceSeeder(
         if (ppn == null && transactionType == TransactionType.PEMBELIAN)
             throw IllegalArgumentException("Transaksi pembelian harus memiliki ppn")
 
-        database.withTransaction {
+        return database.withTransaction {
             val invoiceId = invoiceDao.upsertInvoice(InvoiceEntity(
                 date = date.atStartOfDay(
                     TestTimeService.get().getZoneId()
@@ -78,6 +83,8 @@ class InvoiceSeeder(
 
                 installmentItemDao.insert(mappedItems)
             }
+
+            invoiceId
         }
     }
 }

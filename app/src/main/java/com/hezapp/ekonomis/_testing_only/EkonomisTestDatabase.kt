@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_utils
+package com.hezapp.ekonomis._testing_only
 
 import android.content.Context
 import androidx.room.AutoMigration
@@ -16,11 +16,11 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
-import com.hezapp.ekonomis.test_utils.test_dao.InstallmentItemTestDao
-import com.hezapp.ekonomis.test_utils.test_dao.InstallmentTestDao
-import com.hezapp.ekonomis.test_utils.test_dao.ProductTestDao
-import com.hezapp.ekonomis.test_utils.test_dao.ProfileTestDao
-import com.hezapp.ekonomis.test_utils.test_dao.TransactionTestDao
+import com.hezapp.ekonomis._testing_only.test_dao.InstallmentItemTestDao
+import com.hezapp.ekonomis._testing_only.test_dao.InstallmentTestDao
+import com.hezapp.ekonomis._testing_only.test_dao.ProductTestDao
+import com.hezapp.ekonomis._testing_only.test_dao.ProfileTestDao
+import com.hezapp.ekonomis._testing_only.test_dao.TransactionTestDao
 
 @Database(
     entities = [

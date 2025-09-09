@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.test_utils.test_dao
+package com.hezapp.ekonomis._testing_only.test_dao
 
 import androidx.room.Dao
 import androidx.room.Query

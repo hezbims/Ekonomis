@@ -20,5 +20,5 @@ val RepositoryModule = module {
     single<IInvoiceRepo> { InvoiceRepo(dao = get()) }
     single<IInvoiceItemRepo> { InvoiceItemRepo(dao = get()) }
     single<IMonthlyStockRepo> { MonthlyStockRepo(dao = get()) }
-    single<ITransactionRepository> { TransactionRepository(get(), get(), get()) }
+    single<ITransactionRepository> { TransactionRepository(get(), get(), get(), get(),get()) }
 }

@@ -204,4 +204,9 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         utils.transactionFormRobot.assertIsPaidOff(true)
     }
 
+    @Test
+    fun `Initial paid off state should be 'Not Paid Off', when user try to add new transaction`(){
+        throw NotImplementedError()
+    }
+
 }

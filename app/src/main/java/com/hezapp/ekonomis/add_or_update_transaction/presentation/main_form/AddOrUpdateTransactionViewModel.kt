@@ -540,7 +540,7 @@ data class TransactionUiFormDataModel(
                 ppn = null,
                 invoiceItems = emptyList(),
                 paymentType = PaymentType.CASH,
-                isInstallmentPaidOff = true,
+                isInstallmentPaidOff = false,
                 installmentItems = emptyList(),
             )
 

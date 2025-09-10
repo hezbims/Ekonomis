@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
 
-class DeleteTransaction : BaseEkonomisUiTest() {
+class DeleteTransactionIntegrationTest : BaseEkonomisUiTest() {
     @Before
     fun prepare() = runTest {
         val profiles = List(3){

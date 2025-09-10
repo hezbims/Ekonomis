@@ -2,6 +2,7 @@ package com.hezapp.ekonomis.steps
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
@@ -20,6 +21,7 @@ class FillTransactionFormSteps(
         date: LocalDate,
         chooseProductActions: List<FormProductItem> = emptyList(),
         modifyChoosenProductActions: List<ModifyChoosenProduct> = emptyList(),
+        modifyPaymentSectionActions: List<ModifyPaymentSectionAction> = emptyList(),
         ppn: Int? = null,
         isRegisterNewProfile: Boolean = true,
     ){
@@ -84,6 +86,20 @@ class FillTransactionFormSteps(
                     }
             }
 
+        for (action in modifyPaymentSectionActions)
+            when(action){
+                is ModifyPaymentSectionAction.AddNewInstallmentItem ->
+                    transactionFormRobot.addNewInstallmentItem(action.date, action.amount)
+                is ModifyPaymentSectionAction.EditInstallmentItem ->
+                    transactionFormRobot.editInstallmentItem(action.index, action.date, action.amount)
+                is ModifyPaymentSectionAction.DeleteInstallmentItem ->
+                    transactionFormRobot.deleteInstallmentItemAt(action.index)
+                ModifyPaymentSectionAction.SelectCashPaymentType ->
+                    transactionFormRobot.changeSelectedPaymentType(PaymentType.CASH)
+                ModifyPaymentSectionAction.SelectInstallmentPaymentType ->
+                    transactionFormRobot.changeSelectedPaymentType(PaymentType.INSTALLMENT)
+            }
+
         transactionFormRobot.submitTransactionForm()
     }
 }
@@ -109,3 +125,23 @@ data class EditProduct(
 data class DeleteProduct(
     val targetName: String,
 ) : ModifyChoosenProduct
+
+sealed interface ModifyPaymentSectionAction {
+//    data object ChangePaymentTypeToCash : ModifyPaymentSectionAction
+//    data object ChangePaymentTypeToInstallment : ModifyPaymentSectionAction
+    data class AddNewInstallmentItem(
+        val amount: Int,
+        val date: LocalDate,
+    ) : ModifyPaymentSectionAction
+
+    data class EditInstallmentItem(
+        val index: Int,
+        val amount: Int,
+        val date: LocalDate,
+    ) : ModifyPaymentSectionAction
+
+    data class DeleteInstallmentItem(val index: Int) : ModifyPaymentSectionAction
+
+    data object SelectInstallmentPaymentType : ModifyPaymentSectionAction
+    data object SelectCashPaymentType : ModifyPaymentSectionAction
+}

@@ -1,10 +1,13 @@
 package com.hezapp.ekonomis.robot.transaction_form._interactor
 
 import android.content.Context
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
@@ -44,6 +47,9 @@ class ChoosenProductCardInteractor(
         hasText(context.getString(R.string.choose_label))
     )
 
+    private val bottomSheetTitleMatcher = hasText(context.getString(R.string.transaction_spesification_title))
+    private val bottomSheetMatcher = isDialog() and hasAnyDescendant(bottomSheetTitleMatcher)
+    @OptIn(ExperimentalTestApi::class)
     fun performEdit(
         unitType: UnitType?,
         quantity: Int?,
@@ -56,18 +62,24 @@ class ChoosenProductCardInteractor(
         }
 
         quantity?.let {
-            quantityField.inputText(it.toString(), fresh = true)
+            quantityField.inputText(it.toString(), replaceText = true)
         }
 
         totalPrice?.let {
-            totalPriceField.inputText(it.toString(), fresh = true)
+            totalPriceField.inputText(it.toString(), replaceText = true)
         }
 
         confirmButton.click()
+
+
+        composeRule.waitUntilDoesNotExist(bottomSheetMatcher)
     }
 
+    @OptIn(ExperimentalTestApi::class)
     fun performDelete(){
         editIcon.click()
         deleteIcon.click()
+
+        composeRule.waitUntilDoesNotExist(bottomSheetMatcher)
     }
 }

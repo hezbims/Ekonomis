@@ -16,9 +16,9 @@ open class TextFieldInteractor(
         label: String,
     ) : this(composeRule, hasText(label))
 
-    fun inputText(text: String, fresh: Boolean = false){
+    fun inputText(text: String, replaceText: Boolean = false){
         val node = composeRule.onNode(matcher)
-        if (fresh)
+        if (replaceText)
             node.performTextReplacement(text)
         else
             node.performTextInput(text)

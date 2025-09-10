@@ -9,7 +9,7 @@ import com.hezapp.ekonomis.test_utils.MySeederUtils
 import org.junit.Before
 import org.junit.Test
 
-class ProductStockTest : BaseEkonomisUiTest() {
+class ProductStockIntegrationTest : BaseEkonomisUiTest() {
     /**
      * Memastikan harga pokok tampil dengan benar
      */

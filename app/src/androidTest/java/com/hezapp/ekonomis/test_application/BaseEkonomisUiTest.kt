@@ -11,8 +11,8 @@ import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.robot.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
-import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.TransactionHistoryRobot
+import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.db_assertion.MasterDataDbAssertion
@@ -77,7 +77,12 @@ abstract class BaseEkonomisUiTest(
     }
 
     //region ROBOT
-    protected val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule, context) }
+    protected val transactionHistoryRobot by lazy {
+        TransactionHistoryRobot(
+            composeRule,
+            context
+        )
+    }
     protected val transactionFormRobot by lazy { TransactionFormRobot(composeRule, context) }
     protected val productPreviewRobot by lazy { ProductPreviewRobot(composeRule, context) }
     protected val productDetailRobot by lazy { ProductDetailRobot(composeRule, context) }
@@ -101,7 +106,7 @@ abstract class BaseEkonomisUiTest(
     @Before
     fun reset(){
         GlobalContext.get().get<EkonomisDatabase>().clearAllTables()
-        TestTimeService.reset()
+        TestTimeService.Companion.reset()
         if (immediatelyLaunchMainActivity)
             ActivityScenario.launch(MainActivity::class.java)
     }

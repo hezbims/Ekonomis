@@ -13,7 +13,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.core.presentation.utils.toRupiah
+import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.text.SimpleDateFormat
@@ -37,7 +37,7 @@ class ProductDetailRobot(
                 hasTestTag(ProductDetailTestTag.inQuantity)
             ) and
             hasAnySibling(
-                hasText(price.toRupiah()) and
+                hasText(price.toRupiahV2()) and
                 hasTestTag(ProductDetailTestTag.totalInPrice)
             )
         ).assertExists()
@@ -56,7 +56,7 @@ class ProductDetailRobot(
                 hasTestTag(ProductDetailTestTag.outQuantity)
             ) and
             hasAnySibling(
-                hasText(price.toRupiah()) and
+                hasText(price.toRupiahV2()) and
                 hasTestTag(ProductDetailTestTag.totalOutPrice)
             )
         ).assertExists()
@@ -105,9 +105,10 @@ class ProductDetailRobot(
             .onNodeWithContentDescription(context.getString(R.string.change_period_button))
             .performClick()
 
-        composeRule.onNodeWithContentDescription(context.getString(R.string.increment_month_and_year_label)).let {
-            for (i in 1..totalIncrement)
-                it.performClick()
+        composeRule.onNodeWithContentDescription(context.getString(R.string.increment_month_and_year_label)).let { node ->
+            repeat(totalIncrement) {
+                node.performClick()
+            }
         }
         composeRule.onNodeWithText(context.getString(R.string.confirm_label)).performClick()
     }
@@ -117,9 +118,10 @@ class ProductDetailRobot(
             .onNodeWithContentDescription(context.getString(R.string.change_period_button))
             .performClick()
 
-        composeRule.onNodeWithContentDescription(context.getString(R.string.decrement_month_and_year_label)).let {
-            for (i in 1..totalDecrement)
-                it.performClick()
+        composeRule.onNodeWithContentDescription(context.getString(R.string.decrement_month_and_year_label)).let { node ->
+            repeat (totalDecrement) {
+                node.performClick()
+            }
         }
         composeRule.onNodeWithText(context.getString(R.string.confirm_label)).performClick()
     }

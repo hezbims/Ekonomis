@@ -1,16 +1,23 @@
 package com.hezapp.ekonomis.robot.transaction_form._interactor
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.test_utils.TestConstant
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatterBuilder
 import java.util.Calendar
@@ -19,7 +26,21 @@ import java.util.Locale
 class CalendarPopupInteractor(
     val composeRule : ComposeTestRule,
     private val confirmLabel : String,
+    private val cancelLabel: String,
+    private val title: String
 ) {
+    constructor(composeRule : ComposeTestRule, context: Context) : this(
+        composeRule = composeRule,
+        confirmLabel = context.getString(R.string.choose_label),
+        cancelLabel = context.getString(R.string.cancel_label),
+        title = context.getString(R.string.choose_date_title)
+    )
+
+    val matcher = isDialog() and
+            hasAnyDescendant(hasText(title)) and
+            hasAnyDescendant(hasText(confirmLabel)) and
+            hasAnyDescendant(hasText(cancelLabel))
+
     @OptIn(ExperimentalTestApi::class)
     fun changeYear(year: Int){
         composeRule.apply {
@@ -72,8 +93,24 @@ class CalendarPopupInteractor(
         composeRule.onNodeWithText(targetCalendarString).performClick()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun changeDate(date: LocalDate){
+        changeYear(date.year)
+        changeMonth(date.monthValue)
+        changeDayOfMonth(date.dayOfMonth, date.monthValue, date.year)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
     fun confirmDateSelection(){
-        composeRule.onNodeWithText(confirmLabel, ignoreCase = true)
-            .performClick()
+        composeRule.onNode(
+            hasText(confirmLabel, ignoreCase = true) and
+                    hasAnyAncestor(matcher)
+        ).performClick()
+        composeRule.waitUntilDoesNotExist(matcher)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    fun waitUntilAppear(){
+        composeRule.waitUntilExactlyOneExists(matcher, timeoutMillis = TestConstant.LARGE_TIMEOUT)
     }
 }

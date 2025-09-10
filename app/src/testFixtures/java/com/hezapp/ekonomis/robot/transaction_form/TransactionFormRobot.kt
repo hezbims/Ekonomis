@@ -3,27 +3,37 @@ package com.hezapp.ekonomis.robot.transaction_form
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
-import androidx.compose.ui.test.isFocusable
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.dto.InstallmentItemAssertionDto
+import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
+import com.hezapp.ekonomis.robot._interactor.ResizableSwitchInteractor
 import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.CalendarPopupInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.ChoosenProductCardInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.DateFieldInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentListItemInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentItemFormInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.PaymentTypeRadioGroupInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.TransactionTypeDropdownInteractor
-import com.hezapp.ekonomis.test_utils.TestConstant
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import java.time.LocalDate
 import java.util.Calendar
@@ -47,18 +57,35 @@ class TransactionFormRobot(
                     return transactionType
             throw RuntimeException("Transaction type value in this form is not recognized")
         }
+    //region Component Interactor
     private val transactionTypeField = TransactionTypeDropdownInteractor(composeRule, hasText(context.getString(R.string.choose_transaction_type_label)), context)
-    private val dateField = ComponentInteractor(composeRule, hasText(context.getString(R.string.transaction_date_label), ignoreCase = true) and isFocusable())
-    private val calendarPopup = CalendarPopupInteractor(composeRule, confirmLabel = context.getString(R.string.choose_label))
+    private val dateField = DateFieldInteractor(
+        matcher = hasText(context.getString(R.string.transaction_date_title)),
+        composeRule = composeRule,
+        context = context,
+    )
     private val profileField = ComponentInteractor(
         composeRule,
-        hasText(context.getString(R.string.buyer_name_label)) or
-        hasText(context.getString(R.string.seller_name_label))
+        hasText(context.getString(R.string.buyer_name_title)) or
+        hasText(context.getString(R.string.seller_name_title))
     )
     private val chooseProductButton = ComponentInteractor(composeRule, context.getString(R.string.select_product_label))
     private val ppnField = TextFieldInteractor(composeRule, context.getString(R.string.ppn_label))
     private val submitButton = ComponentInteractor(composeRule, context.getString(R.string.save_label))
     private val deleteTransactionIcon = ComponentInteractor(composeRule, hasContentDescription(context.getString(R.string.delete_transaction_label)))
+    private fun installmentItemAtIndex(index: Int) : InstallmentListItemInteractor =
+        InstallmentListItemInteractor(index, composeRule, context)
+    private val installmentItemBottomSheet = InstallmentItemFormInteractor(
+        composeRule,
+        context
+    )
+    private val paidOffSwitch = ResizableSwitchInteractor(
+        composeRule = composeRule,
+        matcher = SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.Switch),
+        context = context,
+    )
+    private val addNewInstallmentItemButton = ComponentInteractor(composeRule, hasText(context.getString(R.string.add_new_installment_title)))
+    private val paymentTypeRadioGroup = PaymentTypeRadioGroupInteractor(composeRule, context)
     @OptIn(ExperimentalTestApi::class)
     private val confirmDeleteTransactionDialog = object {
         fun confirmDeletion(){
@@ -67,13 +94,13 @@ class TransactionFormRobot(
                 .performClick()
         }
     }
-
     private fun productCardWithName(productName: String) =
         ChoosenProductCardInteractor(composeRule, hasText(productName), context)
 
     fun chooseTransactionType(type: TransactionType){
         transactionTypeField.openAndSelectTransactionType(type)
     }
+    //endregion
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalTestApi::class)
@@ -82,25 +109,24 @@ class TransactionFormRobot(
         month: Int,
         year: Int,
     ){
-        composeRule.apply {
-            dateField.click()
-
-            waitUntilExactlyOneExists(isDialog(), timeoutMillis = TestConstant.LARGE_TIMEOUT)
-
-            calendarPopup.changeYear(year)
-            calendarPopup.changeMonth(month)
-            calendarPopup.changeDayOfMonth(day, month, year)
-            calendarPopup.confirmDateSelection()
-        }
+        dateField.chooseDate(LocalDate.of(year, month, day))
     }
 
-    fun navigateToChooseProfile() : Unit = profileField.click()
+    fun navigateToChooseProfile() {
+        profileField.click(useSemanticsAction = false)
+    }
 
-    fun navigateToChooseProduct() : Unit = chooseProductButton.click()
+    fun navigateToChooseProduct() {
+        chooseProductButton.click(useSemanticsAction = false)
+    }
 
-    fun fillPpn(ppn : Int) : Unit = ppnField.inputText(ppn.toString(), fresh = true)
+    fun fillPpn(ppn : Int) {
+        ppnField.inputText(ppn.toString(), replaceText = true)
+    }
 
-    fun submitTransactionForm() : Unit = submitButton.click()
+    fun submitTransactionForm() {
+        submitButton.click()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun assertFormContent(
@@ -108,7 +134,9 @@ class TransactionFormRobot(
         date: LocalDate,
         profileName: String,
         ppn: Int? = null,
-        products: List<ProductFormAssertData>,){
+        products: List<ProductFormAssertData>,
+        paymentTypeAssertion: PaymentTypeAssertionDto,
+    ){
         composeRule.apply {
             val dateString = TestTimeService.get().toEddMMMyyyy(TestTimeService.get().getCalendar().apply {
                 set(Calendar.MONTH, date.monthValue - 1)
@@ -139,6 +167,35 @@ class TransactionFormRobot(
                     "${context.getString(product.unitType.getStringId())} | ", substring = true) and
                     hasText(product.price.toRupiahV2(), substring = true)
                 ).assertExists()
+
+            val expectedPaymentType = when(paymentTypeAssertion){
+                PaymentTypeAssertionDto.Cash -> PaymentType.CASH
+                is PaymentTypeAssertionDto.Installment -> PaymentType.INSTALLMENT
+            }
+
+            assertSelectedPaymentType(expectedPaymentType)
+            if (paymentTypeAssertion is PaymentTypeAssertionDto.Installment){
+                assertInstallmentItemsExist(paymentTypeAssertion.items)
+            }
+        }
+    }
+
+    fun changeSelectedPaymentType(paymentType: PaymentType){
+        paymentTypeRadioGroup.changeSelectedPaymentType(paymentType)
+    }
+
+    fun assertSelectedPaymentType(expectedPaymentType: PaymentType){
+        paymentTypeRadioGroup.assertSelectedPaymentType(expectedPaymentType)
+    }
+
+    private fun assertInstallmentItemsExist(items: List<InstallmentItemAssertionDto>){
+        val scrollNode = composeRule.onNode(hasScrollAction())
+        items.forEach { item ->
+            scrollNode.performScrollToNode(
+                hasText(item.amount.toRupiahV2(), substring = true) and
+                hasText(TestTimeService.get().toEddMMMyyyy(item.paymentDate)) and
+                hasAnyChild(hasContentDescription(context.getString(R.string.edit_installment_item)))
+            )
         }
     }
 
@@ -155,6 +212,22 @@ class TransactionFormRobot(
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun addNewInstallmentItem(date: LocalDate, amount: Int){
+        addNewInstallmentItemButton.click()
+        installmentItemBottomSheet.specifyAndSubmitInput(date, amount)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun editInstallmentItem(index: Int, date: LocalDate, amount: Int){
+        installmentItemAtIndex(index).clickEditIcon()
+        installmentItemBottomSheet.specifyAndSubmitInput(date, amount)
+    }
+
+    fun deleteInstallmentItemAt(index: Int){
+        installmentItemAtIndex(index).performDelete()
+    }
+
     fun deleteProduct(productName: String){
         productCardWithName(productName).performDelete()
     }
@@ -162,6 +235,27 @@ class TransactionFormRobot(
     fun deleteCurrentTransaction() {
         deleteTransactionIcon.click()
         confirmDeleteTransactionDialog.confirmDeletion()
+    }
+
+    fun assertIsPaidOff(isPaidOff: Boolean) {
+        if (isPaidOff)
+            paidOffSwitch.assertIsOn()
+        else
+            paidOffSwitch.assertIsOff()
+    }
+
+    fun confirmUnsafePaymentTypeChange() {
+        composeRule.onNodeWithText(context.getString(R.string.yes_label))
+            .performClick()
+    }
+
+    fun togglePaidOff() {
+        paidOffSwitch.click()
+    }
+
+    fun confirmPaidOffToggleInDialog() {
+        composeRule.onNode(hasText(context.getString(R.string.yes_label)))
+            .performClick()
     }
 
     val chooseProfileRobot = ChooseProfileRobot(composeRule, context)

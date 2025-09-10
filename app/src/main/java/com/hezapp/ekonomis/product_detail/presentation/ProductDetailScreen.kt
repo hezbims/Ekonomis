@@ -125,24 +125,23 @@ private fun ProductDetailScreen(
                         style = MaterialTheme.typography.titleMedium
                     )
 
-                    Text(
-                        text = currentPeriod.toFullMonthYearString(),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
+                    val context = LocalContext.current
+                    OutlinedButton(
+                        onClick = onClickChangePeriodButton,
+                        modifier = Modifier.semantics {
+                            contentDescription = context.getString(R.string.change_period_button)
+                        }
+                    ) {
+                        Text(
+                            text = currentPeriod.toFullMonthYearString(),
+                        )
+                    }
                 }
 
-                val context = LocalContext.current
-                OutlinedButton(
-                    onClick = onClickChangePeriodButton,
-                    modifier = Modifier.semantics {
-                        contentDescription = context.getString(R.string.change_period_button)
-                    }
-                ) {
-                    Text(stringResource(R.string.change_label))
-                }
+
             }
 
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(16.dp))
         }
 
         item { 
@@ -156,7 +155,7 @@ private fun ProductDetailScreen(
                 style = MaterialTheme.typography.bodyMedium
             )
 
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(16.dp))
         }
 
         item {
@@ -165,7 +164,7 @@ private fun ProductDetailScreen(
                 onClickEditMonthlyStock = onClickEditMonthlyStock,
             )
 
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(16.dp))
         }
 
         renderListProductTransaction(
@@ -174,7 +173,7 @@ private fun ProductDetailScreen(
         )
 
         item {
-            Spacer(Modifier.height(36.dp))
+            Spacer(Modifier.height(16.dp))
         }
 
         renderListProductTransaction(
@@ -246,7 +245,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[0],
                             ppn = null,
                             quantity = 12,
-                            price = (324_000_000).toInt(),
+                            price = 324_000_000,
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         ),
@@ -255,7 +254,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[1],
                             ppn = null,
                             quantity = 150,
-                            price = (500_000).toInt(),
+                            price = 500_000,
                             unitType = UnitType.PIECE,
                             profileName = "Bu Mega"
                         ),
@@ -264,7 +263,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[2],
                             ppn = null,
                             quantity = 1,
-                            price = (45_000).toInt(),
+                            price = 45_000,
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         )
@@ -275,7 +274,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[0],
                             ppn = 12,
                             quantity = 12,
-                            price = (500_000_000).toInt(),
+                            price = 500_000_000,
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         ),
@@ -284,7 +283,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[1],
                             ppn = null,
                             quantity = 150,
-                            price = (500_000).toInt(),
+                            price = 500_000,
                             unitType = UnitType.PIECE,
                             profileName = "Bu Mega"
                         ),
@@ -293,7 +292,7 @@ private fun PreviewProductDetailScreen(){
                             date = listDate[2],
                             ppn = null,
                             quantity = 1,
-                            price = (45_000).toInt(),
+                            price = 45_000,
                             unitType = UnitType.CARTON,
                             profileName = "Bu Mega"
                         ),

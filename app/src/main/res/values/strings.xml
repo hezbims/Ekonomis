@@ -105,4 +105,9 @@
     <string name="confirm_mark_payment_as_paid_off_paragraph">Total pembayaran cicilan masih kurang dari total harga produk. Apakah anda yakin ingin menandai bahwa cicilan ini sudah lunas?</string>
     <string name="are_you_sure_to_delete_this_installment_data_paragraph">Apakah anda yakin ingin menghapus data cicilan ini?</string>
     <string name="changing_payment_from_installment_to_cash_confirmation">Apakah anda yakin ingin mengubah tipe pembayaran dari cicilan ke cash?. \nData-data cicilan sebelumnya akan hilang.</string>
+    <string name="transaction_date_cant_be_empty_error">Tanggal transaksi tidak boleh kosong</string>
+    <string name="seller_cant_be_empty_error">Penjual tidak boleh kosong</string>
+    <string name="buyer_cant_be_empty_error">Pembeli tidak boleh kosong</string>
+    <string name="product_list_cant_be_empty">List barang tidak boleh kosong</string>
+    <string name="ppn_cant_be_empty">PPN tidak boleh kosong</string>
 </resources>

@@ -2,7 +2,6 @@ package com.hezapp.ekonomis.robot._interactor
 
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.performClick
@@ -31,8 +30,12 @@ open class ComponentInteractor (
         composeRule.onNode(matcher).assertDoesNotExist()
     }
 
-    fun assertHasText(expectedText: String){
-        composeRule.onNode(matcher).assertTextContains(expectedText)
+    fun assertHasText(vararg expectedTexts: String){
+        var textMatcher = hasText(expectedTexts[0])
+        for (i in 1..expectedTexts.size - 1)
+            textMatcher = textMatcher or hasText(expectedTexts[i])
+
+        composeRule.onNode(matcher and textMatcher).assertExists()
     }
 
     fun assertDoesntHaveText(text: String){

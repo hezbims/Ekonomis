@@ -9,7 +9,6 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.model.ProfileInputEr
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.TransactionDateError
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.TransactionFormErrorUiModel
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
-import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
 
 fun InvoiceValidationResult.toFormErrorUiModel(
     context: Context,
@@ -38,14 +37,12 @@ fun InvoiceValidationResult.toFormErrorUiModel(
     val profileError =
         when(this.profileError){
             ProfileInputError.CantBeEmpty ->
-                context.getString(
-                    R.string.cant_be_empty,
-                    context.getString(
-                        R.string.profile_name_label,
-                        context.getString(transactionType.getProfileStringId())
-                    )
-                )
-            null -> null
+                when(transactionType){
+                    TransactionType.PEMBELIAN -> context.getString(R.string.seller_cant_be_empty_error)
+                    TransactionType.PENJUALAN -> context.getString(R.string.buyer_cant_be_empty_error)
+                }
+            null ->
+                null
         }
 
     val transactionDateError =

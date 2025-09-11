@@ -258,6 +258,33 @@ class TransactionFormRobot(
             .performClick()
     }
 
+    fun assertSubmitButtonNotExist() {
+        submitButton.assertDoesNotExist()
+    }
+
+    fun assertEmptyDateErrorExist() {
+        dateField.assertHasText(context.getString(R.string.transaction_date_cant_be_empty_error))
+    }
+
+    fun assertEmptyProfileErrorExist() {
+        profileField.assertHasText(when(formTransactionType){
+            TransactionType.PEMBELIAN ->
+                context.getString(R.string.seller_cant_be_empty_error)
+            TransactionType.PENJUALAN ->
+                context.getString(R.string.buyer_cant_be_empty_error)
+            null -> throw AssertionError("Profile error pasti tidak ada karena tipe transaksi belum dipilih di form ini")
+        })
+    }
+
+    fun assertEmptyPpnErrorExist() {
+        ppnField.assertHasText(context.getString(R.string.ppn_cant_be_empty))
+    }
+
+    fun assertEmptyProductListErrorExist(){
+        composeRule.onNodeWithText(context.getString(R.string.product_list_cant_be_empty))
+            .assertExists()
+    }
+
     val chooseProfileRobot = ChooseProfileRobot(composeRule, context)
     val chooseProductRobot = ChooseProductRobot(composeRule, context)
 }

@@ -1,16 +1,17 @@
 package com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.HorizontalDivider
@@ -21,10 +22,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,78 +61,110 @@ fun ListSelectedProductField(
     modifier : Modifier = Modifier,
 ){
     Column(
-        horizontalAlignment = Alignment.Start,
-        modifier = modifier.wrapContentHeight(),
+        modifier
     ) {
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                stringResource(R.string.product_list_title_label),
-                style = MaterialTheme.typography.titleSmall
-            )
-
-            AddNewItemButton(
-                onClick = {
-                    navController.navigateOnce(
-                        MyRoutes.SearchAndChooseProduct
+        Box{
+            Column(
+                horizontalAlignment = Alignment.Start,
+                modifier = Modifier
+                    .border(
+                        width =
+                            if (error == null) BorderWidths.small
+                            else BorderWidths.bold,
+                        color =
+                            if (error == null) Color.Black
+                            else MaterialTheme.colorScheme.error,
+                        shape = RoundedCornerShape(4.dp)
                     )
-                },
-                label = stringResource(R.string.select_product_label)
+                    .padding(16.dp),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+
+                    val total by remember(state.curFormData.invoiceItems) {
+                        derivedStateOf {
+                            state.curFormData.invoiceItems.sumOf {
+                                it.price.toLong()
+                            }
+                        }
+                    }
+
+                    Text(
+                        text = "Total : ${total.toRupiahV2()}",
+                        style = MaterialTheme.typography.labelSmall
+                    )
+
+                    AddNewItemButton(
+                        onClick = {
+                            navController.navigateOnce(
+                                MyRoutes.SearchAndChooseProduct
+                            )
+                        },
+                        label = stringResource(R.string.select_product_label)
+                    )
+                }
+
+                Spacer(Modifier.height(12.dp))
+
+                if (state.curFormData.invoiceItems.isEmpty())
+                    Text(
+                        "Belum ada barang yang anda pilih",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                else
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                    ) {
+                        state.curFormData.invoiceItems.forEachIndexed { index, item ->
+                            SelectedProductCardItem(
+                                item = item,
+                                onClickEdit = {
+                                    onEvent(
+                                        AddOrUpdateTransactionEvent.ChooseInvoiceItemForEdit(
+                                            item
+                                        )
+                                    )
+                                }
+                            )
+                            if (index < state.curFormData.invoiceItems.lastIndex)
+                                HorizontalDivider()
+                        }
+                    }
+            }
+
+            Text(
+                stringResource(R.string.product_list_label),
+                style = MaterialTheme.typography.bodySmall,
+                color =
+                    if (error != null)
+                        MaterialTheme.colorScheme.error
+                    else
+                        Color.Unspecified,
+                fontWeight =
+                    if (error != null)
+                        FontWeight.Bold
+                    else null,
+                modifier = Modifier
+                    .offset(8.dp, (-8).dp)
+                    .padding(horizontal = 4.dp)
+                    .background(MaterialTheme.colorScheme.surface)
             )
         }
 
-        Spacer(Modifier.height(12.dp))
-
-        Box(
-            modifier = Modifier
-                .defaultMinSize(
-                    minHeight = if (state.curFormData.invoiceItems.isEmpty()) 120.dp
-                                else 0.dp
-                )
-                .fillMaxWidth()
-                .border(
-                    width =
-                        if (error == null) BorderWidths.small else BorderWidths.bold,
-                    color = if (error == null) Color.Black else MaterialTheme.colorScheme.error,
-                    shape = MaterialTheme.shapes.small,
-                )
-        ) {
-            if (state.curFormData.invoiceItems.isEmpty())
-                Text(
-                    "Belum ada barang yang anda pilih",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .align(Alignment.Center),
-                    color = if (error == null) Color.Gray else MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            else
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                ) {
-                    state.curFormData.invoiceItems.forEachIndexed { index , item ->
-                        SelectedProductCardItem(
-                            item = item,
-                            onClickEdit = {
-                                onEvent(AddOrUpdateTransactionEvent.ChooseInvoiceItemForEdit(item))
-                            }
-                        )
-                        if (index < state.curFormData.invoiceItems.lastIndex)
-                            HorizontalDivider()
-                    }
-                }
-        }
         error?.let {
             Text(
                 it,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(start = 16.dp, top = 4.dp),
             )
         }
     }

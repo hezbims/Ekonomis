@@ -164,7 +164,9 @@ fun PaymentField(
                         )
                     }
 
-                    Column {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
                         if (installmentItems.isNotEmpty())
                             Spacer(Modifier.height(4.dp))
                         installmentItems.forEachIndexed { index, it ->

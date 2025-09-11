@@ -43,6 +43,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceI
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.styling.BorderWidths
+import com.hezapp.ekonomis.core.presentation.styling.Elevations
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
@@ -119,9 +120,7 @@ fun ListSelectedProductField(
                     )
                 else
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         state.curFormData.invoiceItems.forEachIndexed { index, item ->
                             SelectedProductCardItem(
@@ -198,7 +197,7 @@ fun SelectedProductCardItem(
         supportingContent = {
             Text("${item.quantity} ${stringResource(item.unitType.getStringId())} | ${item.price.toRupiahV2()}")
         },
-
+        tonalElevation = Elevations.normal,
         trailingContent = {
             IconButton(
                 onClick = onClickEdit

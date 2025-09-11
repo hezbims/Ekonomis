@@ -5,6 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import com.hezapp.ekonomis.R
 
 @Composable
@@ -30,7 +31,8 @@ fun ConfirmUnsafePaymentTypeEditDialog(
         },
         text = {
             Text(stringResource(
-                R.string.changing_payment_from_installment_to_cash_confirmation))
+                R.string.changing_payment_from_installment_to_cash_confirmation),
+                textAlign = TextAlign.Justify)
         }
     )
 }

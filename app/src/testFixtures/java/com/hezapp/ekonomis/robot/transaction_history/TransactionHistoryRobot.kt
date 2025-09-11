@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.robot
+package com.hezapp.ekonomis.robot.transaction_history
 
 import android.content.Context
 import android.os.Build
@@ -65,15 +65,15 @@ class TransactionHistoryRobot(
     fun openAndApplyFilter(
         targetMonth: Int,
         targetYear: Int,
-        expectedFilterTimeInMillis: Long = TestTimeService.get().getCalendar().timeInMillis,
+        expectedFilterTimeInMillis: Long = TestTimeService.Companion.get().getCalendar().timeInMillis,
     ) : Long {
         composeRule.onNodeWithContentDescription(context.getString(R.string.open_filter_label))
             .performClick()
         composeRule.onNodeWithText(
-            TestTimeService.get().toMMMyyyy(expectedFilterTimeInMillis))
+            TestTimeService.Companion.get().toMMMyyyy(expectedFilterTimeInMillis))
             .assertExists()
 
-        val currentCalendar = TestTimeService.get().getCalendar().apply {
+        val currentCalendar = TestTimeService.Companion.get().getCalendar().apply {
             timeInMillis = expectedFilterTimeInMillis
         }
         val currentYear = { currentCalendar.get(Calendar.YEAR)  }
@@ -112,7 +112,8 @@ class TransactionHistoryRobot(
         composeRule.onNodeWithText(context.getString(R.string.apply_label))
             .performClick()
 
-        composeRule.onNodeWithText(TestTimeService.get().toMMMMyyyy(
+        composeRule.onNodeWithText(
+            TestTimeService.Companion.get().toMMMMyyyy(
             currentCalendar.timeInMillis
         )).assertExists()
 

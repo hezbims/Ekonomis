@@ -11,7 +11,7 @@ import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.robot.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
-import com.hezapp.ekonomis.robot.TransactionHistoryRobot
+import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_utils.TestTimeService

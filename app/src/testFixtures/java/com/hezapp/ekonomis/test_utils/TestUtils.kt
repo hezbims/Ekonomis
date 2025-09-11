@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.robot.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
-import com.hezapp.ekonomis.robot.TransactionHistoryRobot
+import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_utils.db_assertion.MasterDataDbAssertion

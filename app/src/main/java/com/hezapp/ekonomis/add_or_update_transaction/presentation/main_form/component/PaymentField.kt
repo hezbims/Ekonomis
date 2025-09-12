@@ -153,7 +153,7 @@ fun PaymentField(
                                 .align(Alignment.Bottom)
                         )
 
-                        Text("Sudah Lunas", style = MaterialTheme.typography.bodySmall)
+                        Text(stringResource(R.string.paid_off_label), style = MaterialTheme.typography.bodySmall)
 
                         Spacer(Modifier.width(4.dp))
 

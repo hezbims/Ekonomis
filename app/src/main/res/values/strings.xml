@@ -110,4 +110,6 @@
     <string name="buyer_cant_be_empty_error">Pembeli tidak boleh kosong</string>
     <string name="product_list_cant_be_empty">List barang tidak boleh kosong</string>
     <string name="ppn_cant_be_empty">PPN tidak boleh kosong</string>
+    <string name="not_paid_off_label">Belum lunas</string>
+    <string name="paid_off_label">Sudah lunas</string>
 </resources>

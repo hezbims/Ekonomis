@@ -141,7 +141,8 @@ private fun TransactionHistoryScreen_Preview(){
                                 profileName = "Metri",
                                 profileType = ProfileType.CUSTOMER,
                                 date = TimeService().getCalendar().timeInMillis,
-                                totalPrice = 25_000_000
+                                totalPrice = 25_000_000,
+                                isPaidOff = false,
                             )
                         )
                     ),

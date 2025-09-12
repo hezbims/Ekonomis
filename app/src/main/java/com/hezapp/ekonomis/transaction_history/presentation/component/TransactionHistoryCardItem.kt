@@ -1,17 +1,20 @@
 package com.hezapp.ekonomis.transaction_history.presentation.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CheckCircleOutline
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
@@ -30,25 +33,36 @@ fun TransactionHistoryCardItem(
 ){
     ListItem(
         leadingContent = {
-            Box(
-                modifier = Modifier
-                    .size(12.dp)
-                    .background( color =
-                        when(data.profileType){
-                            ProfileType.SUPPLIER -> Color(0xFFFB8C00)
-                            ProfileType.CUSTOMER -> Color(0xFF7CB342)
-                        },
-                        shape = CircleShape
-                    ),
-            )
+            if (data.isPaidOff)
+                Icon(Icons.Outlined.CheckCircleOutline,
+                    contentDescription = stringResource(R.string.paid_off_label)
+                )
+            else
+                Icon(Icons.Outlined.CheckCircleOutline,
+                    contentDescription = stringResource(R.string.not_paid_off_label))
         },
         tonalElevation = 0.75.dp,
         trailingContent = {
-            val symbol =
-                if (data.profileType == ProfileType.SUPPLIER) "-"
-                else "+"
+            val symbol : String
+            val textColor : Color
+            when(data.profileType){
+                ProfileType.SUPPLIER -> {
+                    textColor = MaterialTheme.colorScheme.error
+                    symbol = "-"
+                }
+                ProfileType.CUSTOMER -> {
+                    textColor =
+                        if (isSystemInDarkTheme())
+                            Color(0xFF81C784)
+                        else
+                            Color(0xFF388E3C)
+                    symbol = "+"
+                }
+            }
+
             Text(
-                "$symbol${data.totalPrice.toString().toRupiah()}"
+                "$symbol${data.totalPrice.toString().toRupiah()}",
+                color = textColor
             )
         },
         overlineContent = {
@@ -76,7 +90,8 @@ fun PreviewTransactionHistoryCardItem(){
                 date = date.timeInMillis,
                 profileType = ProfileType.CUSTOMER,
                 id = 1,
-                totalPrice = 1_000_000_000
+                totalPrice = 1_000_000_000,
+                isPaidOff = false,
             ),
             onClick = {},
             timeService = TimeService()

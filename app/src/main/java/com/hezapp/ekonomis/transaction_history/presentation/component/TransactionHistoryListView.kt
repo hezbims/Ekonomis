@@ -52,7 +52,7 @@ fun TransactionHistoryListView(
                 contentPadding = PaddingValues(
                     start = 24.dp, end = 24.dp, bottom = 64.dp, top = 24.dp,
                 ),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxSize(),
             ) {
                 itemsIndexed(data){ _, item ->
@@ -93,13 +93,13 @@ fun PreviewTransactionHistoryListView(){
     val listTransaksi = listOf(
 
         PreviewTransactionHistory(
-            id = 1, date = listDate[0], profileName = "Fajar Milenium", profileType = ProfileType.SUPPLIER, totalPrice = 10_000_000,
+            id = 1, date = listDate[0], profileName = "Fajar Milenium", profileType = ProfileType.SUPPLIER, totalPrice = 10_000_000, isPaidOff = false
         ),
         PreviewTransactionHistory(
-            id = 2, date = listDate[1], profileName = "Cik Feni", profileType = ProfileType.CUSTOMER, totalPrice = 500_000,
+            id = 2, date = listDate[1], profileName = "Cik Feni", profileType = ProfileType.CUSTOMER, totalPrice = 500_000, isPaidOff = true,
         ),
         PreviewTransactionHistory(
-            id = 3, date = listDate[2], profileName = "Wiranata", profileType = ProfileType.CUSTOMER, totalPrice = 779_000,
+            id = 3, date = listDate[2], profileName = "Wiranata", profileType = ProfileType.CUSTOMER, totalPrice = 779_000, isPaidOff = true,
         ),
     )
     EkonomisTheme {

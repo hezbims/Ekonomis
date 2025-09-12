@@ -11,6 +11,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.robot.transaction_history._interactor.TransactionPreviewItemInteractor
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.time.LocalDate
@@ -20,6 +21,13 @@ class TransactionHistoryRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,
 ) {
+    fun itemWithProfileName(profileName: String) : TransactionPreviewItemInteractor {
+        return TransactionPreviewItemInteractor(
+            hasText(profileName),
+            context,
+            composeRule
+        )
+    }
    fun navigateToProductPreview(){
        composeRule.onNodeWithText(
             context.getString(R.string.product_stock_label),

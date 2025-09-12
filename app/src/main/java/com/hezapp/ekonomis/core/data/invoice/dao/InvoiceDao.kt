@@ -26,7 +26,12 @@ interface InvoiceDao {
             name profile_name, 
             type profile_type,
             date,
-            total_price
+            total_price,
+            COALESCE((
+                SELECT is_paid_off
+                FROM installments
+                WHERE installments.invoice_id = currentPeriodInvoices.id
+            ), 0) is_paid_off
         FROM currentPeriodInvoices
         JOIN profiles
             ON profile_id = profiles.id

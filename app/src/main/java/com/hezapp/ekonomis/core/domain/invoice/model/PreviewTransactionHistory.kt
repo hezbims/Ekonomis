@@ -16,4 +16,7 @@ data class PreviewTransactionHistory(
 
     @ColumnInfo(name = "total_price")
     val totalPrice: Long,
+
+    @ColumnInfo(name = "is_paid_off")
+    val isPaidOff: Boolean,
 )

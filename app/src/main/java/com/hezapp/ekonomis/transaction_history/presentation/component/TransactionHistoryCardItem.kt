@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CheckCircleOutline
+import androidx.compose.material.icons.outlined.PendingActions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -38,7 +39,7 @@ fun TransactionHistoryCardItem(
                     contentDescription = stringResource(R.string.paid_off_label)
                 )
             else
-                Icon(Icons.Outlined.CheckCircleOutline,
+                Icon(Icons.Outlined.PendingActions,
                     contentDescription = stringResource(R.string.not_paid_off_label))
         },
         tonalElevation = 0.75.dp,

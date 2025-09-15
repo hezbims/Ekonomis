@@ -8,8 +8,8 @@ import java.util.TimeZone
  * For Preview Composable Only
  */
 class PreviewTimeService : ITimeService() {
-    override fun getCalendar(): Calendar {
-        return Calendar.getInstance(getTimezone())
+    override fun getCurrentTimeInMillis(): Long {
+        return Calendar.getInstance(getTimezone()).timeInMillis
     }
 
     override fun getTimezone(): TimeZone {

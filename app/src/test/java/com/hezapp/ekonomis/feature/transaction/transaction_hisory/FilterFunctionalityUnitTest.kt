@@ -51,11 +51,11 @@ class FilterFunctionalityUnitTest(
         val prodTimeService = TimeService()
 
         val timeService = object : ITimeService(){
-            override fun getCalendar(): Calendar {
+            override fun getCurrentTimeInMillis(): Long {
                 return Calendar.getInstance(getTimezone()).apply {
                     set(2023, Calendar.JANUARY, 4, 15, 0, 0)
                     set(Calendar.MILLISECOND, 0)
-                }
+                }.timeInMillis
             }
 
             override fun getTimezone(): TimeZone {

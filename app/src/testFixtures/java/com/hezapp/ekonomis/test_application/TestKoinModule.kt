@@ -1,6 +1,8 @@
 package com.hezapp.ekonomis.test_application
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Room
 import androidx.room.RoomDatabase.Callback
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -11,7 +13,12 @@ import com.hezapp.ekonomis.test_utils.TestTimeService
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import org.koin.dsl.module
+import java.time.LocalDate
+import java.time.ZonedDateTime
+import java.util.Locale
+import java.util.TimeZone
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun loadTestKoinModules(
     appContext: Context,
     koin: Koin = GlobalContext.get(),
@@ -39,7 +46,17 @@ fun loadTestKoinModules(
         single { testDb.installmentTestDao }
         single { testDb.installmentItemTestDao }
         //endregion
-        single<ITimeService> { TestTimeService.get() }
+        single<ITimeService> {
+            val timeZone = TimeZone.getTimeZone("GMT+8")
+            TestTimeService(
+                currentTimeInMillis = ZonedDateTime.of(
+                    LocalDate.of(2020, 2, 15).atStartOfDay(),
+                    timeZone.toZoneId(),
+                ).toInstant().toEpochMilli(),
+                timeZone = timeZone,
+                locale = Locale.forLanguageTag("id-ID"),
+            )
+        }
     }
     koin.loadModules(listOf(module), allowOverride = true)
 }

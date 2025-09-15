@@ -11,16 +11,19 @@ import java.util.Locale
 import java.util.TimeZone
 
 abstract class ITimeService {
-    abstract fun getCalendar() : Calendar
+    abstract fun getCurrentTimeInMillis() : Long
     abstract fun getTimezone() : TimeZone
+    abstract fun getLocale() : Locale
     fun getZoneId(): ZoneId = getTimezone().toZoneId()
+    fun getCalendar() : Calendar = Calendar.getInstance(getTimezone()).apply {
+        timeInMillis = getCurrentTimeInMillis()
+    }
     fun getLocalDate(): LocalDate = getCalendar().run {
         LocalDate.now()
             .withYear(get(Calendar.YEAR))
             .withMonth(get(Calendar.MONTH) + 1)
             .withDayOfMonth(get(Calendar.DAY_OF_MONTH))
     }
-    abstract fun getLocale() : Locale
 
     private val dayDateMonthYearFormat by lazy {
         SimpleDateFormat("E, dd-MMM-yyyy", getLocale())

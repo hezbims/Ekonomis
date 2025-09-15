@@ -1,15 +1,13 @@
 package com.hezapp.ekonomis.core.domain.utils
 
 import org.koin.core.context.GlobalContext
-import java.util.Calendar
+import java.time.Instant
 import java.util.Locale
 import java.util.TimeZone
 
 class TimeService : ITimeService() {
-    override fun getCalendar() : Calendar {
-        return Calendar.getInstance(
-            getTimezone()
-        )
+    override fun getCurrentTimeInMillis() : Long {
+        return Instant.now().toEpochMilli()
     }
 
     override fun getTimezone() : TimeZone {

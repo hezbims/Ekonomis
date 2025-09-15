@@ -20,7 +20,7 @@ class GetPreviewTransactionHistoryUseCase(
         emit(ResponseWrapper.Loading())
         emit(ResponseWrapper.Succeed(repo.getPreviewInvoices(filter)))
     }.catch {
-        Log.e("qqq get preview transaction ","${it.message}\n${it.stackTrace}")
+        Log.e("qqq Error","Error Occured", it)
         emit(ResponseWrapper.Failed())
     }
 }

@@ -62,8 +62,11 @@ class TransactionRepository(
     }
 
     override suspend fun getPreviewInvoices(filter: PreviewTransactionFilter): List<PreviewTransactionHistory> {
-        val firstDayOfCurrentPeriod = filter.monthYear.toCalendar(timeService).toBeginningOfMonth().timeInMillis
-        val nextMonthYear = firstDayOfCurrentPeriod.getNextMonthYear()
+        val firstDayOfCurrentPeriod = filter.monthYear
+            .toCalendar(timeService)
+            .toBeginningOfMonth(timeService)
+            .timeInMillis
+        val nextMonthYear = firstDayOfCurrentPeriod.getNextMonthYear(timeService)
         val result = invoiceDao.getPreviewTransactionHistory(
             firstDayOfMonth = firstDayOfCurrentPeriod,
             lastDayOfMonth = nextMonthYear,

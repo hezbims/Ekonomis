@@ -6,7 +6,11 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-class TestTimeService private constructor() : ITimeService()  {
+class TestTimeService(
+    private val currentTimeInMillis: Long? = null,
+    private val timeZone: TimeZone? = null,
+    private val locale: Locale? = null,
+) : ITimeService()  {
     companion object {
         private val productionTimeService = TimeService()
         private val instance = TestTimeService()
@@ -47,9 +51,9 @@ class TestTimeService private constructor() : ITimeService()  {
             testCalendar = defaultTestCalendar
         }
     }
-    override fun getCalendar(): Calendar = testCalendar.clone() as Calendar
-    override fun getTimezone(): TimeZone = testTimeZone.clone() as TimeZone
-    override fun getLocale(): Locale = productionTimeService.getLocale()
+    override fun getCurrentTimeInMillis(): Long = currentTimeInMillis ?: testCalendar.timeInMillis
+    override fun getTimezone(): TimeZone = timeZone ?: testTimeZone.clone() as TimeZone
+    override fun getLocale(): Locale = locale ?: productionTimeService.getLocale()
 }
 
 val testCalendarProvider = TestTimeService.get()

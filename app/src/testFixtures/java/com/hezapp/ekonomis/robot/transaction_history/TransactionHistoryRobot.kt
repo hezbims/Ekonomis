@@ -154,9 +154,23 @@ class TransactionHistoryRobot(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun assertTransactionCardExistWith(date: LocalDate) {
-        val dateFormat = DateTimeFormatter.ofPattern("E, dd-MMM-yyyy")
-        composeRule.onNodeWithText(date.format(dateFormat))
+    fun assertTransactionCardExistWith(
+        date: LocalDate? = null,
+        totalPrice: String? = null,
+    ) {
+        if (date == null && totalPrice == null){
+            throw IllegalArgumentException("At least one parameter is not null")
+        }
+
+        if (date != null) {
+            val dateFormat = DateTimeFormatter.ofPattern("E, dd-MMM-yyyy")
+            composeRule.onNodeWithText(date.format(dateFormat))
+                .assertExists()
+        }
+        if (totalPrice != null){
+            composeRule.onNodeWithText(totalPrice)
+                .assertExists()
+        }
     }
 }
 

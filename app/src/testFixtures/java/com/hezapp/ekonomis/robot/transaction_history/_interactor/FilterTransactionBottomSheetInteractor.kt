@@ -35,6 +35,7 @@ class FilterTransactionBottomSheetInteractor(
         composeRule.onNode(
             hasAnyAncestor(matcher) and
             hasText(context.getString(R.string.apply_label)))
+            .performClick()
     }
 
     private fun applyPaidOffFilter(isOnlyNotPaidOff: Boolean?){

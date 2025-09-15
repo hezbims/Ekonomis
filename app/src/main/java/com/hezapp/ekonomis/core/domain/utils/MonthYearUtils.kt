@@ -1,9 +1,10 @@
 package com.hezapp.ekonomis.core.domain.utils
 
+import org.koin.core.context.GlobalContext
 import java.util.Calendar
 
-fun Calendar.toBeginningOfMonth() : Calendar {
-    return calendarProvider.getCalendar().apply {
+fun Calendar.toBeginningOfMonth(timeService: ITimeService = GlobalContext.get().get()) : Calendar {
+    return timeService.getCalendar().apply {
         timeInMillis = this@toBeginningOfMonth.timeInMillis
         set(Calendar.DAY_OF_MONTH, 1)
         set(Calendar.HOUR_OF_DAY, 0)
@@ -13,8 +14,8 @@ fun Calendar.toBeginningOfMonth() : Calendar {
     }
 }
 
-fun Long.getNextMonthYear() : Long {
-    val currentMonthYearCalendar = toCalendar()
+fun Long.getNextMonthYear(timeService: ITimeService = GlobalContext.get().get()) : Long {
+    val currentMonthYearCalendar = toCalendar(timeService)
     val nextMonthYearCalendar = currentMonthYearCalendar.apply {
         add(Calendar.MONTH, 1)
     }
@@ -22,27 +23,16 @@ fun Long.getNextMonthYear() : Long {
 
 }
 
-fun Long.getPreviousMonthYear() : Long {
-    val currentMonthYearCalendar = toCalendar()
+fun Long.getPreviousMonthYear(timeService: ITimeService = GlobalContext.get().get()) : Long {
+    val currentMonthYearCalendar = toCalendar(timeService)
     val prevMonthYearCalendar = currentMonthYearCalendar.apply {
         add(Calendar.MONTH, -1)
     }
     return prevMonthYearCalendar.timeInMillis
 }
 
-fun Long.isInAMonthYearPeriod(monthYearPeriod: Long) : Boolean {
-    val currentMonthYearPeriodCalendar = monthYearPeriod.toCalendar().toBeginningOfMonth()
-    val nextMonthYearPeriod = calendarProvider.getCalendar().apply {
-        timeInMillis = currentMonthYearPeriodCalendar.timeInMillis
-        add(Calendar.MONTH, 1)
-    }
-
-    return this >= currentMonthYearPeriodCalendar.timeInMillis &&
-            this < nextMonthYearPeriod.timeInMillis
-}
-
-fun Long.toCalendar() : Calendar {
-    return calendarProvider.getCalendar().apply {
+fun Long.toCalendar(timeService: ITimeService = GlobalContext.get().get()) : Calendar {
+    return timeService.getCalendar().apply {
         timeInMillis = this@toCalendar
     }
 }

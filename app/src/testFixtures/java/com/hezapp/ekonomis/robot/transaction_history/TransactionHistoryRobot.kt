@@ -4,23 +4,31 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
+import com.hezapp.ekonomis.robot.transaction_history._interactor.FilterTransactionBottomSheetInteractor
 import com.hezapp.ekonomis.robot.transaction_history._interactor.TransactionPreviewItemInteractor
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.time.LocalDate
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class TransactionHistoryRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,
 ) {
+    private val components = TransactionHistoryRobotComponents(composeRule, context)
     fun itemWithProfileName(profileName: String) : TransactionPreviewItemInteractor {
         return TransactionPreviewItemInteractor(
             hasText(profileName),
@@ -67,6 +75,7 @@ class TransactionHistoryRobot(
         composeRule.onNode(targetSemanticMatcher).performClick()
     }
 
+    @Deprecated(message = "Gunakan actionOpenAndApplyFilter", replaceWith = ReplaceWith("actionOpenAndApplyFilter"))
     /**
      * @return bulan dan tahun dari filter setelah diubah dalam *timeInMillis*
      */
@@ -127,6 +136,15 @@ class TransactionHistoryRobot(
 
         return currentCalendar.timeInMillis
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun actionOpenAndApplyFilter(
+        targetPeriod: YearMonth? = null,
+        isOnlyNotPaidOff: Boolean? = null,
+    ){
+        components.filterIcon.click()
+        components.filterBottomSheet.applyFilter(targetPeriod, isOnlyNotPaidOff)
+    }
+
 
     @OptIn(ExperimentalTestApi::class)
     fun assertTransactionCardNotExist(
@@ -134,4 +152,24 @@ class TransactionHistoryRobot(
     ) {
         composeRule.waitUntilDoesNotExist(hasText(profileName))
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun assertTransactionCardExistWith(date: LocalDate) {
+        val dateFormat = DateTimeFormatter.ofPattern("E, dd-MMM-yyyy")
+        composeRule.onNodeWithText(date.format(dateFormat))
+    }
+}
+
+internal class TransactionHistoryRobotComponents(
+    composeRule: ComposeTestRule,
+    context: Context,
+) {
+    val filterIcon = ComponentInteractor(
+        composeRule,
+        hasContentDescription(context.getString(R.string.open_filter_label)))
+    val filterBottomSheet = FilterTransactionBottomSheetInteractor(composeRule,
+        isDialog() and
+                hasAnyDescendant(hasText(context.getString(R.string.filter_transaction_title))),
+        context)
+
 }

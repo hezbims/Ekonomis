@@ -1,14 +1,18 @@
 package com.hezapp.ekonomis.transaction_history.presentation.component
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -21,8 +25,10 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +52,7 @@ fun TransactionFilterBottomSheet(
     timeService : ITimeService,
     sheetState : SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
 ){
-    val viewModel = rememberTransactionFilterViewModel(initialState)
+    val viewModel = rememberTransactionFilterViewModel(initialState, timeService)
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     ModalBottomSheet(
@@ -62,7 +68,7 @@ fun TransactionFilterBottomSheet(
                 )
         ) {
             Text(
-                "Filter Transaksi",
+                stringResource(R.string.filter_transaction_title),
                 style = MaterialTheme.typography.titleLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
@@ -70,20 +76,42 @@ fun TransactionFilterBottomSheet(
 
             Spacer(Modifier.height(12.dp))
 
-            Column(
-                modifier = Modifier.weight(1f)
+            MonthYearPicker(
+                monthYear = state.monthYear,
+                onDecrementMonthYear = {
+                    viewModel.onEvent(TransactionFilterEvent.DecrementMonthYear)
+                },
+                onIncrementMonthYear = {
+                    viewModel.onEvent(TransactionFilterEvent.IncrementMonthYear)
+                },
+                timeService = timeService,
+            )
+
+            Spacer(Modifier.height(24.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .toggleable(
+                        value = state.isOnlyNotPaidOff,
+                        onValueChange = {
+                            viewModel.onEvent(
+                                TransactionFilterEvent.ChangeOnlyNotPaidOffFilter(it)
+                            )
+                        },
+                        role = Role.Checkbox,
+                    ),
             ) {
-                MonthYearPicker(
-                    monthYear = state.monthYear,
-                    onDecrementMonthYear = {
-                        viewModel.onEvent(TransactionFilterEvent.DecrementMonthYear)
-                    },
-                    onIncrementMonthYear = {
-                        viewModel.onEvent(TransactionFilterEvent.IncrementMonthYear)
-                    },
-                    timeService = timeService,
+                Checkbox(
+                    checked = state.isOnlyNotPaidOff,
+                    onCheckedChange = null,
                 )
+
+                Text(stringResource(R.string.only_not_paid_off_label))
             }
+
+            Spacer(Modifier.weight(1f))
 
             OutlinedButton (
                 contentPadding = PaddingValues(vertical = 16.dp),

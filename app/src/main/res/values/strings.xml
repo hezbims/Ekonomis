@@ -112,4 +112,6 @@
     <string name="ppn_cant_be_empty">PPN tidak boleh kosong</string>
     <string name="not_paid_off_label">Belum lunas</string>
     <string name="paid_off_label">Sudah lunas</string>
+    <string name="filter_transaction_title">Filter Transaksi</string>
+    <string name="only_not_paid_off_label">Hanya yang belum lunas</string>
 </resources>

@@ -6,4 +6,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class PreviewTransactionFilter(
     val monthYear: Long,
+    val isOnlyNotPaidOff: Boolean = false,
 ) : Parcelable

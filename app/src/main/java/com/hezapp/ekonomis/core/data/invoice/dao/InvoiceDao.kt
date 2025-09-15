@@ -11,32 +11,30 @@ import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 @Dao
 interface InvoiceDao {
     @Query("""
-        WITH totalPricePerInvoice AS (
-            SELECT invoice_id, SUM(price) total_price
-            FROM invoice_items
-            GROUP BY invoice_id
-        ),
-        currentPeriodInvoices AS (
-            SELECT *
-            FROM invoices
-            WHERE date >= :firstDayOfMonth AND date < :lastDayOfMonth
-        )
         SELECT 
-            invoice_id id, 
+            invoices.id id, 
             name profile_name, 
             type profile_type,
             date,
-            total_price,
+            (
+                SELECT SUM(price)
+                FROM invoice_items
+                WHERE invoice_id = invoices.id
+            ) total_price,
             COALESCE((
                 SELECT is_paid_off
                 FROM installments
-                WHERE installments.invoice_id = currentPeriodInvoices.id
-            ), 0) is_paid_off
-        FROM currentPeriodInvoices
+                WHERE 
+                    installments.invoice_id = invoices.id AND
+                    (
+                        :isOnlyNotPaidOff = 0 OR
+                         is_paid_off = 1
+                    )
+            ), 1) is_paid_off
+        FROM invoices
         JOIN profiles
             ON profile_id = profiles.id
-        JOIN totalPricePerInvoice
-            ON invoice_id = currentPeriodInvoices.id
+        WHERE date >= :firstDayOfMonth AND date < :lastDayOfMonth
         ORDER BY
             date DESC,
             id DESC
@@ -44,6 +42,7 @@ interface InvoiceDao {
     suspend fun getPreviewTransactionHistory(
         firstDayOfMonth: Long,
         lastDayOfMonth: Long,
+        isOnlyNotPaidOff : Boolean,
     ) : List<PreviewTransactionHistory>
 
     @Transaction

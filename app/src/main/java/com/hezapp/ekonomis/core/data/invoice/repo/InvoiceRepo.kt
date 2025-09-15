@@ -25,6 +25,7 @@ class InvoiceRepo(
         val result = dao.getPreviewTransactionHistory(
             firstDayOfMonth = firstDayOfCurrentPeriod,
             lastDayOfMonth = nextMonthYear,
+            isOnlyNotPaidOff = filter.isOnlyNotPaidOff,
         )
         return result
     }

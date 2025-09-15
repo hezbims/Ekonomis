@@ -7,6 +7,7 @@ import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.transaction.data.mapper.getRoomInvoiceItemEntities
 import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInvoiceEntity
 import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionEntity
@@ -24,6 +25,7 @@ class TransactionRepository(
     private val installmentDao: InstallmentDao,
     private val installmentItemDao: InstallmentItemDao,
     private val transactionProvider: ITransactionProvider,
+    private val timeService: ITimeService,
 ) : ITransactionRepository {
     override suspend fun saveInvoice(dto: TransactionEntity) {
         transactionProvider.withTransaction {
@@ -60,11 +62,12 @@ class TransactionRepository(
     }
 
     override suspend fun getPreviewInvoices(filter: PreviewTransactionFilter): List<PreviewTransactionHistory> {
-        val firstDayOfCurrentPeriod = filter.monthYear.toCalendar().toBeginningOfMonth().timeInMillis
+        val firstDayOfCurrentPeriod = filter.monthYear.toCalendar(timeService).toBeginningOfMonth().timeInMillis
         val nextMonthYear = firstDayOfCurrentPeriod.getNextMonthYear()
         val result = invoiceDao.getPreviewTransactionHistory(
             firstDayOfMonth = firstDayOfCurrentPeriod,
             lastDayOfMonth = nextMonthYear,
+            isOnlyNotPaidOff = filter.isOnlyNotPaidOff,
         )
         return result
     }

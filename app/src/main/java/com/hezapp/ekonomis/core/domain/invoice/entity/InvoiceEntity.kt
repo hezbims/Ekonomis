@@ -36,4 +36,7 @@ data class InvoiceEntity(
 
     @ColumnInfo(name = "transaction_type")
     val transactionType: TransactionType,
+
+    @ColumnInfo(name = "payment_media", defaultValue = "0")
+    val paymentMedia: PaymentMedia = PaymentMedia.TRANSFER
 )

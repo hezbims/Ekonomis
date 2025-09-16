@@ -21,6 +21,7 @@ import com.hezapp.ekonomis._testing_only.test_dao.InstallmentTestDao
 import com.hezapp.ekonomis._testing_only.test_dao.ProductTestDao
 import com.hezapp.ekonomis._testing_only.test_dao.ProfileTestDao
 import com.hezapp.ekonomis._testing_only.test_dao.TransactionTestDao
+import com.hezapp.ekonomis.core.data.invoice.converter.PaymentMediaConverter
 
 @Database(
     entities = [
@@ -32,20 +33,23 @@ import com.hezapp.ekonomis._testing_only.test_dao.TransactionTestDao
         Installment::class,
         InstallmentItem::class,
     ],
-    version = 4,
+    version = 5,
     autoMigrations = [
         AutoMigration(
             from = 1,
             to = 2,
         ),
-        AutoMigration(
-            // menambahkan kolom tipe pembayaran di tabel invoice (cash atau cicilan)
+        AutoMigration( // menambahkan kolom tipe pembayaran di tabel invoice (cash atau cicilan)
             from = 2,
             to = 3,
         ),
         AutoMigration(
             from = 3,
             to = 4,
+        ),
+        AutoMigration(
+            from = 4,
+            to = 5,
         )
     ],
     exportSchema = true,
@@ -55,6 +59,7 @@ import com.hezapp.ekonomis._testing_only.test_dao.TransactionTestDao
     TransactionTypeConverter::class,
     LocalDateConverter::class,
     UnitTypeConverter::class,
+    PaymentMediaConverter::class
 )
 abstract class EkonomisTestDatabase : EkonomisDatabase() {
     abstract val transactionTestDao : TransactionTestDao

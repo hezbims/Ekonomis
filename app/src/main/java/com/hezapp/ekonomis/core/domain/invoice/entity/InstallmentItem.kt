@@ -30,4 +30,6 @@ class InstallmentItem(
     @ColumnInfo(name = "payment_date")
     val paymentDate: LocalDate,
     val amount: Int,
+    @ColumnInfo("payment_media", defaultValue = "0")
+    val paymentMedia: PaymentMedia = PaymentMedia.TRANSFER,
 )

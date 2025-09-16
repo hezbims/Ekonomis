@@ -10,6 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
 import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.converter.LocalDateConverter
+import com.hezapp.ekonomis.core.data.invoice.converter.PaymentMediaConverter
 import com.hezapp.ekonomis.core.data.invoice.converter.TransactionTypeConverter
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.converter.UnitTypeConverter
@@ -36,7 +37,7 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
         Installment::class,
         InstallmentItem::class,
     ],
-    version = 4,
+    version = 5,
     autoMigrations = [
         AutoMigration(
             from = 1,
@@ -49,6 +50,10 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
         AutoMigration(
             from = 3,
             to = 4,
+        ),
+        AutoMigration(
+            from = 4,
+            to = 5,
         )
     ],
     exportSchema = true,
@@ -58,6 +63,7 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
     TransactionTypeConverter::class,
     LocalDateConverter::class,
     UnitTypeConverter::class,
+    PaymentMediaConverter::class
 )
 abstract class EkonomisDatabase : RoomDatabase() {
 

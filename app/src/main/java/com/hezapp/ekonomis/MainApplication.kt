@@ -1,7 +1,7 @@
 package com.hezapp.ekonomis
 
 import android.app.Application
-import com.hezapp.ekonomis.koin_module.CalendarModule
+import com.hezapp.ekonomis.koin_module.UtilitiesModule
 import com.hezapp.ekonomis.koin_module.DaoModule
 import com.hezapp.ekonomis.koin_module.DatabaseModule
 import com.hezapp.ekonomis.koin_module.RepositoryModule
@@ -22,7 +22,7 @@ class MainApplication : Application() {
     companion object {
         val koinModules = listOf(
             DatabaseModule,
-            CalendarModule,
+            UtilitiesModule,
             DaoModule,
             RepositoryModule,
             UseCaseModule,

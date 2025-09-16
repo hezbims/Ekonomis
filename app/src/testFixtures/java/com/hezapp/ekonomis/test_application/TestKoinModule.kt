@@ -9,6 +9,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis._testing_only.EkonomisTestDatabase
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
@@ -57,6 +59,7 @@ fun loadTestKoinModules(
                 locale = Locale.forLanguageTag("id-ID"),
             )
         }
+        single<IErrorReportingService> { FakeErrorReportingService() }
     }
     koin.loadModules(listOf(module), allowOverride = true)
 }

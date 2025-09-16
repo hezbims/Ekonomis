@@ -19,6 +19,7 @@ import androidx.room.PrimaryKey
     ],
     indices = [
         Index("invoice_id"),
+        //TODO : index untuk is_paid_off
     ]
 )
 data class Installment(

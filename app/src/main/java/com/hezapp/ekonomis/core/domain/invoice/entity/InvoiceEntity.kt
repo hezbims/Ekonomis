@@ -19,7 +19,8 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
         )
     ],
     indices = [
-        Index("profile_id")
+        Index("profile_id"),
+    //TODO : tambahkan index untuk date
     ]
 )
 data class InvoiceEntity(

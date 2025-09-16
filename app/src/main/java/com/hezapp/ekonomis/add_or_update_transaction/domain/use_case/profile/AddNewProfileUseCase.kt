@@ -4,12 +4,14 @@ import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.model.CreateNewProfileError
 import com.hezapp.ekonomis.core.domain.profile.repo.IProfileRepo
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class AddNewProfileUseCase(
-    private val repo: IProfileRepo
+    private val repo: IProfileRepo,
+    private val reportingService: IErrorReportingService,
 ) {
     operator fun invoke(newProfile: ProfileEntity) : Flow<ResponseWrapper<Any?, CreateNewProfileError>> =
     flow<ResponseWrapper<Any?, CreateNewProfileError>> {
@@ -32,7 +34,12 @@ class AddNewProfileUseCase(
 
         repo.addNewProfile(newProfile)
         emit(ResponseWrapper.Succeed(null))
-    }.catch {
+    }.catch { t ->
+        reportingService.logNonFatalError(t, mapOf(
+            "id" to newProfile.id,
+            "name" to newProfile.name,
+            "type" to newProfile.type.name,
+        ))
         emit(ResponseWrapper.Failed())
     }
 }

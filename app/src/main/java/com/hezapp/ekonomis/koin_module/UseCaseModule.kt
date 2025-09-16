@@ -16,22 +16,23 @@ import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransac
 import org.koin.dsl.module
 
 val UseCaseModule = module {
-    factory { AddNewProfileUseCase(repo = get()) }
-    factory { GetListProfileUseCase(repo = get()) }
+    factory { AddNewProfileUseCase(repo = get(), reportingService = get()) }
+    factory { GetListProfileUseCase(repo = get(), reportingService = get()) }
 
-    factory { GetAllProductsUseCase(repo = get()) }
-    factory { InsertNewProductUseCase(repo = get()) }
+    factory { GetAllProductsUseCase(repo = get(), reportingService = get()) }
+    factory { InsertNewProductUseCase(repo = get(), reportingService = get())}
 
-    factory { GetPreviewTransactionHistoryUseCase(repo = get()) }
+    factory { GetPreviewTransactionHistoryUseCase(repo = get(), reportingService = get()) }
 
-    factory { CreateOrUpdateInvoiceUseCase(get()) }
-    factory { DeleteInvoiceUseCase(get()) }
+    factory { CreateOrUpdateInvoiceUseCase(get(), reportingService = get()) }
+    factory { DeleteInvoiceUseCase(get(), reportingService = get()) }
     factory { GetFullInvoiceUseCase(
-        repo = get()
+        repo = get(),
+        reportingService = get(),
     ) }
 
     factory { GetPreviewProductSummariesUseCase(
-        repo = get()
+        repo = get(), reportingService = get(),
     ) }
 
     factory { GetTransactionSummaryOfAMonthUseCase(
@@ -39,7 +40,8 @@ val UseCaseModule = module {
         monthlyStockRepo = get(),
     ) }
     factory { GetLatestPreviousMonthStock(
-        getTransactionSummaryOfAMonth = get()
+        getTransactionSummaryOfAMonth = get(),
+        reportingService = get(),
     ) }
 
     factory { GetProductDetailUseCase(
@@ -47,10 +49,12 @@ val UseCaseModule = module {
         getTransactionSummaryOfAMonth = get(),
         monthlyStockRepo = get(),
         transactionProvider = get(),
+        reportingService = get(),
     ) }
 
     factory { EditMonthlyStockUseCase(
         repo = get(),
         transactionProvider = get(),
+        reportingService = get(),
     ) }
 }

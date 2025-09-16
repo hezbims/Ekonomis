@@ -1,12 +1,12 @@
 package com.hezapp.ekonomis.product_detail.domain.use_case
 
-import android.util.Log
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.repo.IMonthlyStockRepo
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
 import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
@@ -19,7 +19,8 @@ class GetProductDetailUseCase(
     private val productRepo : IProductRepo,
     private val monthlyStockRepo: IMonthlyStockRepo,
     private val transactionProvider : ITransactionProvider,
-    private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase
+    private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase,
+    private val reportingService: IErrorReportingService,
 ) {
     operator fun invoke(
         productId : Int,
@@ -67,8 +68,11 @@ class GetProductDetailUseCase(
         }
 
         emit(ResponseWrapper.Succeed(productDetail))
-    }.catch {
-        Log.e("qqq Get Product Detail Use Case Err", "${it.message}")
+    }.catch { t ->
+        reportingService.logNonFatalError(t, mapOf(
+            "productId" to productId,
+            "monthYearPeriod" to monthYearPeriod,
+        ))
         emit(ResponseWrapper.Failed())
     }
 }

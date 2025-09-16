@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.product_detail.domain.use_case
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
 import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
 import com.hezapp.ekonomis.core.domain.utils.toCalendar
@@ -11,9 +12,10 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class GetLatestPreviousMonthStock(
-    private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase
+    private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase,
+    private val reportingService: IErrorReportingService,
 ) {
-    suspend operator  fun invoke(
+    operator  fun invoke(
         currentMonthPeriod: Long,
         productId: Int,
     ) : Flow<ResponseWrapper<QuantityPerUnitType , MyBasicError>> =
@@ -33,5 +35,11 @@ class GetLatestPreviousMonthStock(
 
         emit(ResponseWrapper.Succeed(data = previousMonthTransactionSummary.latestDayOfMonthStock))
 
-    }.catch { emit(ResponseWrapper.Failed()) }
+    }.catch { t ->
+        reportingService.logNonFatalError(t, mapOf(
+            "currentMonthPeriod" to currentMonthPeriod,
+            "productId" to productId,
+        ))
+        emit(ResponseWrapper.Failed())
+    }
 }

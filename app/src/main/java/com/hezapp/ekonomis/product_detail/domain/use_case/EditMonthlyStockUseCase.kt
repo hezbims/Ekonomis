@@ -4,6 +4,7 @@ import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.repo.IMonthlyStockRepo
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockValidationResult
@@ -14,8 +15,9 @@ import kotlinx.coroutines.flow.flow
 class EditMonthlyStockUseCase(
     private val repo : IMonthlyStockRepo,
     private val transactionProvider : ITransactionProvider,
+    private val reportingService: IErrorReportingService,
 ) {
-    suspend operator fun invoke(
+    operator fun invoke(
         cartonQuantity: Int?,
         pieceQuantity: Int?,
         monthlyStockEntityId: Int,
@@ -54,5 +56,14 @@ class EditMonthlyStockUseCase(
             assert(result == -1)
         }
         emit(ResponseWrapper.Succeed(null))
-    }.catch { emit(ResponseWrapper.Failed()) }
+    }.catch { t ->
+        reportingService.logNonFatalError(t, mapOf(
+            "cartonQuantity" to cartonQuantity,
+            "pieceQuantity" to pieceQuantity,
+            "monthlyStockEntityId" to monthlyStockEntityId,
+            "monthYearPeriod" to monthYearPeriod,
+            "productId" to productId,
+        ))
+        emit(ResponseWrapper.Failed())
+    }
 }

@@ -8,7 +8,7 @@ import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 class FirebaseErrorReportingService : IErrorReportingService {
     override fun logNonFatalError(
         t: Throwable,
-        additionalMessage: Map<String, Any>?,
+        additionalMessage: Map<String, Any?>?,
     ) {
         Firebase.crashlytics.recordException(t){
             additionalMessage?.forEach { k, v ->

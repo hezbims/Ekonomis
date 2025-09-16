@@ -4,14 +4,18 @@ import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.product.model.InsertProductError
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class InsertNewProductUseCase(
-    private val repo: IProductRepo
+    private val repo: IProductRepo,
+    private val reportingService: IErrorReportingService,
 ) {
-    operator fun invoke(newProduct: ProductEntity): Flow<ResponseWrapper<Any?, InsertProductError>> =
+    operator fun invoke(
+        newProduct: ProductEntity,
+    ): Flow<ResponseWrapper<Any?, InsertProductError>> =
     flow<ResponseWrapper<Any?, InsertProductError>> {
         emit(ResponseWrapper.Loading())
 
@@ -31,5 +35,11 @@ class InsertNewProductUseCase(
 
         repo.insertProduct(newProduct)
         emit(ResponseWrapper.Succeed(null))
-    }.catch { emit(ResponseWrapper.Failed()) }
+    }.catch { t ->
+        reportingService.logNonFatalError(t , mapOf(
+            "id" to newProduct.id,
+            "name" to newProduct.name,
+        ))
+        emit(ResponseWrapper.Failed())
+    }
 }

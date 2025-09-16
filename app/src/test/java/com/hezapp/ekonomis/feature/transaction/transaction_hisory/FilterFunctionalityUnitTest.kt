@@ -27,6 +27,7 @@ class FilterFunctionalityUnitTest(
     private val yearMonthFilter: YearMonth?,
     private val isOnlyNotPaidOffFilter: Boolean,
     private val expectedDateDatas: Array<LocalDate>,
+    private val expectedNotExistDateDatas: Array<LocalDate>,
 ) : BaseEkonomisUiUnitTestWithoutRunner() {
 
     companion object {
@@ -36,12 +37,17 @@ class FilterFunctionalityUnitTest(
             arrayOf(null, false, arrayOf(
                 LocalDate.of(2023, 1, 12),
                 LocalDate.of(2023, 1, 11)
-            )),
+            ), arrayOf<LocalDate>()),
             arrayOf(YearMonth.of(2022, 12), true, arrayOf(
                 LocalDate.of(2022, 12, 14),
+            ), arrayOf<LocalDate>(
+                LocalDate.of(2022, 12, 5),
+                LocalDate.of(2022, 12, 2)
             )),
             arrayOf(YearMonth.of(2024, 1), true, arrayOf(
                 LocalDate.of(2024, 1, 14)
+            ), arrayOf<LocalDate>(
+                LocalDate.of(2024, 1, 16)
             ))
         )
     }
@@ -240,6 +246,10 @@ class FilterFunctionalityUnitTest(
         for (expectedDate in expectedDateDatas)
             utils.transactionHistoryRobot.assertTransactionCardExistWith(
                 date = expectedDate
+            )
+        for (expectedNotExistDate in expectedNotExistDateDatas)
+            utils.transactionHistoryRobot.assertTransactionCardNotExistWith(
+                date = expectedNotExistDate
             )
     }
 }

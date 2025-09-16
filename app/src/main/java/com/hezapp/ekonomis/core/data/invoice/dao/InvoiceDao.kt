@@ -21,20 +21,17 @@ interface InvoiceDao {
                 FROM invoice_items
                 WHERE invoice_id = invoices.id
             ) total_price,
-            COALESCE((
-                SELECT is_paid_off
-                FROM installments
-                WHERE 
-                    installments.invoice_id = invoices.id AND
-                    (
-                        :isOnlyNotPaidOff = 0 OR
-                         is_paid_off = 1
-                    )
-            ), 1) is_paid_off
+            COALESCE(is_paid_off, 1) is_paid_off
         FROM invoices
         JOIN profiles
             ON profile_id = profiles.id
-        WHERE date >= :firstDayOfMonth AND date < :lastDayOfMonth
+        LEFT JOIN installments
+            ON installments.invoice_id = invoices.id
+        WHERE date >= :firstDayOfMonth AND date < :lastDayOfMonth AND
+        (
+            :isOnlyNotPaidOff = 0 OR
+            installments.is_paid_off = 0
+        )
         ORDER BY
             date DESC,
             id DESC

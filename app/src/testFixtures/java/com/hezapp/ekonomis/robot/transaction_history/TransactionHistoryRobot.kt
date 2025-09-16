@@ -172,6 +172,13 @@ class TransactionHistoryRobot(
                 .assertExists()
         }
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun assertTransactionCardNotExistWith(date: LocalDate){
+        val dateFormat = DateTimeFormatter.ofPattern("E, dd-MMM-yyyy")
+        composeRule.onNodeWithText(date.format(dateFormat))
+            .assertDoesNotExist()
+    }
 }
 
 internal class TransactionHistoryRobotComponents(

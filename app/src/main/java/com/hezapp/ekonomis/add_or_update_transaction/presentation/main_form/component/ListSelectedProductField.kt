@@ -70,10 +70,10 @@ fun ListSelectedProductField(
                 modifier = Modifier
                     .border(
                         width =
-                            if (error == null) BorderWidths.small
+                            if (error == null) BorderWidths.normal
                             else BorderWidths.bold,
                         color =
-                            if (error == null) Color.Black
+                            if (error == null) MaterialTheme.colorScheme.outline
                             else MaterialTheme.colorScheme.error,
                         shape = RoundedCornerShape(4.dp)
                     )

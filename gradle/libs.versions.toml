@@ -17,6 +17,9 @@ desugaring = "2.0.3"
 robolectric = "4.15.1"
 androidx-test = "1.7.0"
 mockitoKotlin = "6.0.0"
+gmsGoogleServices = "4.4.3"
+firebaseBom = "34.2.0"
+firebaseCrashlyticsPlugin = "3.0.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,6 +50,9 @@ koin-androidx-compose = { group = "io.insert-koin", name = "koin-androidx-compos
 desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugaring" }
 robolectric = { group = "org.robolectric" , name = "robolectric" , version.ref = "robolectric" }
 mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref= "firebaseBom" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -56,4 +62,6 @@ serialization = {id = "org.jetbrains.kotlin.plugin.serialization", version.ref =
 ksp = {id = "com.google.devtools.ksp", version.ref = "ksp"}
 room = { id = "androidx.room", version.ref = "room" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+gms-google-services = { id = "com.google.gms.google-services", version.ref = "gmsGoogleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" }
 

@@ -21,3 +21,6 @@
 #-renamesourcefileattribute SourceFile
 
 -keep @kotlinx.serialization.Serializable class com.hezapp.ekonomis.core.presentation.routing.**
+
+-keepattributes SourceFile,LineNumberTable        # Keep file names and line numbers.
+-keep public class * extends java.lang.Exception  # Optional: Keep custom exceptions.

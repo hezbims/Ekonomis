@@ -1,3 +1,4 @@
+import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -8,6 +9,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
     alias(libs.plugins.room)
+    alias(libs.plugins.gms.google.services)
+    alias(libs.plugins.firebase.crashlytics)
     id("kotlin-parcelize")
 }
 
@@ -56,12 +59,19 @@ android {
             storeFile = file(keystoreProperties.getProperty("storeFile"))
             storePassword = keystoreProperties.getProperty("storePassword")
         }
+        getByName("debug") {
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storeFile = file(keystoreProperties.getProperty("storeDebugFile"))
+            storePassword = keystoreProperties.getProperty("storePassword")
+        }
     }
 
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
             kotlin.compilerOptions.freeCompilerArgs.add("-Xdebug")
+            signingConfig = signingConfigs.getByName("debug")
         }
 
         release {
@@ -73,6 +83,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
+
+            configure<CrashlyticsExtension> {
+                mappingFileUploadEnabled = true
+            }
         }
     }
 
@@ -108,6 +122,10 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

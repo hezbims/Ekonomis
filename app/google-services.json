@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "343218353752",
+    "project_id": "aplikasi-ekonomis",
+    "storage_bucket": "aplikasi-ekonomis.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343218353752:android:0fb09bf14f8677b97b3c2d",
+        "android_client_info": {
+          "package_name": "com.hezapp.ekonomis"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyActo_koYWBuYLqzXFmvSvhnLVokhmxPqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343218353752:android:27d98c765379c5257b3c2d",
+        "android_client_info": {
+          "package_name": "com.hezapp.ekonomis.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyActo_koYWBuYLqzXFmvSvhnLVokhmxPqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

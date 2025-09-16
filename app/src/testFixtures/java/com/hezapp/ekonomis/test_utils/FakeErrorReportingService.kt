@@ -6,7 +6,7 @@ import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 class FakeErrorReportingService : IErrorReportingService {
     override fun logNonFatalError(
         t: Throwable,
-        additionalMessage: Map<String, Object>?
+        additionalMessage: Map<String, Any>?
     ) {
         Log.e("qqq test error", "Non fatal error occured", t)
         additionalMessage?.forEach { k , v ->

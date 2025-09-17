@@ -18,6 +18,7 @@ class PaymentTypeRadioGroupInteractor(
 ) {
     fun assertSelectedPaymentType(expectedPaymentType: PaymentType){
         val label = getLabelByPaymentType(expectedPaymentType)
+        composeRule.waitForIdle()
         composeRule.onNode(hasText(label) and
                 SemanticsMatcher.expectValue(SemanticsProperties.Role, Role.RadioButton))
             .assertIsSelected()
@@ -25,7 +26,7 @@ class PaymentTypeRadioGroupInteractor(
 
     private fun getLabelByPaymentType(paymentType: PaymentType) : String {
         return when(paymentType){
-            PaymentType.CASH -> context.getString(R.string.cash)
+            PaymentType.CASH -> context.getString(R.string.one_time_label)
             PaymentType.INSTALLMENT -> context.getString(R.string.installment)
         }
     }

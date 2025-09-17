@@ -15,6 +15,7 @@ fun TransactionEntity.toRoomInvoiceEntity() : InvoiceEntity {
         ppn = ppn,
         profileId = profileId,
         transactionType = transactionType,
+        paymentMedia = paymentMedia,
     )
 }
 

@@ -15,6 +15,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentT
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.toUiModel
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
@@ -118,6 +119,16 @@ class AddOrUpdateTransactionViewModel(
                 dismissPaymentTypeEditedConfirmationDialog()
             AddOrUpdateTransactionEvent.UnsafePaymentTypeEditConfirmed ->
                 submitData(withoutValidation = true)
+            is AddOrUpdateTransactionEvent.OnSelectPaymentMedia ->
+                changePaymentMedia(event.newData)
+        }
+    }
+
+    private fun changePaymentMedia(newData: PaymentMedia){
+        if (newData == _state.value.curFormData.paymentMedia)
+            return
+        _state.update {
+            it.copy(curFormData = it.curFormData.copy(paymentMedia = newData))
         }
     }
 
@@ -441,6 +452,8 @@ sealed class AddOrUpdateTransactionEvent {
     class OnInstallmentItemEdited(val index: Int, val newData: InstallmentItemUiDto) : AddOrUpdateTransactionEvent()
     class OnInstallmentItemDeleted(val index: Int) : AddOrUpdateTransactionEvent()
     class OnInstallmentItemAdded(val newData: InstallmentItemUiDto) : AddOrUpdateTransactionEvent()
+    class OnSelectPaymentMedia(val newData: PaymentMedia) : AddOrUpdateTransactionEvent()
+
     data object ShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
     data object DoneShowQuitConfirmationDialog : AddOrUpdateTransactionEvent()
     data object ShowDeleteConfirmationDialog : AddOrUpdateTransactionEvent()
@@ -491,7 +504,8 @@ data class AddOrUpdateTransactionUiState(
                             )
                         }
                     )
-            }
+            },
+            paymentMedia = curFormData.paymentMedia,
         )
 
     /**
@@ -524,6 +538,7 @@ data class TransactionUiFormDataModel(
     val ppn : Int?,
     val invoiceItems : List<InvoiceItemUiModel>,
     val paymentType: PaymentType,
+    val paymentMedia: PaymentMedia,
     val installmentItems: List<InstallmentItemUiDto>,
     val isInstallmentPaidOff: Boolean,
 ){
@@ -542,6 +557,7 @@ data class TransactionUiFormDataModel(
                 paymentType = PaymentType.CASH,
                 isInstallmentPaidOff = false,
                 installmentItems = emptyList(),
+                paymentMedia = PaymentMedia.TRANSFER,
             )
 
         fun fromFullInvoiceDetails(invoiceDetails : FullInvoiceDetails) : TransactionUiFormDataModel {
@@ -566,6 +582,7 @@ data class TransactionUiFormDataModel(
                         )
                     }
                 } ?: emptyList(),
+                paymentMedia = invoiceDetails.invoice.invoice.paymentMedia,
             )
 
             return formModel

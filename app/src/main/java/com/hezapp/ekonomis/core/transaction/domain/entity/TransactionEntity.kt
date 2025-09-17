@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.core.transaction.domain.entity
 
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import java.time.LocalDate
@@ -12,6 +13,7 @@ data class TransactionEntity(
     val ppn: Int?,
     val items: List<TransactionItemEntity>,
     val installment: InstallmentEntity?,
+    val paymentMedia: PaymentMedia,
 )
 
 data class TransactionItemEntity(

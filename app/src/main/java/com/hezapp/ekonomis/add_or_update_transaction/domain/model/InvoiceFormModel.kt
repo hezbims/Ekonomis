@@ -1,6 +1,7 @@
 package com.hezapp.ekonomis.add_or_update_transaction.domain.model
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
@@ -17,6 +18,7 @@ data class InvoiceFormModel(
     val newInvoiceItems: List<InvoiceItemEntity>,
     val prevInvoiceItems: List<InvoiceItemEntity>,
     val installment: InstallmentEntity?,
+    val paymentMedia: PaymentMedia,
 ){
     fun toEntity() : InvoiceEntity =
         InvoiceEntity(
@@ -43,5 +45,6 @@ data class InvoiceFormModel(
                 )
             },
             installment = installment,
+            paymentMedia = paymentMedia,
         )
 }

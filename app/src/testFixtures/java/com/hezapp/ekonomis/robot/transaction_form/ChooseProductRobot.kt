@@ -1,11 +1,13 @@
 package com.hezapp.ekonomis.robot.transaction_form
 
 import android.content.Context
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isEditable
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTextInput
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
@@ -54,7 +56,7 @@ class ChooseProductRobot(
 
     private fun confirmChoosenProductSpecification(){
         composeRule.onNodeWithText(context.getString(R.string.choose_label))
-            .performClick()
+            .performSemanticsAction(SemanticsActions.OnClick)
     }
 
     fun chooseProductForTransaction(

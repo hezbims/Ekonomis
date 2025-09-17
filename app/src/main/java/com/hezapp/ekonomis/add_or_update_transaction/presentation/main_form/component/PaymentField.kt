@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.ResizableSwitch
@@ -49,8 +50,10 @@ import java.time.LocalDate
 @Composable
 fun PaymentField(
     selectedPaymentType: PaymentType,
+    selectedPaymentMedia: PaymentMedia,
     installmentItems: List<InstallmentItemUiDto>,
     onSelectPaymentType: (PaymentType) -> Unit,
+    onSelectPaymentMedia: (PaymentMedia) -> Unit,
     installmentPaidOff: Boolean,
     onChangeInstallmentPaidOff: (Boolean) -> Unit,
     onInstallmentItemAdded: (InstallmentItemUiDto) -> Unit,
@@ -78,31 +81,61 @@ fun PaymentField(
                     listOf(PaymentType.CASH, PaymentType.INSTALLMENT)
                 }
                 Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .weight(1f)
                         .padding(top = 8.dp)
                         .selectableGroup()
                 ) {
-                    paymentOptions.forEach {
+                    paymentOptions.forEachIndexed { index, paymentType ->
+                        if (index != 0)
+                            Spacer(Modifier.height(16.dp))
+
                         Row(
                             Modifier.selectable(
-                                selected = selectedPaymentType == it,
+                                selected = selectedPaymentType == paymentType,
                                 onClick = {
-                                    onSelectPaymentType(it)
+                                    onSelectPaymentType(paymentType)
                                 },
                                 role = Role.RadioButton,
                             )
                         ) {
                             RadioButton(
-                                selected = selectedPaymentType == it,
+                                selected = selectedPaymentType == paymentType,
                                 onClick = null,
                             )
 
                             Spacer(Modifier.width(4.dp))
 
-                            Text(stringResource(it))
+                            Text(stringResource(paymentType))
                         }
+
+                        if (paymentType == PaymentType.CASH && selectedPaymentType == PaymentType.CASH)
+                            Column(
+                                verticalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier
+                                    .padding(start = 36.dp, top = 4.dp)
+                            ) {
+                                PaymentMedia.entries.forEach { paymentMedia ->
+                                    Row(
+                                        Modifier.selectable(
+                                            selected = selectedPaymentMedia == paymentMedia,
+                                            onClick = {
+                                                onSelectPaymentMedia(paymentMedia)
+                                            },
+                                            role = Role.RadioButton,
+                                        )
+                                    ) {
+                                        RadioButton(
+                                            selected = selectedPaymentMedia == paymentMedia,
+                                            onClick = null,
+                                        )
+
+                                        Spacer(Modifier.width(4.dp))
+
+                                        Text(stringResource(paymentMedia))
+                                    }
+                                }
+                            }
                     }
                 }
 
@@ -221,6 +254,8 @@ private fun PreviewPaymentField_Installment_With_Item(){
                 onInstallmentItemDeleted = {},
                 onInstallmentItemEdited = { index, it -> },
                 onInstallmentItemAdded = {},
+                onSelectPaymentMedia = {},
+                selectedPaymentMedia = PaymentMedia.CASH,
                 modifier = Modifier.padding(24.dp),
             )
         }
@@ -242,6 +277,8 @@ private fun PreviewPaymentField_Installment_No_Item(){
                 onInstallmentItemDeleted = {},
                 onInstallmentItemEdited = { index, it -> },
                 onInstallmentItemAdded = {},
+                onSelectPaymentMedia = {},
+                selectedPaymentMedia = PaymentMedia.CASH,
                 modifier = Modifier.padding(24.dp)
             )
         }
@@ -268,6 +305,8 @@ private fun PreviewPaymentField_Cash(){
                 onInstallmentItemDeleted = {},
                 onInstallmentItemEdited = { index, it -> },
                 onInstallmentItemAdded = {},
+                selectedPaymentMedia = PaymentMedia.CASH,
+                onSelectPaymentMedia = {},
                 modifier = Modifier.padding(24.dp)
             )
         }

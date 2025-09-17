@@ -18,6 +18,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
@@ -32,6 +33,7 @@ import com.hezapp.ekonomis.robot.transaction_form._interactor.ChoosenProductCard
 import com.hezapp.ekonomis.robot.transaction_form._interactor.DateFieldInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentListItemInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentItemFormInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.PaymentMediaGroupInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.PaymentTypeRadioGroupInteractor
 import com.hezapp.ekonomis.robot.transaction_form._interactor.TransactionTypeDropdownInteractor
 import com.hezapp.ekonomis.test_utils.TestTimeService
@@ -86,6 +88,7 @@ class TransactionFormRobot(
     )
     private val addNewInstallmentItemButton = ComponentInteractor(composeRule, hasText(context.getString(R.string.add_new_installment_title)))
     private val paymentTypeRadioGroup = PaymentTypeRadioGroupInteractor(composeRule, context)
+    private val paymentMediaGroup = PaymentMediaGroupInteractor(composeRule, context)
     @OptIn(ExperimentalTestApi::class)
     private val confirmDeleteTransactionDialog = object {
         fun confirmDeletion(){
@@ -117,7 +120,7 @@ class TransactionFormRobot(
     }
 
     fun navigateToChooseProduct() {
-        chooseProductButton.click(useSemanticsAction = false)
+        chooseProductButton.click()
     }
 
     fun fillPpn(ppn : Int) {
@@ -283,6 +286,10 @@ class TransactionFormRobot(
     fun assertEmptyProductListErrorExist(){
         composeRule.onNodeWithText(context.getString(R.string.product_list_cant_be_empty))
             .assertExists()
+    }
+
+    fun changeSelectedPaymentMedia(paymentMedia: PaymentMedia) {
+        paymentMediaGroup.selectPaymentMedia(paymentMedia)
     }
 
     val chooseProfileRobot = ChooseProfileRobot(composeRule, context)

@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.steps
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
@@ -94,10 +95,12 @@ class FillTransactionFormSteps(
                     transactionFormRobot.editInstallmentItem(action.index, action.date, action.amount)
                 is ModifyPaymentSectionAction.DeleteInstallmentItem ->
                     transactionFormRobot.deleteInstallmentItemAt(action.index)
-                ModifyPaymentSectionAction.SelectCashPaymentType ->
+                ModifyPaymentSectionAction.SelectOneTimePaymentType ->
                     transactionFormRobot.changeSelectedPaymentType(PaymentType.CASH)
                 ModifyPaymentSectionAction.SelectInstallmentPaymentType ->
                     transactionFormRobot.changeSelectedPaymentType(PaymentType.INSTALLMENT)
+                is ModifyPaymentSectionAction.SelectPaymentMedia ->
+                    transactionFormRobot.changeSelectedPaymentMedia(action.paymentMedia)
             }
 
         transactionFormRobot.submitTransactionForm()
@@ -143,5 +146,6 @@ sealed interface ModifyPaymentSectionAction {
     data class DeleteInstallmentItem(val index: Int) : ModifyPaymentSectionAction
 
     data object SelectInstallmentPaymentType : ModifyPaymentSectionAction
-    data object SelectCashPaymentType : ModifyPaymentSectionAction
+    data object SelectOneTimePaymentType : ModifyPaymentSectionAction
+    data class SelectPaymentMedia(val paymentMedia: PaymentMedia) : ModifyPaymentSectionAction
 }

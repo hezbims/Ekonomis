@@ -68,13 +68,13 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceI
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.PercentageVisualTransformation
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
-import com.hezapp.ekonomis.core.domain.utils.calendarProvider
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
@@ -301,9 +301,13 @@ private fun AddOrUpdateTransactionScreen(
 
                 PaymentField(
                     selectedPaymentType = state.curFormData.paymentType,
+                    selectedPaymentMedia = PaymentMedia.TRANSFER,
                     installmentItems = state.curFormData.installmentItems,
                     onSelectPaymentType = {
                         onEvent(AddOrUpdateTransactionEvent.OnSelectPaymentType(it))
+                    },
+                    onSelectPaymentMedia = {
+                        onEvent(AddOrUpdateTransactionEvent.OnSelectPaymentMedia(it))
                     },
                     installmentPaidOff = state.curFormData.isInstallmentPaidOff,
                     onChangeInstallmentPaidOff = {
@@ -507,9 +511,9 @@ private fun ChooseDateField(
     )
 
     if (showDatePicker){
-        val currentYear = calendarProvider.getCalendar().get(Calendar.YEAR)
+        val currentYear = timeService.getCalendar().get(Calendar.YEAR)
         val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = value ?: calendarProvider.getCalendar().timeInMillis,
+            initialSelectedDateMillis = value ?: timeService.getCalendar().timeInMillis,
             yearRange = (currentYear - 5)..(currentYear + 5)
         )
         DatePickerDialog (
@@ -641,6 +645,7 @@ private fun PreviewAddOrUpdateTransactionScreen(){
         paymentType = PaymentType.CASH,
         installmentItems = listOf(),
         isInstallmentPaidOff = false,
+        paymentMedia = PaymentMedia.CASH,
     )
     PreviewKoin  {
         MyScaffold(

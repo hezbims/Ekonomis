@@ -10,6 +10,7 @@ import com.hezapp.ekonomis._testing_only.test_dao.InstallmentTestDao
 import com.hezapp.ekonomis._testing_only.test_dao.ProductTestDao
 import com.hezapp.ekonomis._testing_only.test_dao.ProfileTestDao
 import com.hezapp.ekonomis._testing_only.test_dao.TransactionTestDao
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.contains
 import com.hezapp.ekonomis.test_utils.tryUntilSucceed
 import kotlinx.coroutines.runBlocking
@@ -47,7 +48,8 @@ class TransactionDbAssertion(
                 it.date != expectedDateInMillis ||
                 currentTransactionProfileName != expected.profileName ||
                 it.transactionType != expected.transactionType ||
-                it.ppn != expected.ppn
+                it.ppn != expected.ppn ||
+                it.paymentMedia != expected.paymentMedia
             )
                 return@count false
 
@@ -134,6 +136,7 @@ data class TransactionDetailsAssertionDto(
     val ppn: Int?,
     val productItems: List<TransactionDetailsItemAssertionDto>,
     val paymentType: PaymentTypeAssertionDto,
+    val paymentMedia: PaymentMedia = PaymentMedia.TRANSFER,
 )
 
 data class TransactionDetailsItemAssertionDto(

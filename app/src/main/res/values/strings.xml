@@ -92,7 +92,7 @@
     <string name="payment_amount">Jumlah Pembayaran</string>
     <string name="add_new_installment_title">Tambah Cicilan</string>
     <string name="payment_type">Tipe Pembayaran</string>
-    <string name="cash">Cash</string>
+    <string name="cash_label">Tunai</string>
     <string name="installment">Cicilan</string>
     <string name="no_installment_recorded">Belum ada cicilan yang tercatat</string>
     <string name="cancel_edit">Batalkan edit</string>
@@ -114,4 +114,6 @@
     <string name="paid_off_label">Sudah lunas</string>
     <string name="filter_transaction_title">Filter Transaksi</string>
     <string name="only_not_paid_off_label">Hanya yang belum lunas</string>
+    <string name="one_time_label">Langsung</string>
+    <string name="transfer_label">Transfer</string>
 </resources>

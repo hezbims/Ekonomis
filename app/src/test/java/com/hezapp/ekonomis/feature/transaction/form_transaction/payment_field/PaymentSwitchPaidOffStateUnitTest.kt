@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.feature.transaction.form_transaction.payment_field
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionScreen
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
+import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
 import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
@@ -96,7 +97,7 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         }))
     }
 
-    private fun setContent(invoiceId: Int){
+    private fun setContent(invoiceId: Int?){
         val viewModel = koin.get<AddOrUpdateTransactionViewModel> { parametersOf(invoiceId) }
         composeRule.setContent {
             AddOrUpdateTransactionScreen(
@@ -110,6 +111,10 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
     }
     private fun setContentWithEditingTransaction(){
         setContent(invoiceId = 1)
+    }
+
+    private fun setContentWithAddNewTransaction(){
+        setContent(invoiceId = null)
     }
 
     private fun setEditingTestDataToPaidOff(){
@@ -206,7 +211,12 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
 
     @Test
     fun `Initial paid off state should be 'Not Paid Off', when user try to add new transaction`(){
-        throw NotImplementedError()
+        setContentWithAddNewTransaction()
+
+        utils.transactionFormRobot.chooseTransactionType(TransactionType.PEMBELIAN)
+        utils.transactionFormRobot.changeSelectedPaymentType(PaymentType.INSTALLMENT)
+
+        utils.transactionFormRobot.assertIsPaidOff(false)
     }
 
 }

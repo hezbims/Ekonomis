@@ -21,6 +21,8 @@ import org.robolectric.shadows.ShadowLog
 abstract class BaseEkonomisUiUnitTestWithoutRunner {
     //region JUnit Rule
     private var _koinApp: KoinApplication? = null
+    protected val koinApp: KoinApplication
+        get() = _koinApp!!
     protected val koin: Koin
         get() = _koinApp!!.koin
     protected val appContext : Context = ApplicationProvider.getApplicationContext()

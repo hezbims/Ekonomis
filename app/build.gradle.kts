@@ -1,4 +1,5 @@
 import com.google.firebase.crashlytics.buildtools.gradle.CrashlyticsExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -70,7 +71,6 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".debug"
-            kotlin.compilerOptions.freeCompilerArgs.add("-Xdebug")
             signingConfig = signingConfigs.getByName("debug")
         }
 
@@ -158,4 +158,12 @@ dependencies {
     testFixturesImplementation(libs.androidx.room.runtime)
     testFixturesImplementation(libs.koin.core)
     testFixturesImplementation(libs.koin.android)
+}
+
+tasks.withType(KotlinCompile::class).configureEach {
+    if (name.contains("Test", ignoreCase = true)) {
+        compilerOptions {
+            kotlin.compilerOptions.freeCompilerArgs.add("-Xdebug")
+        }
+    }
 }

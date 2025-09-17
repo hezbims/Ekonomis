@@ -15,46 +15,57 @@ fun tryUntilSucceed(
     timeout : Long = TestConstant.SMALL_TIMEOUT,
     errorMessage: suspend () -> String? = { null },
     body: suspend () -> Unit,
-) : Unit =  runBlocking {
+) {
     var latestException: Throwable? = null
-    val isSucceed : Boolean = withContext(Dispatchers.IO) {
-        val isRobolectric: Boolean = Build.FINGERPRINT.contains("robolectric", true)
-        var currentTime = if (isRobolectric) 0 else Calendar.getInstance().timeInMillis
-        val endTime = currentTime + timeout
-        var isSucceed = false
+    val isSucceed : Boolean
+    val errorMessage : String?
 
-        while (true) {
-            try {
-                body()
-                isSucceed = true
-            } catch (t: Throwable) {
-                latestException = t
+    isSucceed = runBlocking {
+        errorMessage = withContext(Dispatchers.IO) { errorMessage() }
 
-                currentTime =
-                    if (isRobolectric)
-                        currentTime + 50
-                    else
-                        Calendar.getInstance().timeInMillis
+         withContext(Dispatchers.IO) {
+            val isRobolectric: Boolean = Build.FINGERPRINT.contains("robolectric", true)
+            var currentTime = if (isRobolectric) 0 else Calendar.getInstance().timeInMillis
+            val endTime = currentTime + timeout
+            var isSucceed: Boolean
 
-                if (currentTime < endTime) {
-                    if (!isRobolectric)
-                        delay(50L)
-                    continue
+             while (true) {
+                try {
+                    body()
+                    isSucceed = true
+                    break
+                } catch (t: Throwable) {
+                    latestException = t
+
+                    currentTime =
+                        if (isRobolectric)
+                            currentTime + 50
+                        else
+                            Calendar.getInstance().timeInMillis
+
+                    if (currentTime < endTime) {
+                        if (!isRobolectric)
+                            delay(50L)
+                        continue
+                    }
+                    else {
+                        isSucceed = false
+                        break
+                    }
                 }
-                else break
             }
-        }
 
-        isSucceed
+            isSucceed
+        }
     }
 
     if (isSucceed)
-        return@runBlocking
-
-    val errorMessage = withContext(Dispatchers.IO) { errorMessage() }
+        return
 
     if (errorMessage != null)
-        throw RuntimeException(errorMessage())
+        throw RuntimeException(errorMessage)
 
-    throw latestException ?: RuntimeException("Terjadi kesalahan tidak diketahui")
+    throw latestException?.apply {
+        stackTrace += Thread.currentThread().stackTrace
+    } ?: RuntimeException("Terjadi kesalahan tidak diketahui")
 }

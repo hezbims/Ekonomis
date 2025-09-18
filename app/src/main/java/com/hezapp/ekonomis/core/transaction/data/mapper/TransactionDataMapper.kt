@@ -44,5 +44,6 @@ fun InstallmentItemEntity.toRoomInstallmentItemEntity(installmentId: Int) : Inst
         installmentId = installmentId,
         paymentDate = paymentDate,
         amount = amount,
+        paymentMedia = paymentMedia,
     )
 }

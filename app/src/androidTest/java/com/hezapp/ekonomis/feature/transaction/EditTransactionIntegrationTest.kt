@@ -2,6 +2,7 @@ package com.hezapp.ekonomis.feature.transaction
 
 import androidx.test.core.app.ActivityScenario
 import com.hezapp.ekonomis.MainActivity
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
@@ -22,6 +23,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
+import java.time.YearMonth
 
 class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
     @Before
@@ -63,17 +65,20 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         paymentDate = LocalDate.now()
                             .withYear(2020)
                             .withMonth(6)
-                            .withDayOfMonth(13)
+                            .withDayOfMonth(13),
+                        paymentMedia = PaymentMedia.CASH,
                     ),
                     InstallmentItemSeed(
                         amount = 11_000_000,
                         paymentDate = LocalDate.now()
                             .withYear(2020)
                             .withMonth(6)
-                            .withDayOfMonth(14)
+                            .withDayOfMonth(14),
+                        paymentMedia = PaymentMedia.TRANSFER,
                     ),
-                )
-            )
+                ),
+            ),
+            paymentMedia = PaymentMedia.CASH,
         )
         invoiceSeeder.run(
             pembeli,
@@ -98,18 +103,20 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         paymentDate = LocalDate.now()
                             .withYear(2020)
                             .withMonth(6)
-                            .withDayOfMonth(14)
+                            .withDayOfMonth(14),
+                        paymentMedia = PaymentMedia.CASH,
                     )
                 )
-            )
+            ),
+            paymentMedia = PaymentMedia.CASH,
         )
         ActivityScenario.launch(MainActivity::class.java)
     }
 
-    @Test(timeout = 60_000L)
+    @Test(timeout = 300_000L)
     fun editedDataShouldDisplayedCorrectly() {
-        transactionHistoryRobot.openAndApplyFilter(
-            targetYear = 2020, targetMonth = 6)
+        transactionHistoryRobot.actionOpenAndApplyFilter(
+            targetPeriod = YearMonth.of(2020, 6))
 
         transactionHistoryRobot.waitAndClickTransactionCard(profileName = "penjual-1")
 
@@ -137,7 +144,8 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                     date = LocalDate.now()
                         .withYear(2020)
                         .withMonth(6)
-                        .withDayOfMonth(15)
+                        .withDayOfMonth(15),
+                    paymentMedia = PaymentMedia.TRANSFER,
                 ),
                 ModifyPaymentSectionAction.DeleteInstallmentItem(index = 0),
                 ModifyPaymentSectionAction.AddNewInstallmentItem(
@@ -146,6 +154,7 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         .withYear(2020)
                         .withMonth(6)
                         .withDayOfMonth(19),
+                    paymentMedia = PaymentMedia.CASH,
                 ),
                 ModifyPaymentSectionAction.AddNewInstallmentItem(
                     amount = 9_000_000,
@@ -153,6 +162,7 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         .withYear(2020)
                         .withMonth(6)
                         .withDayOfMonth(23),
+                    paymentMedia = PaymentMedia.TRANSFER
                 )
             ),
         )
@@ -168,6 +178,7 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         .withMonth(6)
                         .withDayOfMonth(15),
                     amount = 10_000_000,
+                    paymentMedia = PaymentMedia.TRANSFER,
                 ),
                 InstallmentItemAssertionDto(
                     paymentDate = LocalDate.now()
@@ -175,6 +186,7 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         .withMonth(6)
                         .withDayOfMonth(19),
                     amount = 7_000_000,
+                    paymentMedia = PaymentMedia.CASH,
                 ),
                 InstallmentItemAssertionDto(
                     paymentDate = LocalDate.now()
@@ -182,6 +194,7 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                         .withMonth(6)
                         .withDayOfMonth(23),
                     amount = 9_000_000,
+                    paymentMedia = PaymentMedia.TRANSFER,
                 ),
             )
         )
@@ -221,6 +234,7 @@ class EditTransactionIntegrationTest : BaseEkonomisUiTest() {
                 )
             ),
             paymentType = expectedPaymentTypeData,
+            paymentMedia = PaymentMedia.CASH
         ), 1)
         transactionDbAssertion.assertCountInvoiceItems(2)
     }

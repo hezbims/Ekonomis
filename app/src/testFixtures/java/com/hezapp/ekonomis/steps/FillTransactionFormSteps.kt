@@ -90,9 +90,9 @@ class FillTransactionFormSteps(
         for (action in modifyPaymentSectionActions)
             when(action){
                 is ModifyPaymentSectionAction.AddNewInstallmentItem ->
-                    transactionFormRobot.addNewInstallmentItem(action.date, action.amount)
+                    transactionFormRobot.addNewInstallmentItem(action.date, action.amount, action.paymentMedia)
                 is ModifyPaymentSectionAction.EditInstallmentItem ->
-                    transactionFormRobot.editInstallmentItem(action.index, action.date, action.amount)
+                    transactionFormRobot.editInstallmentItem(action.index, action.date, action.amount, action.paymentMedia)
                 is ModifyPaymentSectionAction.DeleteInstallmentItem ->
                     transactionFormRobot.deleteInstallmentItemAt(action.index)
                 ModifyPaymentSectionAction.SelectOneTimePaymentType ->
@@ -135,12 +135,14 @@ sealed interface ModifyPaymentSectionAction {
     data class AddNewInstallmentItem(
         val amount: Int,
         val date: LocalDate,
+        val paymentMedia: PaymentMedia,
     ) : ModifyPaymentSectionAction
 
     data class EditInstallmentItem(
         val index: Int,
         val amount: Int,
         val date: LocalDate,
+        val paymentMedia: PaymentMedia,
     ) : ModifyPaymentSectionAction
 
     data class DeleteInstallmentItem(val index: Int) : ModifyPaymentSectionAction

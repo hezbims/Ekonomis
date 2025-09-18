@@ -31,4 +31,5 @@ data class InstallmentEntity(
 data class InstallmentItemEntity(
     val paymentDate: LocalDate,
     val amount: Int,
+    val paymentMedia: PaymentMedia,
 )

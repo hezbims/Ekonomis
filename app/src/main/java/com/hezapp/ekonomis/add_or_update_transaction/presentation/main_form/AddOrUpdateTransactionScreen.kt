@@ -301,7 +301,7 @@ private fun AddOrUpdateTransactionScreen(
 
                 PaymentField(
                     selectedPaymentType = state.curFormData.paymentType,
-                    selectedPaymentMedia = PaymentMedia.TRANSFER,
+                    selectedPaymentMedia = state.curFormData.paymentMedia,
                     installmentItems = state.curFormData.installmentItems,
                     onSelectPaymentType = {
                         onEvent(AddOrUpdateTransactionEvent.OnSelectPaymentType(it))

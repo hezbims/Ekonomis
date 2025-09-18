@@ -216,15 +216,15 @@ class TransactionFormRobot(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addNewInstallmentItem(date: LocalDate, amount: Int){
+    fun addNewInstallmentItem(date: LocalDate, amount: Int, paymentMedia: PaymentMedia){
         addNewInstallmentItemButton.click()
-        installmentItemBottomSheet.specifyAndSubmitInput(date, amount)
+        installmentItemBottomSheet.specifyAndSubmitInput(date, amount, paymentMedia)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun editInstallmentItem(index: Int, date: LocalDate, amount: Int){
+    fun editInstallmentItem(index: Int, date: LocalDate, amount: Int, paymentMedia: PaymentMedia){
         installmentItemAtIndex(index).clickEditIcon()
-        installmentItemBottomSheet.specifyAndSubmitInput(date, amount)
+        installmentItemBottomSheet.specifyAndSubmitInput(date, amount, paymentMedia)
     }
 
     fun deleteInstallmentItemAt(index: Int){

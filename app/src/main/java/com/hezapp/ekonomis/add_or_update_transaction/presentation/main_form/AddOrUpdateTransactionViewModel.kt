@@ -501,6 +501,7 @@ data class AddOrUpdateTransactionUiState(
                             InstallmentItemEntity(
                                 paymentDate = it.date,
                                 amount = it.amount,
+                                paymentMedia = it.paymentMedia,
                             )
                         }
                     )
@@ -578,7 +579,8 @@ data class TransactionUiFormDataModel(
                     installment.installmentItems.map { item ->
                         InstallmentItemUiDto(
                             amount = item.amount,
-                            date = item.paymentDate
+                            date = item.paymentDate,
+                            paymentMedia = item.paymentMedia,
                         )
                     }
                 } ?: emptyList(),

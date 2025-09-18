@@ -7,6 +7,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddO
 import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
 import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 import com.hezapp.ekonomis.core.domain.invoice.relationship.InstallmentWithItems
@@ -113,7 +114,8 @@ class TotalPaymentDisplayTextUnitTest : BaseEkonomisUiUnitTest() {
         repeat(3) {
             utils.transactionFormRobot.addNewInstallmentItem(
                 date = LocalDate.of(2021, 3, 23),
-                amount = 1_000_000_000
+                amount = 1_000_000_000,
+                paymentMedia = PaymentMedia.CASH,
             )
         }
 

@@ -11,8 +11,11 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
+import com.hezapp.ekonomis.robot._interactor.DropdownInteractor
 import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
+import com.hezapp.ekonomis.test_utils.getString
 import java.time.LocalDate
 
 class InstallmentItemFormInteractor(
@@ -41,6 +44,11 @@ class InstallmentItemFormInteractor(
     private val amountField = TextFieldInteractor(
         composeRule = composeRule,
         matcher = hasText(context.getString(R.string.payment_amount)) and hasAnyAncestor(bottomSheetMatcher)
+    )
+    private val paymentMediaField = DropdownInteractor(
+        composeRule = composeRule,
+        matcher = hasText(context.getString(R.string.payment_media_title))
+            and hasAnyAncestor(bottomSheetMatcher)
     )
     private val submitButton = ComponentInteractor(
         composeRule = composeRule,
@@ -80,10 +88,23 @@ class InstallmentItemFormInteractor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun specifyAndSubmitInput(date: LocalDate, amount: Int) {
+    fun specifyAndSubmitInput(date: LocalDate, amount: Int, paymentMedia: PaymentMedia) {
         waitUntilAppear()
         selectDate(date)
         inputTextInAmountField(amount.toString(), replaceText = true)
+        selectPaymentMedia(paymentMedia)
         submit()
     }
+
+    fun assertPaymentMedia(paymentMedia: PaymentMedia) {
+        waitUntilAppear()
+        paymentMediaField.assertHasText(context.getString(paymentMedia))
+    }
+
+    fun selectPaymentMedia(paymentMedia: PaymentMedia) {
+        waitUntilAppear()
+        paymentMediaField.openAndSelectValue(context.getString(paymentMedia))
+    }
+
+
 }

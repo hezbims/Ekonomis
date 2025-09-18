@@ -3,6 +3,8 @@ package com.hezapp.ekonomis.feature.transaction.form_transaction.payment_field
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.component.InstallmentItemBottomSheetForm
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentItemFormInteractor
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.TestTimeService
@@ -16,20 +18,22 @@ class InstallmentItemBottomSheetFormFunctionalityUnitTest : BaseEkonomisUiUnitTe
     private val formInteractor = InstallmentItemFormInteractor(composeRule, appContext)
 
     @Test
-    fun `the date field should filled with current date and the amount field is empty, when the form is opened without initial data`(){
-        val currentDate = TestTimeService.Companion.get().getLocalDate()
+    fun `the date field should filled with current date, the amount field is empty, and the payment media is transfer, when the form is opened without initial data`(){
+        val timeService : ITimeService = koin.get()
+        val currentDate = timeService.getLocalDate()
 
         composeRule.setContent {
             InstallmentItemBottomSheetForm(
                 visible = true,
                 onDismissRequest = { },
                 onSaveData = { },
-                timeService = TestTimeService.Companion.get(),
+                timeService = timeService,
             )
         }
 
         formInteractor.assertDateFieldContent(currentDate)
         formInteractor.assertAmountFieldContent("")
+        formInteractor.assertPaymentMedia(PaymentMedia.TRANSFER)
     }
 
     @Test
@@ -48,6 +52,7 @@ class InstallmentItemBottomSheetFormFunctionalityUnitTest : BaseEkonomisUiUnitTe
                 initialData = InstallmentItemUiDto(
                     date = initialDate,
                     amount = initialAmount,
+                    paymentMedia = PaymentMedia.CASH,
                 ),
                 timeService = TestTimeService.Companion.get(),
             )
@@ -142,6 +147,7 @@ class InstallmentItemBottomSheetFormFunctionalityUnitTest : BaseEkonomisUiUnitTe
             .withYear(2023)
             .withMonth(12)
             .withDayOfMonth(12))
+        formInteractor.selectPaymentMedia(PaymentMedia.CASH)
         formInteractor.submit()
 
         // Assert
@@ -158,6 +164,7 @@ class InstallmentItemBottomSheetFormFunctionalityUnitTest : BaseEkonomisUiUnitTe
             )
             MatcherAssert.assertThat(savedData?.amount, CoreMatchers.equalTo(expectedAmount))
             MatcherAssert.assertThat(dismissCalled, CoreMatchers.equalTo(true))
+            MatcherAssert.assertThat(savedData?.paymentMedia, CoreMatchers.equalTo(PaymentMedia.CASH))
         }
     }
 

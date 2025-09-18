@@ -116,4 +116,8 @@
     <string name="only_not_paid_off_label">Hanya yang belum lunas</string>
     <string name="one_time_label">Langsung</string>
     <string name="transfer_label">Transfer</string>
+    <string name="payment_media_title">Media Pembayaran</string>
+    <string name="type_label">Tipe</string>
+    <string name="media_label">Media</string>
+    <string name="payment_label">Pembayaran</string>
 </resources>

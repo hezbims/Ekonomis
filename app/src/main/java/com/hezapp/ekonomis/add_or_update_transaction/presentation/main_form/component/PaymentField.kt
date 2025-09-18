@@ -74,157 +74,163 @@ fun PaymentField(
                 )
                 .padding(16.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.Bottom,
+            Text(
+                stringResource(R.string.type_label),
+                style = MaterialTheme.typography.labelMedium,
+            )
+            Row (
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+                    .selectableGroup()
             ) {
-                val paymentOptions = remember {
-                    listOf(PaymentType.CASH, PaymentType.INSTALLMENT)
+                listOf(PaymentType.CASH, PaymentType.INSTALLMENT).forEachIndexed { index, paymentType ->
+                    Row(
+                        Modifier.selectable(
+                            selected = selectedPaymentType == paymentType,
+                            onClick = {
+                                onSelectPaymentType(paymentType)
+                            },
+                            role = Role.RadioButton,
+                        ).weight(1f)
+                    ) {
+                        RadioButton(
+                            selected = selectedPaymentType == paymentType,
+                            onClick = null,
+                        )
+
+                        Spacer(Modifier.width(4.dp))
+
+                        Text(stringResource(paymentType))
+                    }
                 }
-                Column(
+            }
+
+            if (selectedPaymentType == PaymentType.CASH) {
+                Text(
+                    stringResource(R.string.media_label),
+                    style = MaterialTheme.typography.labelMedium,
+                    modifier = Modifier.padding(top = 16.dp)
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(top = 8.dp)
+                        .fillMaxWidth()
+                        .padding(top = 4.dp)
                         .selectableGroup()
                 ) {
-                    paymentOptions.forEachIndexed { index, paymentType ->
-                        if (index != 0)
-                            Spacer(Modifier.height(16.dp))
-
+                    PaymentMedia.entries.forEach { paymentMedia ->
                         Row(
                             Modifier.selectable(
-                                selected = selectedPaymentType == paymentType,
+                                selected = selectedPaymentMedia == paymentMedia,
                                 onClick = {
-                                    onSelectPaymentType(paymentType)
+                                    onSelectPaymentMedia(paymentMedia)
                                 },
                                 role = Role.RadioButton,
-                            )
+                            ).weight(1f)
                         ) {
                             RadioButton(
-                                selected = selectedPaymentType == paymentType,
+                                selected = selectedPaymentMedia == paymentMedia,
                                 onClick = null,
                             )
 
                             Spacer(Modifier.width(4.dp))
 
-                            Text(stringResource(paymentType))
+                            Text(stringResource(paymentMedia))
                         }
-
-                        if (paymentType == PaymentType.CASH && selectedPaymentType == PaymentType.CASH)
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(4.dp),
-                                modifier = Modifier
-                                    .padding(start = 36.dp, top = 4.dp)
-                            ) {
-                                PaymentMedia.entries.forEach { paymentMedia ->
-                                    Row(
-                                        Modifier.selectable(
-                                            selected = selectedPaymentMedia == paymentMedia,
-                                            onClick = {
-                                                onSelectPaymentMedia(paymentMedia)
-                                            },
-                                            role = Role.RadioButton,
-                                        )
-                                    ) {
-                                        RadioButton(
-                                            selected = selectedPaymentMedia == paymentMedia,
-                                            onClick = null,
-                                        )
-
-                                        Spacer(Modifier.width(4.dp))
-
-                                        Text(stringResource(paymentMedia))
-                                    }
-                                }
-                            }
                     }
-                }
-
-                if (selectedPaymentType == PaymentType.INSTALLMENT) {
-                    var showAddInstallmentBottomSheet by rememberSaveable { mutableStateOf(false) }
-                    Row(
-                        horizontalArrangement = Arrangement.End,
-                    ) {
-                        AddNewItemButton(
-                            onClick = {
-                                showAddInstallmentBottomSheet = true
-                            },
-                            label = stringResource(R.string.add_new_installment_title)
-                        )
-                    }
-
-                    InstallmentItemBottomSheetForm(
-                        visible = showAddInstallmentBottomSheet,
-                        onDismissRequest = {
-                            showAddInstallmentBottomSheet = false
-                        },
-                        onSaveData = onInstallmentItemAdded,
-                        timeService = timeService,
-                    )
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
 
             if (selectedPaymentType == PaymentType.INSTALLMENT)
                 Column(
-                    modifier = Modifier.padding(top = 12.dp)
+                    modifier = Modifier.padding(top = 16.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        val totalPrice by remember(installmentItems) {
-                            derivedStateOf {
-                                installmentItems.sumOf { it.amount.toLong() }
+                        Column {
+                            val totalPrice by remember(installmentItems) {
+                                derivedStateOf {
+                                    installmentItems.sumOf { it.amount.toLong() }
+                                }
+                            }
+                            Text(
+                                "Total : ${totalPrice.toRupiahV2()}",
+                                style = MaterialTheme.typography.labelSmall,
+                            )
+
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    stringResource(R.string.paid_off_label),
+                                    style = MaterialTheme.typography.bodySmall
+                                )
+
+                                Spacer(Modifier.width(4.dp))
+
+                                ResizableSwitch(
+                                    checked = installmentPaidOff,
+                                    onCheckedChange = onChangeInstallmentPaidOff,
+                                    scale = 0.6,
+                                )
                             }
                         }
-                        Text(
-                            "Total : ${totalPrice.toRupiahV2()}",
-                            style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier
-                                .weight(1f)
-                                .align(Alignment.Bottom)
-                        )
 
-                        Text(stringResource(R.string.paid_off_label), style = MaterialTheme.typography.bodySmall)
+                        var showAddInstallmentBottomSheet by rememberSaveable { mutableStateOf(false) }
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                        ) {
+                            AddNewItemButton(
+                                onClick = {
+                                    showAddInstallmentBottomSheet = true
+                                },
+                                label = stringResource(R.string.add_new_installment_title)
+                            )
+                        }
 
-                        Spacer(Modifier.width(4.dp))
-
-                        ResizableSwitch(
-                            checked = installmentPaidOff,
-                            onCheckedChange = onChangeInstallmentPaidOff,
-                            scale = 0.6,
+                        InstallmentItemBottomSheetForm(
+                            visible = showAddInstallmentBottomSheet,
+                            onDismissRequest = {
+                                showAddInstallmentBottomSheet = false
+                            },
+                            onSaveData = onInstallmentItemAdded,
+                            timeService = timeService,
                         )
                     }
 
+                    if (installmentItems.isNotEmpty())
+                        Spacer(Modifier.height(12.dp))
                     Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        if (installmentItems.isNotEmpty())
-                            Spacer(Modifier.height(4.dp))
                         installmentItems.forEachIndexed { index, it ->
                             InstallmentListItem(
                                 installmentItem = it,
                                 timeService = timeService,
                                 onItemEdited = { newData ->
                                     onInstallmentItemEdited(index, newData)
-                               },
+                                },
                                 onItemDeleted = { onInstallmentItemDeleted(index) }
                             )
                         }
-
-                        if (installmentItems.isEmpty())
-                            Text(
-                                text = androidx.compose.ui.res.stringResource(R.string.no_installment_recorded),
-                                style = MaterialTheme.typography.bodySmall,
-                                modifier = Modifier.padding(start = 12.dp, top = 8.dp)
-                            )
                     }
+
+                    if (installmentItems.isEmpty())
+                        Text(
+                            text = "•  " + stringResource(R.string.no_installment_recorded),
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(start = 8.dp, top = 12.dp)
+                        )
                 }
             }
 
         Text(
-            stringResource(R.string.payment_type),
+            stringResource(R.string.payment_label),
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier
                 .offset(8.dp, (-8).dp)
@@ -245,6 +251,7 @@ private fun PreviewPaymentField_Installment_With_Item(){
                     InstallmentItemUiDto(
                         amount = 2_000_000,
                         date = LocalDate.now(),
+                        paymentMedia = PaymentMedia.CASH,
                     )
                 ),
                 onSelectPaymentType = {},
@@ -296,6 +303,7 @@ private fun PreviewPaymentField_Cash(){
                     InstallmentItemUiDto(
                         amount = 2_000_000,
                         date = LocalDate.now(),
+                        paymentMedia = PaymentMedia.TRANSFER,
                     )
                 ),
                 onSelectPaymentType = {},

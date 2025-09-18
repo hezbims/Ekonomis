@@ -17,12 +17,10 @@ import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
 import com.hezapp.ekonomis.robot.transaction_history._interactor.FilterTransactionBottomSheetInteractor
 import com.hezapp.ekonomis.robot.transaction_history._interactor.TransactionPreviewItemInteractor
-import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 class TransactionHistoryRobot(
     private val composeRule: ComposeTestRule,
@@ -75,67 +73,6 @@ class TransactionHistoryRobot(
         composeRule.onNode(targetSemanticMatcher).performClick()
     }
 
-    @Deprecated(message = "Gunakan actionOpenAndApplyFilter", replaceWith = ReplaceWith("actionOpenAndApplyFilter"))
-    /**
-     * @return bulan dan tahun dari filter setelah diubah dalam *timeInMillis*
-     */
-    fun openAndApplyFilter(
-        targetMonth: Int,
-        targetYear: Int,
-        expectedFilterTimeInMillis: Long = TestTimeService.Companion.get().getCalendar().timeInMillis,
-    ) : Long {
-        composeRule.onNodeWithContentDescription(context.getString(R.string.open_filter_label))
-            .performClick()
-        composeRule.onNodeWithText(
-            TestTimeService.Companion.get().toMMMyyyy(expectedFilterTimeInMillis))
-            .assertExists()
-
-        val currentCalendar = TestTimeService.Companion.get().getCalendar().apply {
-            timeInMillis = expectedFilterTimeInMillis
-        }
-        val currentYear = { currentCalendar.get(Calendar.YEAR)  }
-        val currentMonth = { currentCalendar.get(Calendar.MONTH) + 1 }
-        var totalBackwardStep = 0
-        var totalForwardStep = 0
-
-        while (currentYear() < targetYear ||
-            currentYear() == targetYear &&
-            currentMonth() < targetMonth
-        ) {
-            composeRule.onNodeWithContentDescription(
-                context.getString(
-                    R.string.increment_month_and_year_label
-                )
-            ).performClick()
-
-            currentCalendar.add(Calendar.MONTH, 1)
-            totalForwardStep++
-        }
-
-        while (currentYear() > targetYear ||
-            currentYear() == targetYear &&
-            currentMonth() > targetMonth
-        ) {
-            composeRule.onNodeWithContentDescription(
-                context.getString(
-                    R.string.decrement_month_and_year_label
-                )
-            ).performClick()
-
-            currentCalendar.add(Calendar.MONTH, -1)
-            totalBackwardStep--
-        }
-
-        composeRule.onNodeWithText(context.getString(R.string.apply_label))
-            .performClick()
-
-        composeRule.onNodeWithText(
-            TestTimeService.Companion.get().toMMMMyyyy(
-            currentCalendar.timeInMillis
-        )).assertExists()
-
-        return currentCalendar.timeInMillis
-    }
     @RequiresApi(Build.VERSION_CODES.O)
     fun actionOpenAndApplyFilter(
         targetPeriod: YearMonth? = null,

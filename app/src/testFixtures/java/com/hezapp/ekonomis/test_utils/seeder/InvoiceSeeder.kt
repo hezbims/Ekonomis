@@ -11,6 +11,7 @@ import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
 import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
 import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
@@ -37,6 +38,7 @@ class InvoiceSeeder(
         invoiceItems: List<InvoiceItemSeed>,
         ppn: Int?,
         installmentSeed: InstallmentSeed? = null,
+        paymentMedia: PaymentMedia = PaymentMedia.TRANSFER,
     ) : Int {
         val transactionType = when(profile.type){
             ProfileType.SUPPLIER -> TransactionType.PEMBELIAN
@@ -53,6 +55,7 @@ class InvoiceSeeder(
                 ppn = if (transactionType == TransactionType.PENJUALAN) null else ppn!!,
                 profileId = profile.id,
                 transactionType = transactionType,
+                paymentMedia = paymentMedia,
             )).toInt()
 
             invoiceItems.forEach {
@@ -104,4 +107,5 @@ data class InstallmentSeed(
 data class InstallmentItemSeed(
     val amount: Int,
     val paymentDate: LocalDate,
+    val paymentMedia: PaymentMedia = PaymentMedia.TRANSFER,
 )

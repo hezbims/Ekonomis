@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.styling.Elevations
@@ -132,7 +133,8 @@ private fun PreviewInstallmentListItem(){
             InstallmentListItem(
                 installmentItem = InstallmentItemUiDto(
                     date = LocalDate.of(2020, 7, 21),
-                    amount = 200_000
+                    amount = 200_000,
+                    paymentMedia = PaymentMedia.TRANSFER,
                 ),
                 timeService = TimeService(),
                 onItemEdited = {},

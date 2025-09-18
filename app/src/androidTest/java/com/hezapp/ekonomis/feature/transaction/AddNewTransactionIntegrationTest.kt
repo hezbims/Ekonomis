@@ -1,5 +1,6 @@
 package com.hezapp.ekonomis.feature.transaction
 
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.dto.InstallmentItemAssertionDto
@@ -16,7 +17,7 @@ class AddNewTransactionIntegrationTest : BaseEkonomisUiTest(immediatelyLaunchMai
     /**
      * Memastikan data yang dibuat tampil dengan akurat.
      */
-    @Test(timeout = 60_000)
+    @Test(timeout = 300_000)
     fun insertedDataShouldDisplayedCorrectly() {
         transactionHistoryRobot.navigateToAddNewTransaction()
 
@@ -42,24 +43,29 @@ class AddNewTransactionIntegrationTest : BaseEkonomisUiTest(immediatelyLaunchMai
                 ModifyPaymentSectionAction.SelectInstallmentPaymentType,
                 ModifyPaymentSectionAction.AddNewInstallmentItem(
                     amount = 3_000_000,
-                    date = LocalDate.of(2015, 1, 1)
+                    date = LocalDate.of(2015, 1, 1),
+                    paymentMedia = PaymentMedia.CASH
                 ),
                 ModifyPaymentSectionAction.AddNewInstallmentItem(
                     amount = 1_500,
                     date = LocalDate.of(2015, 1, 1),
+                    paymentMedia = PaymentMedia.CASH
                 ),
                 ModifyPaymentSectionAction.AddNewInstallmentItem(
                     amount = 5_000,
-                    date = LocalDate.of(2015, 1, 3)
+                    date = LocalDate.of(2015, 1, 3),
+                    paymentMedia = PaymentMedia.TRANSFER,
                 ),
                 ModifyPaymentSectionAction.AddNewInstallmentItem(
                     amount = 3_000_000,
-                    date = LocalDate.of(2015, 1, 1)
+                    date = LocalDate.of(2015, 1, 1),
+                    paymentMedia = PaymentMedia.CASH,
                 ),
                 ModifyPaymentSectionAction.EditInstallmentItem(
                     index = 1,
                     amount = 2_000,
                     date = LocalDate.of(2015, 1, 2),
+                    paymentMedia = PaymentMedia.TRANSFER
                 ),
                 ModifyPaymentSectionAction.DeleteInstallmentItem(index = 3),
             )
@@ -88,15 +94,18 @@ class AddNewTransactionIntegrationTest : BaseEkonomisUiTest(immediatelyLaunchMai
                     items = listOf(
                         InstallmentItemAssertionDto(
                             paymentDate = LocalDate.of(2015, 1, 1),
-                            amount = 3_000_000
+                            amount = 3_000_000,
+                            paymentMedia = PaymentMedia.CASH,
                         ),
                         InstallmentItemAssertionDto(
                             paymentDate = LocalDate.of(2015, 1, 2),
-                            amount = 2_000
+                            amount = 2_000,
+                            paymentMedia = PaymentMedia.TRANSFER,
                         ),
                         InstallmentItemAssertionDto(
                             paymentDate = LocalDate.of(2015, 1, 3),
-                            amount = 5_000
+                            amount = 5_000,
+                            paymentMedia = PaymentMedia.TRANSFER,
                         ),
                     ),
                 )

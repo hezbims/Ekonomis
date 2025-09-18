@@ -42,10 +42,12 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.view_model.rememberInstallmentItemFormViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.RupiahVisualTransformation
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.OutlinedDateField
+import com.hezapp.ekonomis.core.presentation.component.OutlinedDropdownField
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +71,8 @@ fun InstallmentItemBottomSheetForm(
             onSaveData(
                 InstallmentItemUiDto(
                     date = state.date,
-                    amount = state.amount!!
+                    amount = state.amount!!,
+                    paymentMedia = state.paymentMedia,
                 )
             )
             onDismissRequest()
@@ -149,6 +152,19 @@ fun InstallmentItemBottomSheetForm(
                 visualTransformation = RupiahVisualTransformation(),
                 modifier = Modifier.Companion.fillMaxWidth(),
             )
+
+            OutlinedDropdownField(
+                label = stringResource(R.string.payment_media_title),
+                entries = PaymentMedia.entries,
+                selectedValue = state.paymentMedia,
+                onValueChange = { viewModel.changePaymentMedia(it) },
+                valueToString = { selectedPaymentMedia ->
+                    selectedPaymentMedia?.let {
+                        com.hezapp.ekonomis.core.presentation.utils.stringResource(it)
+                    } ?: ""
+                },
+            )
+
 
             Spacer(Modifier.Companion.height(12.dp))
 

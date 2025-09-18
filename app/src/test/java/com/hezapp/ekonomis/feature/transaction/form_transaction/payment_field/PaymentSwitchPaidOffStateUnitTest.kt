@@ -7,6 +7,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentT
 import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
 import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
 import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 import com.hezapp.ekonomis.core.domain.invoice.relationship.InstallmentWithItems
@@ -148,7 +149,8 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         //region ACT
         utils.transactionFormRobot.addNewInstallmentItem(
             date = TestTimeService.get().getLocalDate(),
-            amount = 1_000_000
+            amount = 1_000_000,
+            paymentMedia = PaymentMedia.TRANSFER,
         )
         //endregion
 
@@ -168,7 +170,8 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         utils.transactionFormRobot.editInstallmentItem(
             index = 0,
             date = TestTimeService.Companion.get().getLocalDate(),
-            amount = 2_999_999
+            amount = 2_999_999,
+            paymentMedia = PaymentMedia.TRANSFER,
         )
         //endregion
 
@@ -200,7 +203,8 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         utils.transactionFormRobot.editInstallmentItem(
             index = 0,
             date = TestTimeService.Companion.get().getLocalDate(),
-            amount = 2_999_999
+            amount = 2_999_999,
+            paymentMedia = PaymentMedia.TRANSFER,
         )
         utils.transactionFormRobot.togglePaidOff()
         utils.transactionFormRobot.confirmPaidOffToggleInDialog()

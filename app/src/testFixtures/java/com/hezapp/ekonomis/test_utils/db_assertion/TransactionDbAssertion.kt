@@ -94,7 +94,8 @@ class TransactionDbAssertion(
                         actualInstallmentItems.contains { actualInstallmentItem ->
                             expectedInstallmentItem.paymentDate
                                 .isEqual(actualInstallmentItem.paymentDate) &&
-                            expectedInstallmentItem.amount == actualInstallmentItem.amount
+                            expectedInstallmentItem.amount == actualInstallmentItem.amount &&
+                            expectedInstallmentItem.paymentMedia == actualInstallmentItem.paymentMedia
                         }
                     }
                 }

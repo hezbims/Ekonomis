@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.presentation.utils.InputTextToNonNegativeRupiahTransformer
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -57,6 +58,14 @@ class InstallmentItemFormViewModel(
             _popBackEvent.tryEmit(Unit)
         }
     }
+
+    fun changePaymentMedia(newPaymentMedia: PaymentMedia) {
+        if (newPaymentMedia == _state.value.paymentMedia)
+            return
+        _state.update {
+            it.copy(paymentMedia = newPaymentMedia)
+        }
+    }
 }
 
 @Composable
@@ -78,6 +87,7 @@ private fun getSaver() = Saver<InstallmentItemFormViewModel, InstallmentItemForm
 data class InstallmentItemFormUiState(
     val date: LocalDate,
     val amount: Int?,
+    val paymentMedia: PaymentMedia,
     val amountHasError: Boolean = false,
 ) : Parcelable {
     companion object {
@@ -87,6 +97,7 @@ data class InstallmentItemFormUiState(
         ) = InstallmentItemFormUiState(
             date = dto?.date ?: timeService.getLocalDate(),
             amount = dto?.amount,
+            paymentMedia = dto?.paymentMedia ?: PaymentMedia.TRANSFER,
         )
     }
 }

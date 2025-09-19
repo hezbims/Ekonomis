@@ -45,8 +45,8 @@ android {
         applicationId = "com.hezapp.ekonomis"
         minSdk = 24
         targetSdk = 34
-        versionCode = 6
-        versionName = "1.3.0"
+        versionCode = 7
+        versionName = "1.3.1"
 
         testInstrumentationRunner = "com.hezapp.ekonomis.test_application.MyTestRunner"
         vectorDrawables {

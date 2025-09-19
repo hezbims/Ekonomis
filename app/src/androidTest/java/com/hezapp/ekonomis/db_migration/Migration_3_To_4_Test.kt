@@ -1,19 +1,17 @@
 package com.hezapp.ekonomis.db_migration
 
+import android.content.ContentValues
+import android.database.sqlite.SQLiteDatabase
+import androidx.room.ForeignKey
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
-import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.CreateInstallmentItemRawSqlDto
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.CreateInstallmentRawSqlDto
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.assertCountEntities
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.createInstallments
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.createNewInvoice
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.createNewInvoiceItem
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.createNewProduct
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.createNewProfile
-import com.hezapp.ekonomis.test_utils.raw_sql_helper.deleteInvoice
+import com.hezapp.ekonomis.test_utils.raw_sql_helper.assertCountEntity
+import com.hezapp.ekonomis.test_utils.raw_sql_helper.hasForeignKey
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 @Suppress("ClassName")
 class Migration_3_To_4_Test : BaseDbMigrationTest() {
@@ -28,38 +26,67 @@ class Migration_3_To_4_Test : BaseDbMigrationTest() {
         val invoiceId = helper.createDatabase(EkonomisDatabase.DB_NAME, 3).run {
             setForeignKeyConstraintsEnabled(true)
 
-            val profileId = createNewProfile("profile-name", ProfileType.SUPPLIER)
+            assertThat(hasForeignKey(
+                tableName = "installments",
+                columnName = "invoice_id",
+                refTable = "invoices",
+                refColumn = "id",
+                onDeleteForignKeyId = ForeignKey.CASCADE,
+            ), equalTo(false))
+            assertThat(hasForeignKey(
+                tableName = "installment_items",
+                columnName = "installment_id",
+                refTable = "installments",
+                refColumn = "id",
+                onDeleteForignKeyId = ForeignKey.CASCADE,
+            ), equalTo(false))
+            assertThat(hasForeignKey(
+                tableName = "invoice_items",
+                columnName = "invoice_id",
+                refTable = "invoices",
+                refColumn = "id",
+                onDeleteForignKeyId = ForeignKey.CASCADE,
+            ), equalTo(false))
+
+            val profileId = insert("profiles", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
+                put("name", "profile-name")
+                put("type", 0)
+            })
+
             val productIds = List(2) { index ->
-                createNewProduct("product-name-$index")
+                insert("products", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
+                    put("name", "product-name-$index")
+                })
             }
-            val invoiceId = createNewInvoice(
-                date = LocalDate.now()
-                    .withYear(2020)
-                    .withMonth(5)
-                    .withDayOfYear(7),
-                profileId = profileId,
-                ppn = 13,
-            )
+
+            val invoiceId = insert("invoices", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
+                put("date", ZonedDateTime.of(
+                    LocalDate.of(2025, 5, 7).atStartOfDay(),
+                    ZoneId.of("UTC")
+                ).toInstant().toEpochMilli())
+                put("profile_id", profileId)
+                put("ppn", 13)
+                put("transaction_type", 0)
+            })
 
             for (i in 0..1)
-                createNewInvoiceItem(
-                    productId = productIds[i],
-                    invoiceId = invoiceId,
-                    quantity = 3 + i,
-                    unitType = UnitType.PIECE,
-                    totalPrice = 2_500_000 * (i + 1),
-                )
+                insert("invoice_items", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
+                    put("product_id", productIds[i])
+                    put("invoice_id", invoiceId)
+                    put("quantity", 3 + i)
+                    put("unit_type", 1)
+                    put("price", 2_500_000 * (i + 1))
+                })
 
-            createInstallments(CreateInstallmentRawSqlDto(
-                invoiceId = invoiceId,
-                isPaidOff = true,
-                items = listOf(
-                    CreateInstallmentItemRawSqlDto(
-                        paymentDate = "22-06-2023",
-                        amount = 25_000_000
-                    )
-                )
-            ))
+            val installmentId = insert("installments", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
+                put("invoice_id", invoiceId)
+                put("is_paid_off", 1)
+            })
+            insert("installment_items", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
+                put("payment_date", "2023-06-22")
+                put("amount", 25_000_000)
+                put("installment_id", installmentId)
+            })
 
             invoiceId
         }
@@ -70,16 +97,36 @@ class Migration_3_To_4_Test : BaseDbMigrationTest() {
             validateDroppedTables = true
         ).apply {
             setForeignKeyConstraintsEnabled(true)
-            deleteInvoice(invoiceId)
+            delete("invoices", "id = ?", arrayOf(invoiceId))
 
-            assertCountEntities(
-                installmentCount = 0,
-                installmentItemsCount = 0,
-                invoiceCount = 0,
-                invoiceItemCount = 0,
-                profileCount = 1,
-                productCount = 2,
-            )
+            assertCountEntity("installments", 0)
+            assertCountEntity("installment_items", 0)
+            assertCountEntity("invoices", 0)
+            assertCountEntity("invoice_items", 0)
+            assertCountEntity("profiles", 1)
+            assertCountEntity("products", 2)
+
+            assertThat(hasForeignKey(
+                tableName = "installments",
+                columnName = "invoice_id",
+                refTable = "invoices",
+                refColumn = "id",
+                onDeleteForignKeyId = ForeignKey.CASCADE,
+            ), equalTo(true))
+            assertThat(hasForeignKey(
+                tableName = "installment_items",
+                columnName = "installment_id",
+                refTable = "installments",
+                refColumn = "id",
+                onDeleteForignKeyId = ForeignKey.CASCADE,
+            ), equalTo(true))
+            assertThat(hasForeignKey(
+                tableName = "invoice_items",
+                columnName = "invoice_id",
+                refTable = "invoices",
+                refColumn = "id",
+                onDeleteForignKeyId = ForeignKey.CASCADE,
+            ), equalTo(true))
         }
     }
 }

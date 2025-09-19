@@ -51,3 +51,16 @@ fun SupportSQLiteDatabase.assertCountEntities(
         assertCountEntity(TableNames.PRODUCT, it)
     }
 }
+
+fun SupportSQLiteDatabase.hasColumn(tableName: String, columnName: String): Boolean {
+    val cursor = this.query("PRAGMA table_info($tableName)")
+    val nameIndex = cursor.getColumnIndex("name")
+    while (cursor.moveToNext()) {
+        val currentColumn = cursor.getString(nameIndex)
+        if (currentColumn.equals(columnName, ignoreCase = true)) {
+            return true
+        }
+    }
+
+    return false
+}

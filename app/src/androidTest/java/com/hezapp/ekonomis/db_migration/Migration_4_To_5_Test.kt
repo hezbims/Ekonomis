@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.core.data.invoice.converter.PaymentMediaConverter
 import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
+import com.hezapp.ekonomis.test_utils.raw_sql_helper.hasColumn
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -22,6 +23,9 @@ class Migration_4_To_5_Test : BaseDbMigrationTest() {
 
         helper.createDatabase(EkonomisDatabase.DB_NAME, 4).run {
             setForeignKeyConstraintsEnabled(true)
+            assertThat(hasColumn("invoices", "payment_media"), equalTo(false))
+            assertThat(hasColumn("installment_items", "payment_media"), equalTo(false))
+
             val supplierId = insert("profiles", SQLiteDatabase.CONFLICT_FAIL, ContentValues().apply {
                 put("name", "supplier-1")
                 put("type", 0)

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "c193766165b8b605ac213bb314b81941",
+    "identityHash": "e0c6a654fbfbacc34be47fa03728fee1",
     "entities": [
       {
         "tableName": "products",
@@ -60,7 +60,7 @@
       },
       {
         "tableName": "invoices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER NOT NULL, `profile_id` INTEGER NOT NULL, `ppn` INTEGER, `transaction_type` INTEGER NOT NULL, `payment_media` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`profile_id`) REFERENCES `profiles`(`id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `date` INTEGER NOT NULL, `profile_id` INTEGER NOT NULL, `ppn` INTEGER, `transaction_type` INTEGER NOT NULL, FOREIGN KEY(`profile_id`) REFERENCES `profiles`(`id`) ON UPDATE RESTRICT ON DELETE RESTRICT )",
         "fields": [
           {
             "fieldPath": "id",
@@ -90,13 +90,6 @@
             "columnName": "transaction_type",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "paymentMedia",
-            "columnName": "payment_media",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -345,7 +338,7 @@
       },
       {
         "tableName": "installment_items",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `installment_id` INTEGER NOT NULL, `payment_date` TEXT NOT NULL, `amount` INTEGER NOT NULL, `payment_media` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`installment_id`) REFERENCES `installments`(`id`) ON UPDATE RESTRICT ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `installment_id` INTEGER NOT NULL, `payment_date` TEXT NOT NULL, `amount` INTEGER NOT NULL, FOREIGN KEY(`installment_id`) REFERENCES `installments`(`id`) ON UPDATE RESTRICT ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -370,13 +363,6 @@
             "columnName": "amount",
             "affinity": "INTEGER",
             "notNull": true
-          },
-          {
-            "fieldPath": "paymentMedia",
-            "columnName": "payment_media",
-            "affinity": "INTEGER",
-            "notNull": true,
-            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -413,7 +399,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c193766165b8b605ac213bb314b81941')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0c6a654fbfbacc34be47fa03728fee1')"
     ]
   }
 }

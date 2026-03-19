@@ -40,7 +40,7 @@ class EditTransactionUnitTest : BaseEkonomisUiUnitTest() {
                         price = 2_500_000
                     )
                 )
-            )
+            ).id
             composeRule.setContent {
                 AddOrUpdateTransactionScreen(
                     navController = rememberNavController(),
@@ -93,7 +93,7 @@ class EditTransactionUnitTest : BaseEkonomisUiUnitTest() {
                         ),
                     )
                 )
-            )
+            ).id
             utils.invoiceSeeder.run(
                 profile = profile,
                 date = LocalDate.now()

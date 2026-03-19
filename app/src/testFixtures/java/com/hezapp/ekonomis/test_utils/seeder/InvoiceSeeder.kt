@@ -18,6 +18,12 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentItemSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceItemSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProductSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProfileSnapshot
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import java.time.LocalDate
@@ -39,7 +45,7 @@ class InvoiceSeeder(
         ppn: Int?,
         installmentSeed: InstallmentSeed? = null,
         paymentMedia: PaymentMedia = PaymentMedia.TRANSFER,
-    ) : Int {
+    ) : InvoiceSnapshot {
         val transactionType = when(profile.type){
             ProfileType.SUPPLIER -> TransactionType.PEMBELIAN
             ProfileType.CUSTOMER -> TransactionType.PENJUALAN
@@ -87,7 +93,46 @@ class InvoiceSeeder(
                 installmentItemDao.insert(mappedItems)
             }
 
-            invoiceId
+            val fullDetails = invoiceDao.getFullInvoiceDetails(invoiceId)
+
+            InvoiceSnapshot(
+                id = fullDetails.invoice.invoice.id,
+                date = fullDetails.invoice.invoice.date,
+                ppn = fullDetails.invoice.invoice.ppn,
+                transactionType = fullDetails.invoice.invoice.transactionType,
+                paymentMedia = fullDetails.invoice.invoice.paymentMedia,
+                profile = ProfileSnapshot(
+                    id = fullDetails.profile.id,
+                    name = fullDetails.profile.name,
+                    type = fullDetails.profile.type,
+                ),
+                invoiceItems = fullDetails.invoice.invoiceItemWithProducts.map { itemWithProduct ->
+                    InvoiceItemSnapshot(
+                        id = itemWithProduct.invoiceItem.id,
+                        product = ProductSnapshot(
+                            id = itemWithProduct.product.id,
+                            name = itemWithProduct.product.name,
+                        ),
+                        quantity = itemWithProduct.invoiceItem.quantity,
+                        price = itemWithProduct.invoiceItem.price,
+                        unitType = itemWithProduct.invoiceItem.unitType,
+                    )
+                },
+                installment = fullDetails.installmentWithItems?.let { installmentWithItems ->
+                    InstallmentSnapshot(
+                        id = installmentWithItems.installment.id,
+                        isPaidOff = installmentWithItems.installment.isPaidOff,
+                        items = installmentWithItems.installmentItems.map { item ->
+                            InstallmentItemSnapshot(
+                                id = item.id,
+                                amount = item.amount,
+                                paymentDate = item.paymentDate,
+                                paymentMedia = item.paymentMedia,
+                            )
+                        },
+                    )
+                },
+            )
         }
     }
 }

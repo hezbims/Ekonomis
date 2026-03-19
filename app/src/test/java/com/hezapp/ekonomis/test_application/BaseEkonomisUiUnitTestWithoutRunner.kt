@@ -8,7 +8,7 @@ import com.hezapp.ekonomis.MainApplication
 import com.hezapp.ekonomis.test_utils.TestUtils
 import com.hezapp.ekonomis.test_utils.rule.ComposeTreeLoggerRule
 import com.hezapp.ekonomis.test_utils.rule.GlobalTimeConfigRule
-import com.hezapp.ekonomis.test_utils.rule.TestDataCleanerRule
+import com.hezapp.ekonomis.test_utils.rule.TestEnvironmentResetRule
 import org.junit.Rule
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
@@ -34,7 +34,7 @@ abstract class BaseEkonomisUiUnitTestWithoutRunner {
             _koinApp = koinApplication {
                 allowOverride(true)
                 androidContext(appContext)
-                modules(MainApplication.Companion.koinModules)
+                modules(MainApplication.koinModules)
             }.apply {
                 loadTestKoinModules(appContext = appContext, koin = koin, useInMemoryDb = true)
             }
@@ -51,7 +51,7 @@ abstract class BaseEkonomisUiUnitTestWithoutRunner {
     val globalTimeConfigRule = GlobalTimeConfigRule()
 
     @get:Rule(2)
-    val testDataCleanerRule = TestDataCleanerRule { koin }
+    val testEnvironementResetRule = TestEnvironmentResetRule { koin }
 
     @get:Rule(3)
     val composeRule = createAndroidComposeRule<ComponentActivity>()

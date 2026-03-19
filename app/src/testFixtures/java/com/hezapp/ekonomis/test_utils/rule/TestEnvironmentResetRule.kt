@@ -11,13 +11,13 @@ import org.koin.core.Koin
 /**
  * Koin harus berjalan terlebih dahulu
  */
-class TestDataCleanerRule(
+class TestEnvironmentResetRule(
     private val getKoin: () -> Koin,
 ) : ExternalResource() {
     override fun before() = runBlocking {
         withContext(Dispatchers.IO) {
             getKoin().get<EkonomisDatabase>().clearAllTables()
         }
-        TestTimeService.Companion.reset()
+        TestTimeService.reset()
     }
 }

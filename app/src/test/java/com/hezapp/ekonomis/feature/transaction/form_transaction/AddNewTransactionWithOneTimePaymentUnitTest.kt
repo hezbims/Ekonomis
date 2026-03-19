@@ -54,7 +54,7 @@ class AddNewTransactionWithOneTimePaymentUnitTest(
 
     @Test
     fun `The payment media that inserted to database when user choose one-time payment must be correct`(){
-        utils.filltransactionSteps.fillForm(
+        utils.fillTransactionSteps.fillForm(
             transactionType = TransactionType.PENJUALAN,
             profileName = "customer-1",
             date = koin.get<ITimeService>().getLocalDate(),

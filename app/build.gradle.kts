@@ -28,7 +28,7 @@ room {
 
 android {
     namespace = "com.hezapp.ekonomis"
-    compileSdk = 36
+    compileSdk = 35
 
     @Suppress("UnstableApiUsage")
     testFixtures {
@@ -44,7 +44,7 @@ android {
     defaultConfig {
         applicationId = "com.hezapp.ekonomis"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 7
         versionName = "1.3.1"
 

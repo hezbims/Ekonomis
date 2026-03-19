@@ -117,7 +117,7 @@ class ProductStockIntegrationTest : BaseEkonomisUiTest() {
 
     @Before
     fun before(){
-        MySeederUtils.Companion.seedTigaBulanTransaksi()
+        MySeederUtils.seedTigaBulanTransaksi()
         ActivityScenario.launch(MainActivity::class.java)
     }
 }

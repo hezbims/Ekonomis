@@ -8,22 +8,13 @@ import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
 import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
-import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
-import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
-import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
-import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.*
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentItemSnapshot
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentSnapshot
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceItemSnapshot
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProductSnapshot
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProfileSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.*
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import java.time.LocalDate
@@ -97,7 +88,7 @@ class InvoiceSeeder(
 
             InvoiceSnapshot(
                 id = fullDetails.invoice.invoice.id,
-                date = fullDetails.invoice.invoice.date,
+                dateInMillis = fullDetails.invoice.invoice.date,
                 ppn = fullDetails.invoice.invoice.ppn,
                 transactionType = fullDetails.invoice.invoice.transactionType,
                 paymentMedia = fullDetails.invoice.invoice.paymentMedia,

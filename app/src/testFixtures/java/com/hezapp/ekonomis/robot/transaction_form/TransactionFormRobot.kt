@@ -5,17 +5,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.SemanticsProperties
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.hasAnyChild
-import androidx.compose.ui.test.hasContentDescription
-import androidx.compose.ui.test.hasScrollAction
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollToNode
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
@@ -26,19 +17,15 @@ import com.hezapp.ekonomis.core.presentation.utils.getTransactionStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.dto.InstallmentItemAssertionDto
 import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
+import com.hezapp.ekonomis.robot._interactor.BackButtonInteractor
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
 import com.hezapp.ekonomis.robot._interactor.ResizableSwitchInteractor
 import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.ChoosenProductCardInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.DateFieldInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentListItemInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentItemFormInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.PaymentMediaGroupInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.PaymentTypeRadioGroupInteractor
-import com.hezapp.ekonomis.robot.transaction_form._interactor.TransactionTypeDropdownInteractor
+import com.hezapp.ekonomis.robot.transaction_form._interactor.*
 import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
 import java.time.LocalDate
-import java.util.Calendar
+import java.util.*
 
 class TransactionFormRobot(
     private val composeRule: ComposeTestRule,
@@ -60,6 +47,7 @@ class TransactionFormRobot(
             throw RuntimeException("Transaction type value in this form is not recognized")
         }
     //region Component Interactor
+    private val backButton = BackButtonInteractor(composeRule, context)
     private val transactionTypeField = TransactionTypeDropdownInteractor(composeRule, hasText(context.getString(R.string.choose_transaction_type_label)), context)
     private val dateField = DateFieldInteractor(
         matcher = hasText(context.getString(R.string.transaction_date_title)),
@@ -104,6 +92,10 @@ class TransactionFormRobot(
         transactionTypeField.openAndSelectTransactionType(type)
     }
     //endregion
+
+    fun backToPreviousScreen(){
+        backButton.click()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @OptIn(ExperimentalTestApi::class)
@@ -181,6 +173,41 @@ class TransactionFormRobot(
                 assertInstallmentItemsExist(paymentTypeAssertion.items)
             }
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun assertFormContent(
+        snapshot: InvoiceSnapshot,
+        testTimeService: TestTimeService = TestTimeService.get(),
+    ){
+        val installment = snapshot.installment
+        assertFormContent(
+            transactionType = snapshot.transactionType,
+            date = snapshot.getLocalDate(testTimeService),
+            profileName = snapshot.profile.name,
+            ppn = snapshot.ppn,
+            products = snapshot.invoiceItems.map {
+                ProductFormAssertData(
+                    name = it.product.name,
+                    price = it.price,
+                    quantity = it.quantity,
+                    unitType = it.unitType,
+                )
+            },
+            paymentTypeAssertion = when(installment){
+                null -> PaymentTypeAssertionDto.Cash
+                else-> PaymentTypeAssertionDto.Installment(
+                    isPaidOff = installment.isPaidOff,
+                    items = installment.items.map { installmentItem ->
+                        InstallmentItemAssertionDto(
+                            amount = installmentItem.amount,
+                            paymentDate = installmentItem.paymentDate,
+                            paymentMedia = installmentItem.paymentMedia,
+                        )
+                    }
+                )
+            }
+        )
     }
 
     fun changeSelectedPaymentType(paymentType: PaymentType){

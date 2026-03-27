@@ -3,20 +3,16 @@ package com.hezapp.ekonomis.robot.transaction_history
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.hasAnyDescendant
-import androidx.compose.ui.test.hasContentDescription
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
 import com.hezapp.ekonomis.robot.transaction_history._interactor.FilterTransactionBottomSheetInteractor
 import com.hezapp.ekonomis.robot.transaction_history._interactor.TransactionPreviewItemInteractor
+import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.time.LocalDate
 import java.time.YearMonth
@@ -50,7 +46,7 @@ class TransactionHistoryRobot(
     @OptIn(ExperimentalTestApi::class)
     fun waitAndClickTransactionCard(
         profileName: String,
-        totalPrice: Int? = null,
+        pairTotalPriceAndProfileType: Pair<Int, ProfileType>? = null,
         date: LocalDate? = null
     ){
         val dateString = date?.let {
@@ -62,8 +58,17 @@ class TransactionHistoryRobot(
         }
 
         var targetSemanticMatcher = hasText(profileName)
-        totalPrice?.let {
-            targetSemanticMatcher = targetSemanticMatcher and hasText(it.toRupiahV2())
+        pairTotalPriceAndProfileType?.let {
+            if (it.first < 0)
+                throw IllegalArgumentException("Total price can't be negative")
+
+            val prefix = when(it.second){
+                ProfileType.SUPPLIER -> "-"
+                ProfileType.CUSTOMER -> "+"
+            }
+            val totalPriceString = prefix + it.first.toRupiahV2()
+
+            targetSemanticMatcher = targetSemanticMatcher and hasText(totalPriceString)
         }
         dateString?.let {
             targetSemanticMatcher = targetSemanticMatcher and hasText(it)
@@ -71,6 +76,20 @@ class TransactionHistoryRobot(
 
         composeRule.waitUntilExactlyOneExists(targetSemanticMatcher)
         composeRule.onNode(targetSemanticMatcher).performClick()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun waitAndClickTransactionCard(
+        snapshot: InvoiceSnapshot,
+        testTimeService: TestTimeService = TestTimeService.get(),
+    ){
+        val totalPrice = snapshot.invoiceItems.sumOf { it.price }
+
+        waitAndClickTransactionCard(
+            profileName = snapshot.profile.name,
+            pairTotalPriceAndProfileType = Pair(totalPrice, snapshot.profile.type),
+            date = snapshot.getLocalDate(testTimeService),
+        )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

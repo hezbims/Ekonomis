@@ -78,6 +78,7 @@ class InvoiceSeeder(
                         installmentId = installmentId.toInt(),
                         paymentDate = item.paymentDate,
                         amount = item.amount,
+                        paymentMedia = item.paymentMedia,
                     )
                 }
 

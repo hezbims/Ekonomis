@@ -3,15 +3,12 @@ package com.hezapp.ekonomis.robot.transaction_form._interactor
 import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.SemanticsMatcher
-import androidx.compose.ui.test.hasAnyAncestor
-import androidx.compose.ui.test.hasAnyDescendant
-import androidx.compose.ui.test.hasText
-import androidx.compose.ui.test.isDialog
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
+import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.dto.InstallmentItemAssertionDto
 import com.hezapp.ekonomis.robot._interactor.ComponentInteractor
 import com.hezapp.ekonomis.robot._interactor.DropdownInteractor
 import com.hezapp.ekonomis.robot._interactor.TextFieldInteractor
@@ -96,6 +93,12 @@ class InstallmentItemFormInteractor(
         submit()
     }
 
+    fun assertInstallmentItem(expectedItem: InstallmentItemAssertionDto){
+        assertDateFieldContent(expectedItem.paymentDate)
+        assertAmountFieldContent(expectedItem.amount.toRupiahV2())
+        assertPaymentMedia(expectedItem.paymentMedia)
+    }
+
     fun assertPaymentMedia(paymentMedia: PaymentMedia) {
         waitUntilAppear()
         paymentMediaField.assertHasText(context.getString(paymentMedia))
@@ -106,5 +109,7 @@ class InstallmentItemFormInteractor(
         paymentMediaField.openAndSelectValue(context.getString(paymentMedia))
     }
 
-
+    fun close(){
+        composeRule.onNodeWithText(context.getString(R.string.cancel_label)).performClick()
+    }
 }

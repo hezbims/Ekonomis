@@ -8,6 +8,7 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.add_or_update_transaction.presentation._test_tag.AddOrUpdateTransactionTestTags
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.PaymentType
 import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
@@ -163,14 +164,10 @@ class TransactionFormRobot(
                     hasText(product.price.toRupiahV2(), substring = true)
                 ).assertExists()
 
-            val expectedPaymentType = when(paymentTypeAssertion){
-                PaymentTypeAssertionDto.Cash -> PaymentType.CASH
-                is PaymentTypeAssertionDto.Installment -> PaymentType.INSTALLMENT
-            }
-
-            assertSelectedPaymentType(expectedPaymentType)
+            assertSelectedPaymentType(paymentTypeAssertion)
             if (paymentTypeAssertion is PaymentTypeAssertionDto.Installment){
-                assertInstallmentItemsExist(paymentTypeAssertion.items)
+                assertInstallmentItemsMatch(paymentTypeAssertion.items)
+                assertIsPaidOff(paymentTypeAssertion.isPaidOff)
             }
         }
     }
@@ -218,14 +215,29 @@ class TransactionFormRobot(
         paymentTypeRadioGroup.assertSelectedPaymentType(expectedPaymentType)
     }
 
-    private fun assertInstallmentItemsExist(items: List<InstallmentItemAssertionDto>){
+    fun assertSelectedPaymentType(expectedPaymentTypeAssertionDto: PaymentTypeAssertionDto){
+        val expectedPaymentType = when(expectedPaymentTypeAssertionDto){
+            PaymentTypeAssertionDto.Cash -> PaymentType.CASH
+            is PaymentTypeAssertionDto.Installment -> PaymentType.INSTALLMENT
+        }
+        assertSelectedPaymentType(expectedPaymentType)
+    }
+
+    private fun assertInstallmentItemsMatch(items: List<InstallmentItemAssertionDto>){
+        composeRule.onAllNodes(hasTestTag(
+            AddOrUpdateTransactionTestTags.installmentListItem)).assertCountEquals(items.count())
+
         val scrollNode = composeRule.onNode(hasScrollAction())
         items.forEach { item ->
-            scrollNode.performScrollToNode(
-                hasText(item.amount.toRupiahV2(), substring = true) and
-                hasText(TestTimeService.get().toEddMMMyyyy(item.paymentDate)) and
-                hasAnyChild(hasContentDescription(context.getString(R.string.edit_installment_item)))
-            )
+            val installmentItemContainerMatcher = hasText(item.amount.toRupiahV2()) and
+                    hasText(TestTimeService.get().toEddMMMyyyy(item.paymentDate))
+            val editIconMatcher = hasContentDescription(context.getString(R.string.edit_installment_item)) and
+                    hasAnyAncestor(installmentItemContainerMatcher)
+
+            scrollNode.performScrollToNode(installmentItemContainerMatcher)
+            composeRule.onNode(editIconMatcher).performClick()
+            installmentItemBottomSheet.assertInstallmentItem(item)
+            installmentItemBottomSheet.close()
         }
     }
 

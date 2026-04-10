@@ -1,10 +1,6 @@
 package com.hezapp.ekonomis.core.domain.invoice.entity
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 
 @Entity(
@@ -37,6 +33,12 @@ data class InvoiceEntity(
     @ColumnInfo(name = "transaction_type")
     val transactionType: TransactionType,
 
+
+    /**
+     * if invoice entity doesn't have any `InstallmentItem`, than this `paymentMedia`
+     * will not be ignored in business logic. And it also means this Invoice is paid
+     * immediately
+     */
     @ColumnInfo(name = "payment_media", defaultValue = "0")
     val paymentMedia: PaymentMedia = PaymentMedia.TRANSFER
 )

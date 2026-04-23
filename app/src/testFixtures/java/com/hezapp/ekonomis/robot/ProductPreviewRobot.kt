@@ -10,6 +10,9 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiah
 
+/**
+ * This is robot for [ProductPreviewScreen][com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen]
+ */
 class ProductPreviewRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,

@@ -28,6 +28,10 @@ import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
 import java.time.LocalDate
 import java.util.*
 
+
+/**
+ * This is robot for [AddOrUpdateTransactionScreen][com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionScreen]
+ */
 class TransactionFormRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,

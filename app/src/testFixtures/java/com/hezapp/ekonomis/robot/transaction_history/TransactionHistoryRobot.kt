@@ -18,6 +18,9 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
+/**
+ * This is robot for [TransactionHistoryScreen][com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen]
+ */
 class TransactionHistoryRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,

@@ -1,14 +1,8 @@
 package com.hezapp.ekonomis.robot
 
 import android.content.Context
-import androidx.compose.ui.test.ExperimentalTestApi
-import androidx.compose.ui.test.hasAnySibling
-import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
@@ -17,9 +11,11 @@ import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import java.util.*
 
+/**
+ * This is robot for [ProductDetailScreen][com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen]
+ */
 class ProductDetailRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,

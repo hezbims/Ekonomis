@@ -9,7 +9,7 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 @Dao
 interface ProductTestDao {
     @Query("SELECT * FROM products WHERE id = :id")
-    suspend fun getById(id : Int) : ProductEntity
+    suspend fun getById(id : Int) : ProductEntity?
 
     @Insert
     suspend fun insertNewProducts(newProducts: List<ProductEntity>) : List<Long>

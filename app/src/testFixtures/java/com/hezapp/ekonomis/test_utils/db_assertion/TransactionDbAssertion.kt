@@ -2,16 +2,12 @@ package com.hezapp.ekonomis.test_utils.db_assertion
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.hezapp.ekonomis._testing_only.test_dao.*
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
-import com.hezapp.ekonomis._testing_only.test_dao.InstallmentItemTestDao
-import com.hezapp.ekonomis._testing_only.test_dao.InstallmentTestDao
-import com.hezapp.ekonomis._testing_only.test_dao.ProductTestDao
-import com.hezapp.ekonomis._testing_only.test_dao.ProfileTestDao
-import com.hezapp.ekonomis._testing_only.test_dao.TransactionTestDao
-import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.contains
+import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
 import com.hezapp.ekonomis.test_utils.tryUntilSucceed
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.MatcherAssert.assertThat
@@ -62,7 +58,7 @@ class TransactionDbAssertion(
                 currentTransactionItems.contains { actualItem ->
                     runBlocking {
                         val actualItemProductName = productTestDao
-                            .getById(actualItem.productId).name
+                            .getById(actualItem.productId)?.name
 
                         actualItem.quantity == expectedItem.quantity &&
                                 actualItem.unitType == expectedItem.unitType &&

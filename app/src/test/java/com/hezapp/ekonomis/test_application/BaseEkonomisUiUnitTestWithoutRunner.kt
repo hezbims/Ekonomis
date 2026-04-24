@@ -18,6 +18,9 @@ import org.koin.core.KoinApplication
 import org.koin.dsl.koinApplication
 import org.robolectric.shadows.ShadowLog
 
+/**
+ * Can be immediately used as extension when a test is using parameterized robolectric
+ */
 abstract class BaseEkonomisUiUnitTestWithoutRunner {
     //region JUnit Rule
     private var _koinApp: KoinApplication? = null

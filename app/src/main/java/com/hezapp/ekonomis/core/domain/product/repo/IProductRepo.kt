@@ -10,5 +10,6 @@ interface IProductRepo {
         searchQuery: String,
     ) : List<PreviewProductSummary>
     suspend fun getProduct(productId: Int) : ProductEntity?
+    suspend fun getProductByName(name: String) : ProductEntity?
     suspend fun updateProductName(id: Int, newName: String)
 }

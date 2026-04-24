@@ -68,4 +68,7 @@ interface ProductDao {
         WHERE id = :id
     """)
     suspend fun getProduct(id: Int) : ProductEntity
+
+    @Query("UPDATE products SET name = :newName WHERE id = :id")
+    suspend fun updateProductName(id: Int, newName: String)
 }

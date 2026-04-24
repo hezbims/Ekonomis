@@ -25,4 +25,8 @@ class ProductRepo(
     override suspend fun getProduct(productId: Int): ProductEntity {
         return dao.getProduct(id = productId)
     }
+
+    override suspend fun updateProductName(id: Int, newName: String) {
+        dao.updateProductName(id = id, newName = newName)
+    }
 }

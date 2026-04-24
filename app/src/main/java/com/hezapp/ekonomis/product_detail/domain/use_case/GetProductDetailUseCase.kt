@@ -6,11 +6,7 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.repo.IMonthlyStockRepo
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
-import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
-import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
-import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
-import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
-import com.hezapp.ekonomis.core.domain.utils.toCalendar
+import com.hezapp.ekonomis.core.domain.utils.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -61,7 +57,7 @@ class GetProductDetailUseCase(
                 )
             }
             return@withTransaction ProductDetail(
-                id = currentProduct.id,
+                id = currentProduct!!.id,
                 productName = currentProduct.name,
                 transactionSummary = currentTransactionSummary,
             )

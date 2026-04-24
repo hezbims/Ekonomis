@@ -21,7 +21,7 @@ import org.koin.core.context.GlobalContext
 class TestUtils(
     composeRule: ComposeTestRule,
     context: Context,
-    koin: Koin = GlobalContext.get(),
+    val koin: Koin = GlobalContext.get(),
 ) : ITestUtils {
     //region ROBOT
     override val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule, context) }

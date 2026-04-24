@@ -23,4 +23,11 @@ interface ProductTestDao {
 
     @Query("SELECT COUNT(*) FROM ${TableNames.PRODUCT}")
     suspend fun count() : Int
+
+    @Query("""
+        SELECT *
+        FROM products
+        WHERE name IN (:names)
+    """)
+    suspend fun getByExactNames(vararg names: String) : List<ProductEntity>
 }

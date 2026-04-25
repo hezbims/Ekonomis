@@ -23,9 +23,9 @@ abstract class _BaseEditProductNameUnitTest : BaseEkonomisUiUnitTest() {
 
     @Before
     fun prepareBase() {
-        editProductName = utils.koin.get<EditProductNameUseCase>()
-        productSeeder = utils.productSeeder
-        productTestDao = utils.koin.get<ProductTestDao>()
+        editProductName = koin.get<EditProductNameUseCase>()
+        productSeeder = dataUtils.productSeeder
+        productTestDao = koin.get<ProductTestDao>()
     }
 
     protected fun userHasProductWithNames(vararg names: String) = runTest {

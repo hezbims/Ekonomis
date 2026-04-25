@@ -76,16 +76,16 @@ class FilterFunctionalityUnitTest(
             single<ITimeService>{ timeService }
         }), allowOverride = true)
 
-        val customer = utils.profileSeeder.run(profileName = "customer-1", profileType = ProfileType.CUSTOMER)
-        val supplier = utils.profileSeeder.run(profileName = "supplier-1", profileType = ProfileType.SUPPLIER)
-        val product1 = utils.productSeeder.run(
+        val customer = dataUtils.profileSeeder.run(profileName = "customer-1", profileType = ProfileType.CUSTOMER)
+        val supplier = dataUtils.profileSeeder.run(profileName = "supplier-1", profileType = ProfileType.SUPPLIER)
+        val product1 = dataUtils.productSeeder.run(
             products = listOf(
                 ProductEntity(1, "product-1")
             )
         ).single()
 
         //region Dua bulan sebelumnya
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().minusMonths(2).withDayOfMonth(2),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -99,7 +99,7 @@ class FilterFunctionalityUnitTest(
         )
         //endregion
         //region Satu bulan sebelumnya
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().minusMonths(1).withDayOfMonth(14),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -111,7 +111,7 @@ class FilterFunctionalityUnitTest(
             ppn = null,
             installmentSeed = InstallmentSeed(isPaidOff = false, items = listOf()),
         )
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = supplier,
             date = timeService.getLocalDate().minusMonths(1).withDayOfMonth(2),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -123,7 +123,7 @@ class FilterFunctionalityUnitTest(
             ppn = 11,
             installmentSeed = InstallmentSeed(isPaidOff = true, items = emptyList()),
         )
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().minusMonths(1).withDayOfMonth(5),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -137,7 +137,7 @@ class FilterFunctionalityUnitTest(
         )
         //endregion
         //region Bulan sekarang
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().withDayOfMonth(12),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -149,7 +149,7 @@ class FilterFunctionalityUnitTest(
             ppn = null,
             installmentSeed = InstallmentSeed(isPaidOff = false, items = listOf()),
         )
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = supplier,
             date = timeService.getLocalDate().withDayOfMonth(11),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -163,7 +163,7 @@ class FilterFunctionalityUnitTest(
         )
         //endregion
         //region Satu bulan setelahnya
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().plusMonths(1).withDayOfMonth(14),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -175,7 +175,7 @@ class FilterFunctionalityUnitTest(
             ppn = null,
             installmentSeed = InstallmentSeed(isPaidOff = false, items = listOf()),
         )
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = supplier,
             date = timeService.getLocalDate().plusMonths(1).withDayOfMonth(2),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -187,7 +187,7 @@ class FilterFunctionalityUnitTest(
             ppn = 11,
             installmentSeed = InstallmentSeed(isPaidOff = true, items = emptyList()),
         )
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().plusMonths(1).withDayOfMonth(5),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -201,7 +201,7 @@ class FilterFunctionalityUnitTest(
         )
         //endregion
         //region Satu tahun setelahnya
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().plusYears(1).withDayOfMonth(14),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -213,7 +213,7 @@ class FilterFunctionalityUnitTest(
             ppn = null,
             installmentSeed = InstallmentSeed(isPaidOff = false, items = listOf()),
         )
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = timeService.getLocalDate().plusYears(1).withDayOfMonth(16),
             invoiceItems = listOf(InvoiceItemSeed(
@@ -238,16 +238,16 @@ class FilterFunctionalityUnitTest(
 
     @Test
     fun `Should filter data correctly`(){
-        utils.transactionHistoryRobot.actionOpenAndApplyFilter(
+        uiUtils.transactionHistoryRobot.actionOpenAndApplyFilter(
             yearMonthFilter,
             isOnlyNotPaidOffFilter)
 
         for (expectedDate in expectedDateDatas)
-            utils.transactionHistoryRobot.assertTransactionCardExistWith(
+            uiUtils.transactionHistoryRobot.assertTransactionCardExistWith(
                 date = expectedDate
             )
         for (expectedNotExistDate in expectedNotExistDateDatas)
-            utils.transactionHistoryRobot.assertTransactionCardNotExistWith(
+            uiUtils.transactionHistoryRobot.assertTransactionCardNotExistWith(
                 date = expectedNotExistDate
             )
     }

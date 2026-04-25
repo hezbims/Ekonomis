@@ -42,20 +42,20 @@ class AddNewTransactionWithOneTimePaymentUnitTest(
 
     @Before
     fun prepare() = runTest {
-        utils.productSeeder
+        dataUtils.productSeeder
             .run(listOf(ProductEntity(name = "product-1")))
-        utils.profileSeeder
+        dataUtils.profileSeeder
             .run(profileName = "customer-1", profileType = ProfileType.CUSTOMER)
 
         composeRule.setContent {
             MainComposable(koinApp)
         }
-        utils.transactionHistoryRobot.navigateToAddNewTransaction()
+        uiUtils.transactionHistoryRobot.navigateToAddNewTransaction()
     }
 
     @Test
     fun `The payment media that inserted to database when user choose one-time payment must be correct`(){
-        utils.fillTransactionSteps.fillForm(
+        uiUtils.fillTransactionSteps.fillForm(
             transactionType = TransactionType.PENJUALAN,
             profileName = "customer-1",
             date = koin.get<ITimeService>().getLocalDate(),
@@ -77,7 +77,7 @@ class AddNewTransactionWithOneTimePaymentUnitTest(
 
         composeRule.waitForIdle()
 
-        utils.transactionDbAssertion.assertCountTransactionDetails(
+        dataUtils.transactionDbAssertion.assertCountTransactionDetails(
             expected = TransactionDetailsAssertionDto(
                 date = koin.get<ITimeService>().getLocalDate(),
                 profileName = "customer-1",

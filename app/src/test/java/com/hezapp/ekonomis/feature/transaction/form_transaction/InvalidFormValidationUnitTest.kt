@@ -26,46 +26,46 @@ class InvalidFormValidationUnitTest : BaseEkonomisUiUnitTest() {
 
     @Test
     fun `When transaction type is not selected, the submit button must not be exist`(){
-        utils.transactionFormRobot.assertSubmitButtonNotExist()
+        uiUtils.transactionFormRobot.assertSubmitButtonNotExist()
     }
 
     @Test
     fun `When transaction date is not choosen, and user submit the form, there will be error`(){
-        utils.transactionFormRobot.apply {
+        uiUtils.transactionFormRobot.apply {
             chooseTransactionType(TransactionType.PEMBELIAN)
             submitTransactionForm()
         }
 
-        utils.transactionFormRobot.assertEmptyDateErrorExist()
+        uiUtils.transactionFormRobot.assertEmptyDateErrorExist()
     }
 
     @Test
     fun `When profile is not choosen, and user submit the form, there will be error`(){
-        utils.transactionFormRobot.apply {
+        uiUtils.transactionFormRobot.apply {
             chooseTransactionType(TransactionType.PEMBELIAN)
             submitTransactionForm()
         }
 
-        utils.transactionFormRobot.assertEmptyProfileErrorExist()
+        uiUtils.transactionFormRobot.assertEmptyProfileErrorExist()
     }
 
     @Test
     fun `When transaction type is 'PEMBELIAN', and user don't specify PPN, and user submit the form, there will be error`(){
-        utils.transactionFormRobot.apply {
+        uiUtils.transactionFormRobot.apply {
             chooseTransactionType(TransactionType.PEMBELIAN)
             submitTransactionForm()
         }
 
-        utils.transactionFormRobot.assertEmptyPpnErrorExist()
+        uiUtils.transactionFormRobot.assertEmptyPpnErrorExist()
     }
 
     @Test
     fun `When product list is empty, and user submit the form, there will be error`(){
-        utils.transactionFormRobot.apply {
+        uiUtils.transactionFormRobot.apply {
             chooseTransactionType(TransactionType.PEMBELIAN)
             submitTransactionForm()
         }
 
-        utils.transactionFormRobot.assertEmptyProductListErrorExist()
+        uiUtils.transactionFormRobot.assertEmptyProductListErrorExist()
     }
 }

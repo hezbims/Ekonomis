@@ -54,25 +54,25 @@ class TransactionItemDataDisplayUnitTest : BaseEkonomisUiUnitTest() {
 
     @Test
     fun `Not paid off transaction should displayed as 'Not Paid Off'`(){
-        utils.transactionHistoryRobot.itemWithProfileName("Si Pencicil")
+        uiUtils.transactionHistoryRobot.itemWithProfileName("Si Pencicil")
             .assertIsNotPaidOff()
     }
 
     @Test
     fun `Paid off transaction should be displayed as 'Paid off'`(){
-        utils.transactionHistoryRobot.itemWithProfileName("Si Lunas")
+        uiUtils.transactionHistoryRobot.itemWithProfileName("Si Lunas")
             .assertIsPaidOff()
     }
 
     @Test
     fun `Transaction with type 'Penjualan barang' should displayed with '+' sign rupiah`(){
-        utils.transactionHistoryRobot.itemWithProfileName("Si Pencicil")
+        uiUtils.transactionHistoryRobot.itemWithProfileName("Si Pencicil")
             .assertTotalProductPrice("+Rp2.000.000")
     }
 
     @Test
     fun `Transaction with type 'Pembelian barang' should displayed with '-' sign rupiah`(){
-        utils.transactionHistoryRobot.itemWithProfileName("Si Lunas")
+        uiUtils.transactionHistoryRobot.itemWithProfileName("Si Lunas")
             .assertTotalProductPrice("-Rp20.000.000")
     }
 }

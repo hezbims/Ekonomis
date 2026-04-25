@@ -20,12 +20,12 @@ class EditTransactionUnitTest : BaseEkonomisUiUnitTest() {
     fun `when invoice doesn't have installment, the radio button should select cash payment type`() =
         runTest {
             //region Prepare
-            val product = utils.productSeeder
+            val product = dataUtils.productSeeder
                 .run(listOf(ProductEntity(name = "product-1")))
                 .single()
-            val profile = utils.profileSeeder
+            val profile = dataUtils.profileSeeder
                 .run(profileName = "profile-1", profileType = ProfileType.CUSTOMER)
-            val invoiceId = utils.invoiceSeeder.run(
+            val invoiceId = dataUtils.invoiceSeeder.run(
                 profile = profile,
                 date = LocalDate.now()
                     .withYear(2020)
@@ -54,18 +54,18 @@ class EditTransactionUnitTest : BaseEkonomisUiUnitTest() {
             }
             //endregion
 
-            utils.transactionFormRobot.assertSelectedPaymentType(PaymentType.CASH)
+            uiUtils.transactionFormRobot.assertSelectedPaymentType(PaymentType.CASH)
         }
 
     @Test
     fun `when user edit transaction from installment to cash, the previous installment should be deleted`() =
         runTest {
-            val product = utils.productSeeder
+            val product = dataUtils.productSeeder
                 .run(listOf(ProductEntity(name = "product-1")))
                 .single()
-            val profile = utils.profileSeeder
+            val profile = dataUtils.profileSeeder
                 .run(profileName = "profile-1", profileType = ProfileType.CUSTOMER)
-            val invoiceId = utils.invoiceSeeder.run(
+            val invoiceId = dataUtils.invoiceSeeder.run(
                 profile = profile,
                 date = LocalDate.now()
                     .withYear(2020)
@@ -94,7 +94,7 @@ class EditTransactionUnitTest : BaseEkonomisUiUnitTest() {
                     )
                 )
             ).id
-            utils.invoiceSeeder.run(
+            dataUtils.invoiceSeeder.run(
                 profile = profile,
                 date = LocalDate.now()
                     .withYear(2020)
@@ -131,11 +131,11 @@ class EditTransactionUnitTest : BaseEkonomisUiUnitTest() {
                 )
             }
 
-            utils.transactionFormRobot.changeSelectedPaymentType(PaymentType.CASH)
-            utils.transactionFormRobot.submitTransactionForm()
-            utils.transactionFormRobot.confirmUnsafePaymentTypeChange()
+            uiUtils.transactionFormRobot.changeSelectedPaymentType(PaymentType.CASH)
+            uiUtils.transactionFormRobot.submitTransactionForm()
+            uiUtils.transactionFormRobot.confirmUnsafePaymentTypeChange()
 
-            utils.transactionDbAssertion.assertCountInstallment(1)
-            utils.transactionDbAssertion.assertCountInstallmentItem(1)
+            dataUtils.transactionDbAssertion.assertCountInstallment(1)
+            dataUtils.transactionDbAssertion.assertCountInstallmentItem(1)
         }
 }

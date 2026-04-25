@@ -15,14 +15,14 @@ import org.junit.Test
 class TotalPriceDisplayUnitTest : BaseEkonomisUiUnitTest() {
     @Before
     fun prepare() = runTest {
-        val supplier = utils.profileSeeder.run("supplier-1", ProfileType.SUPPLIER)
-        val customer = utils.profileSeeder.run("customer-1", ProfileType.CUSTOMER)
-        val products = utils.productSeeder.run(listOf(
+        val supplier = dataUtils.profileSeeder.run("supplier-1", ProfileType.SUPPLIER)
+        val customer = dataUtils.profileSeeder.run("customer-1", ProfileType.CUSTOMER)
+        val products = dataUtils.productSeeder.run(listOf(
             ProductEntity(name = "product-1"), ProductEntity(name = "product-2")
         ))
 
         // buying transaction
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = supplier,
             date = koin.get<ITimeService>().getLocalDate(),
             invoiceItems = listOf(
@@ -50,7 +50,7 @@ class TotalPriceDisplayUnitTest : BaseEkonomisUiUnitTest() {
         )
 
         // selling transaction
-        utils.invoiceSeeder.run(
+        dataUtils.invoiceSeeder.run(
             profile = customer,
             date = koin.get<ITimeService>().getLocalDate(),
             invoiceItems = listOf(
@@ -82,7 +82,7 @@ class TotalPriceDisplayUnitTest : BaseEkonomisUiUnitTest() {
 
     @Test
     fun `Should display total price of product correctly from sum of invoice items`(){
-        utils.transactionHistoryRobot. apply {
+        uiUtils.transactionHistoryRobot. apply {
             assertTransactionCardExistWith(totalPrice = "-Rp5.100.000.000")
             assertTransactionCardExistWith(totalPrice = "+Rp3.300.000.000")
         }

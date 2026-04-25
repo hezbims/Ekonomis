@@ -112,7 +112,7 @@ class TotalPaymentDisplayTextUnitTest : BaseEkonomisUiUnitTest() {
     @Test
     fun `Total payment should displayed correctly in rupiah after modifying payment field`(){
         repeat(3) {
-            utils.transactionFormRobot.addNewInstallmentItem(
+            uiUtils.transactionFormRobot.addNewInstallmentItem(
                 date = LocalDate.of(2021, 3, 23),
                 amount = 1_000_000_000,
                 paymentMedia = PaymentMedia.CASH,

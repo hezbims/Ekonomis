@@ -147,7 +147,7 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         setContentWithEditingTransaction()
 
         //region ACT
-        utils.transactionFormRobot.addNewInstallmentItem(
+        uiUtils.transactionFormRobot.addNewInstallmentItem(
             date = TestTimeService.get().getLocalDate(),
             amount = 1_000_000,
             paymentMedia = PaymentMedia.TRANSFER,
@@ -155,7 +155,7 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         //endregion
 
         //region ASSERT
-        utils.transactionFormRobot.assertIsPaidOff(true)
+        uiUtils.transactionFormRobot.assertIsPaidOff(true)
         //endregion
     }
 
@@ -167,7 +167,7 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         //endregion
 
         //region ACT
-        utils.transactionFormRobot.editInstallmentItem(
+        uiUtils.transactionFormRobot.editInstallmentItem(
             index = 0,
             date = TestTimeService.Companion.get().getLocalDate(),
             amount = 2_999_999,
@@ -175,7 +175,7 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         )
         //endregion
 
-        utils.transactionFormRobot.assertIsPaidOff(false)
+        uiUtils.transactionFormRobot.assertIsPaidOff(false)
     }
 
     @Test
@@ -186,10 +186,10 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         //endregion
 
         //region ACT
-        utils.transactionFormRobot.deleteInstallmentItemAt(index = 0)
+        uiUtils.transactionFormRobot.deleteInstallmentItemAt(index = 0)
         //endregion
 
-        utils.transactionFormRobot.assertIsPaidOff(false)
+        uiUtils.transactionFormRobot.assertIsPaidOff(false)
     }
 
     @Test
@@ -200,27 +200,27 @@ class PaymentSwitchPaidOffStateUnitTest : BaseEkonomisUiUnitTest() {
         //endregion
 
         //region ACT
-        utils.transactionFormRobot.editInstallmentItem(
+        uiUtils.transactionFormRobot.editInstallmentItem(
             index = 0,
             date = TestTimeService.Companion.get().getLocalDate(),
             amount = 2_999_999,
             paymentMedia = PaymentMedia.TRANSFER,
         )
-        utils.transactionFormRobot.togglePaidOff()
-        utils.transactionFormRobot.confirmPaidOffToggleInDialog()
+        uiUtils.transactionFormRobot.togglePaidOff()
+        uiUtils.transactionFormRobot.confirmPaidOffToggleInDialog()
         //endregion
 
-        utils.transactionFormRobot.assertIsPaidOff(true)
+        uiUtils.transactionFormRobot.assertIsPaidOff(true)
     }
 
     @Test
     fun `Initial paid off state should be 'Not Paid Off', when user try to add new transaction`(){
         setContentWithAddNewTransaction()
 
-        utils.transactionFormRobot.chooseTransactionType(TransactionType.PEMBELIAN)
-        utils.transactionFormRobot.changeSelectedPaymentType(PaymentType.INSTALLMENT)
+        uiUtils.transactionFormRobot.chooseTransactionType(TransactionType.PEMBELIAN)
+        uiUtils.transactionFormRobot.changeSelectedPaymentType(PaymentType.INSTALLMENT)
 
-        utils.transactionFormRobot.assertIsPaidOff(false)
+        uiUtils.transactionFormRobot.assertIsPaidOff(false)
     }
 
 }

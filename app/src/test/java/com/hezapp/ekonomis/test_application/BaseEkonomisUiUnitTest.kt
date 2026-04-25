@@ -6,7 +6,8 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainApplication
-import com.hezapp.ekonomis.test_utils.TestUtils
+import com.hezapp.ekonomis.test_utils.TestDataUtils
+import com.hezapp.ekonomis.test_utils.TestUiUtils
 import com.hezapp.ekonomis.test_utils.gherkin.IGherkinSyntax
 import com.hezapp.ekonomis.test_utils.rule.ComposeTreeLoggerRule
 import com.hezapp.ekonomis.test_utils.rule.GlobalTimeConfigRule
@@ -64,9 +65,12 @@ abstract class BaseEkonomisUiUnitTest : IGherkinSyntax {
     val composeTreeLogger = ComposeTreeLoggerRule(composeRule)
     //endregion
 
-    val utils by lazy { TestUtils(
+    val uiUtils by lazy { TestUiUtils(
         composeRule = composeRule,
         context = ApplicationProvider.getApplicationContext(),
-        koin = koin,
     ) }
+
+    val dataUtils by lazy {
+        TestDataUtils(koin = koin)
+    }
 }

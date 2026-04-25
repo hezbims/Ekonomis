@@ -4,11 +4,7 @@ import androidx.compose.ui.test.hasText
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionScreen
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
-import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
-import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
-import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
-import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.invoice.entity.*
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
 import com.hezapp.ekonomis.core.domain.invoice.relationship.InstallmentWithItems
 import com.hezapp.ekonomis.core.domain.invoice.relationship.InvoiceWithInvoiceItemAndProducts
@@ -41,7 +37,7 @@ class TotalPaymentDisplayTextUnitTest : BaseEkonomisUiUnitTest() {
                 InstallmentItem(
                     id = 1,
                     installmentId = 1,
-                    paymentDate = TestTimeService.Companion.get().getLocalDate(),
+                    paymentDate = TestTimeService.get().getLocalDate(),
                     amount = 35_000_000
                 )
             ),
@@ -49,7 +45,7 @@ class TotalPaymentDisplayTextUnitTest : BaseEkonomisUiUnitTest() {
         invoice = InvoiceWithInvoiceItemAndProducts(
             invoice = InvoiceEntity(
                 id = 1,
-                date = TestTimeService.Companion.get().getCalendar().timeInMillis,
+                date = TestTimeService.get().getCalendar().timeInMillis,
                 profileId = 1,
                 ppn = null,
                 transactionType = TransactionType.PENJUALAN,

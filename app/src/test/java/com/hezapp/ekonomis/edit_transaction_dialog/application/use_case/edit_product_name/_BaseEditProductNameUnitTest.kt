@@ -4,7 +4,7 @@ import com.hezapp.ekonomis._testing_only.test_dao.ProductTestDao
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.edit_product_dialog.application.model.EditProductNameError
 import com.hezapp.ekonomis.edit_product_dialog.application.use_case.EditProductNameUseCase
-import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
+import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.test_utils.seeder.ProductSeeder
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
@@ -13,7 +13,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 
 @Suppress("ClassName")
-abstract class _BaseEditProductNameUnitTest : BaseEkonomisUiUnitTest() {
+abstract class _BaseEditProductNameUnitTest : BaseDataUnitTest() {
 
     protected lateinit var editProductName: EditProductNameUseCase
     private lateinit var productSeeder: ProductSeeder

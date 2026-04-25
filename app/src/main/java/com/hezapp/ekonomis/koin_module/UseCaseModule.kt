@@ -11,7 +11,7 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCas
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetTransactionSummaryOfAMonthUseCase
-import com.hezapp.ekonomis.edit_product_dialog.application.use_case.EditProductNameUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.EditProductNameUseCase
 import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
 import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransactionHistoryUseCase
 import org.koin.dsl.module

@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.edit_transaction_dialog.application.use_case.edit_product_name
+package com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.edit_product_name
 
 import org.junit.Test
 

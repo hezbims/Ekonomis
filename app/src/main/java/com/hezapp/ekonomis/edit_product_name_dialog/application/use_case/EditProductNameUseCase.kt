@@ -1,9 +1,9 @@
-package com.hezapp.ekonomis.edit_product_dialog.application.use_case
+package com.hezapp.ekonomis.edit_product_name_dialog.application.use_case
 
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
-import com.hezapp.ekonomis.edit_product_dialog.application.model.EditProductNameError
+import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

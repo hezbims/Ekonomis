@@ -1,6 +1,6 @@
-package com.hezapp.ekonomis.edit_transaction_dialog.application.use_case.edit_product_name
+package com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.edit_product_name
 
-import com.hezapp.ekonomis.edit_product_dialog.application.model.EditProductNameError
+import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
 import org.junit.Test
 
 class WhenProductIdNotFound : _BaseEditProductNameUnitTest() {

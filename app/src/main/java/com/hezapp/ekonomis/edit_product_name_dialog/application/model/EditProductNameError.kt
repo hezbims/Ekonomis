@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.edit_product_dialog.application.model
+package com.hezapp.ekonomis.edit_product_name_dialog.application.model
 
 sealed class EditProductNameError {
     object EmptyName : EditProductNameError()

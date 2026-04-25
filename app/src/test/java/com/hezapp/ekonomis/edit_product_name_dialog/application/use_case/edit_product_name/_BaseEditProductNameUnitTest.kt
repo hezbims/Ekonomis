@@ -3,7 +3,7 @@ package com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.edit_p
 import com.hezapp.ekonomis._testing_only.test_dao.ProductTestDao
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
-import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.EditProductNameUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
 import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.test_utils.seeder.ProductSeeder
 import kotlinx.coroutines.flow.last
@@ -15,7 +15,7 @@ import org.junit.Before
 @Suppress("ClassName")
 abstract class _BaseEditProductNameUnitTest : BaseDataUnitTest() {
 
-    protected lateinit var editProductName: EditProductNameUseCase
+    protected lateinit var editProductName: IEditProductNameUseCase
     private lateinit var productSeeder: ProductSeeder
     private lateinit var productTestDao: ProductTestDao
 
@@ -23,7 +23,7 @@ abstract class _BaseEditProductNameUnitTest : BaseDataUnitTest() {
 
     @Before
     fun prepareBase() {
-        editProductName = koin.get<EditProductNameUseCase>()
+        editProductName = koin.get<IEditProductNameUseCase>()
         productSeeder = dataUtils.productSeeder
         productTestDao = koin.get<ProductTestDao>()
     }

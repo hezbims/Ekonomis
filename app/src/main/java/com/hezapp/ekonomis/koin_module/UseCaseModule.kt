@@ -7,11 +7,12 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.product.Get
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.product.InsertNewProductUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.AddNewProfileUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.GetListProfileUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.impl.EditProductNameUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetTransactionSummaryOfAMonthUseCase
-import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.EditProductNameUseCase
 import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
 import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransactionHistoryUseCase
 import org.koin.dsl.module
@@ -59,5 +60,5 @@ val UseCaseModule = module {
         reportingService = get(),
     ) }
 
-    factory { EditProductNameUseCase(repo = get(), reportingService = get()) }
+    factory<IEditProductNameUseCase> { EditProductNameUseCase(repo = get(), reportingService = get()) }
 }

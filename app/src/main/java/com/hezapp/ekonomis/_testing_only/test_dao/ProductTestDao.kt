@@ -21,6 +21,9 @@ interface ProductTestDao {
     """)
     suspend fun getByIds(ids: List<Int>) : List<ProductEntity>
 
+    @Query("SELECT * FROM products")
+    suspend fun getAll() : List<ProductEntity>
+
     @Query("SELECT COUNT(*) FROM ${TableNames.PRODUCT}")
     suspend fun count() : Int
 

@@ -12,9 +12,9 @@ class TestDataUtils(
     koin: Koin = GlobalContext.get(),
 ) : ITestDataUtils {
     //region SEEDER
-    override val invoiceSeeder = InvoiceSeeder(koin)
-    override val productSeeder = ProductSeeder(koin)
-    override val profileSeeder = ProfileSeeder(koin)
+    override val invoiceSeeder by lazy { InvoiceSeeder(koin) }
+    override val productSeeder by lazy { ProductSeeder(koin) }
+    override val profileSeeder by lazy { ProfileSeeder(koin) }
     //endregion
 
     //region DB ASSERTION

@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.core.app.ApplicationProvider
 import com.hezapp.ekonomis.MainApplication
 import com.hezapp.ekonomis.test_utils.TestUtils
+import com.hezapp.ekonomis.test_utils.gherkin.IGherkinSyntax
 import com.hezapp.ekonomis.test_utils.rule.ComposeTreeLoggerRule
 import com.hezapp.ekonomis.test_utils.rule.GlobalTimeConfigRule
 import com.hezapp.ekonomis.test_utils.rule.TestEnvironmentResetRule
@@ -21,7 +22,7 @@ import org.robolectric.shadows.ShadowLog
 /**
  * Can be immediately used as extension when a test is using parameterized robolectric
  */
-abstract class BaseEkonomisUiUnitTestWithoutRunner {
+abstract class BaseEkonomisUiUnitTestWithoutRunner : IGherkinSyntax {
     //region JUnit Rule
     private var _koinApp: KoinApplication? = null
     protected val koinApp: KoinApplication

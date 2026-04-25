@@ -6,7 +6,7 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
-import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTestWithoutRunner
+import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.seeder.InstallmentSeed
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
@@ -18,17 +18,16 @@ import org.koin.dsl.module
 import org.robolectric.ParameterizedRobolectricTestRunner
 import java.time.LocalDate
 import java.time.YearMonth
-import java.util.Calendar
-import java.util.Locale
-import java.util.TimeZone
+import java.util.*
 
+@Suppress("Junit4RunWithInspection")
 @RunWith(ParameterizedRobolectricTestRunner::class)
 class FilterFunctionalityUnitTest(
     private val yearMonthFilter: YearMonth?,
     private val isOnlyNotPaidOffFilter: Boolean,
     private val expectedDateDatas: Array<LocalDate>,
     private val expectedNotExistDateDatas: Array<LocalDate>,
-) : BaseEkonomisUiUnitTestWithoutRunner() {
+) : BaseEkonomisUiUnitTest() {
 
     companion object {
         @JvmStatic

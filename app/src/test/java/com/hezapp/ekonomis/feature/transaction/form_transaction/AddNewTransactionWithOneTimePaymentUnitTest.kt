@@ -10,7 +10,7 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
 import com.hezapp.ekonomis.steps.FormProductItem
 import com.hezapp.ekonomis.steps.ModifyPaymentSectionAction
-import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTestWithoutRunner
+import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
 import kotlinx.coroutines.test.runTest
@@ -23,11 +23,12 @@ import org.robolectric.ParameterizedRobolectricTestRunner
  * Memastikan payment media bisa masuk ke database dengan benar apabila user memilih
  * tipe pembayaran 'langsung'
  */
+@Suppress("Junit4RunWithInspection")
 @RunWith(ParameterizedRobolectricTestRunner::class)
 class AddNewTransactionWithOneTimePaymentUnitTest(
     private val selectedPaymentMedia: PaymentMedia?,
     private val expectedPaymentMediaInDb: PaymentMedia,
-) : BaseEkonomisUiUnitTestWithoutRunner() {
+) : BaseEkonomisUiUnitTest() {
 
     companion object {
         @Suppress("Unused")

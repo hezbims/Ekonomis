@@ -16,7 +16,7 @@ class TestEnvironmentResetRule(
 ) : ExternalResource() {
     override fun before() = runBlocking {
         withContext(Dispatchers.IO) {
-            getKoin().get<EkonomisDatabase>().clearAllTables()
+            getKoin().getOrNull<EkonomisDatabase>()?.clearAllTables()
         }
         TestTimeService.reset()
     }

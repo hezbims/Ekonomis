@@ -7,7 +7,11 @@ import com.hezapp.ekonomis.test_utils.TestUiUtils
 import com.hezapp.ekonomis.test_utils.rule.ComposeTreeLoggerRule
 import org.junit.Rule
 
-abstract class BaseEkonomisUiUnitTest : BaseDataUnitTest() {
+abstract class BaseEkonomisUiUnitTest(
+    loadDefaultKoinModules : Boolean = true,
+) : BaseDataUnitTest(
+    loadDefaultKoinModules = loadDefaultKoinModules
+) {
     @get:Rule(3)
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 

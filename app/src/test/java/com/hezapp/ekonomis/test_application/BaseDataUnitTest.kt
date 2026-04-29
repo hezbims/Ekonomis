@@ -19,7 +19,9 @@ import org.koin.dsl.koinApplication
 import org.robolectric.shadows.ShadowLog
 
 @RunWith(AndroidJUnit4::class)
-abstract class BaseDataUnitTest : IGherkinSyntax {
+abstract class BaseDataUnitTest(
+    private val loadDefaultKoinModules : Boolean = true
+) : IGherkinSyntax {
     private var _koinApp: KoinApplication? = null
     protected val koinApp: KoinApplication
         get() = _koinApp!!
@@ -34,9 +36,11 @@ abstract class BaseDataUnitTest : IGherkinSyntax {
             _koinApp = koinApplication {
                 allowOverride(true)
                 androidContext(appContext)
-                modules(MainApplication.koinModules)
+                if (loadDefaultKoinModules)
+                    modules(MainApplication.koinModules)
             }.apply {
-                loadTestKoinModules(appContext = appContext, koin = koin, useInMemoryDb = true)
+                if (loadDefaultKoinModules)
+                    loadTestKoinModules(appContext = appContext, koin = koin, useInMemoryDb = true)
             }
             super.starting(description)
         }

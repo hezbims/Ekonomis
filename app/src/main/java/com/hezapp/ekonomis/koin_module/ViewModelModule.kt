@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.koin_module
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_profile.SearchAndChooseProfileViewModel
+import com.hezapp.ekonomis.edit_product_name_dialog.presentation.EditProductNameDialogViewModel
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.product_detail.presentation.ProductDetailViewModel
 import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewViewModel
@@ -45,5 +46,10 @@ val ViewModelModule = module {
         getLatestPreviousMonthStock = get(),
         editMonthlyStock = get(),
         params = params.get(),
+    ) }
+
+    viewModel { params -> EditProductNameDialogViewModel(
+        productId = params.get(),
+        editProductName = get(),
     ) }
 }

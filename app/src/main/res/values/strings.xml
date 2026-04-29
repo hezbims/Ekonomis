@@ -47,7 +47,7 @@
     <string name="choose_profile_label">Pilih %1$s</string>
     <string name="search_profile_name_label">Cari Nama %1$s</string>
     <string name="profile_name_label">Nama %1$s</string>
-    <string name="name_label">Nama</string>
+    <string name="product_name_label">Nama Barang</string>
     <string name="detail_product_label">Detail Barang</string>
     <string name="purchase_price_label">Harga Beli</string>
     <string name="selling_price_label">Harga jual</string>
@@ -120,4 +120,5 @@
     <string name="type_label">Tipe</string>
     <string name="media_label">Media</string>
     <string name="payment_label">Pembayaran</string>
+    <string name="edit_product_name_title">Edit Nama Barang</string>
 </resources>

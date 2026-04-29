@@ -9,7 +9,7 @@ import java.util.TimeZone
  */
 class PreviewTimeService : ITimeService() {
     override fun getCurrentTimeInMillis(): Long {
-        return Calendar.getInstance(getTimezone()).timeInMillis
+        return 1777447083000
     }
 
     override fun getTimezone(): TimeZone {

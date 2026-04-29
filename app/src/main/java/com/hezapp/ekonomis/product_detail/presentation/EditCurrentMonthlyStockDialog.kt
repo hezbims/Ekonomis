@@ -31,15 +31,16 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.core.presentation.utils.toShortMonthYearString
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
 import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
 
 @Composable
@@ -92,6 +93,7 @@ fun EditCurrentMonthlyStockDialog(
         onEvent = viewModel::onEvent,
         period = args.period,
         onDismissRequest = onDismissRequest,
+        timeService = koinInject(),
     )
 }
 
@@ -101,6 +103,7 @@ private fun EditCurrentMonthlyStockDialog(
     onEvent: (EditMonthlyStockDialogEvent) -> Unit,
     period: Long,
     onDismissRequest: () -> Unit,
+    timeService: ITimeService,
 ){
     AlertDialog(
         onDismissRequest = onDismissRequest,
@@ -112,7 +115,7 @@ private fun EditCurrentMonthlyStockDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Text(
-                    "${stringResource(R.string.period_label)} : ${period.toShortMonthYearString()}",
+                    "${stringResource(R.string.period_label)} : ${timeService.toMMMyyyy(period)}",
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
@@ -123,10 +126,10 @@ private fun EditCurrentMonthlyStockDialog(
             ResponseLoader(
                 response = state.quantityResponse,
                 onRetry = {}
-            ) {
+            ) { quantityResponse ->
                 Column {
                     TextField(
-                        value = it.cartonQuantity?.toString() ?: "",
+                        value = quantityResponse.cartonQuantity?.toString() ?: "",
                         onValueChange = {
                             onEvent(EditMonthlyStockDialogEvent.ChangeCartonQuantity(it))
                         },
@@ -150,7 +153,7 @@ private fun EditCurrentMonthlyStockDialog(
                     Spacer(Modifier.height(12.dp))
 
                     TextField(
-                        value = it.pieceQuantity?.toString() ?: "",
+                        value = quantityResponse.pieceQuantity?.toString() ?: "",
                         onValueChange = {
                             onEvent(EditMonthlyStockDialogEvent.ChangePieceQuantity(it))
                         },
@@ -215,13 +218,15 @@ private fun EditCurrentMonthlyStockDialog(
                 ) {
                     Text(stringResource(R.string.save_label))
                 }
-        }
+        },
     )
 }
 
 @Preview
 @Composable
 private fun SetCurrentMonthlyStockDialogPreview(){
+    val timeService = PreviewTimeService()
+
     EkonomisTheme {
         Surface {
             EditCurrentMonthlyStockDialog(
@@ -231,10 +236,10 @@ private fun SetCurrentMonthlyStockDialogPreview(){
                     )
                 ),
                 onDismissRequest = {},
-                period = PreviewTimeService().getCalendar().timeInMillis,
-                onEvent = {}
+                period = timeService.getCurrentTimeInMillis(),
+                onEvent = {},
+                timeService = timeService,
             )
         }
     }
 }
-

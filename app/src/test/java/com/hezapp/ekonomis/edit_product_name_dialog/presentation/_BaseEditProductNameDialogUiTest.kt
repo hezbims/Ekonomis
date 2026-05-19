@@ -1,13 +1,16 @@
 package com.hezapp.ekonomis.edit_product_name_dialog.presentation
 
+import androidx.activity.compose.setContent
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
+import com.hezapp.ekonomis.edit_product_name_dialog.application.model.GetProductByIdError
+import com.hezapp.ekonomis.edit_product_name_dialog.application.model.ProductByIdPreviewDto
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IGetProductByIdUseCase
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.koin.compose.KoinIsolatedContext
 import org.koin.core.module.dsl.viewModel
@@ -25,9 +28,11 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
             listOf(
                 module {
                     factory<IEditProductNameUseCase> { FakeEditProductNameUseCase() }
-                    viewModel { params ->
+                    factory<IGetProductByIdUseCase> { FakeGetProductByIdUseCase() }
+                    viewModel { _ ->
                         EditProductNameDialogViewModel(
-                            productId = params.get(),
+                            productId = 1,
+                            getProductById = get(),
                             editProductName = get(),
                         )
                     }
@@ -39,19 +44,23 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
 
     fun userOpennedEditProductNameDialog() {
         isDialogClosed = false
-        composeRule.setContent {
+        composeRule.activity.setContent {
             KoinIsolatedContext(koinApp) {
                 EditProductNameDialog(
                     productId = 1,
-                    onEdited = { isDialogClosed = true },
-                    onDismissRequest = { isDialogClosed = true },
+                    onEdited = {
+                        isDialogClosed = true
+                    },
+                    onDismissRequest = {
+                        isDialogClosed = true
+                    },
                 )
             }
         }
     }
 
     fun editProductName(to: String) {
-        uiUtils.editProductNameDialogRobot.enterName(to)
+        uiUtils.editProductNameDialogRobot.replaceName(to)
         uiUtils.editProductNameDialogRobot.clickSave()
     }
 
@@ -62,8 +71,16 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
     }
 
     fun theDialogShouldBeDismissed() {
-        composeRule.waitForIdle()
-        assertTrue("Expected dialog to be closed but it wasn't", isDialogClosed)
+        composeRule.waitUntil(
+            conditionDescription = "Expected dialog to be closed but it wasn't",
+            timeoutMillis = 2_500L
+        ) {
+            isDialogClosed
+        }
+    }
+
+    fun theDialogShouldDisplayInitialEditedTargetProductName(){
+        uiUtils.editProductNameDialogRobot.assertTextFieldContent("fake-loaded-product-name")
     }
 }
 
@@ -78,5 +95,12 @@ private class FakeEditProductNameUseCase : IEditProductNameUseCase {
         } else {
             emit(ResponseWrapper.Succeed(null))
         }
+    }
+}
+
+private class FakeGetProductByIdUseCase : IGetProductByIdUseCase {
+    override fun invoke(id: Int): Flow<ResponseWrapper<ProductByIdPreviewDto, GetProductByIdError>> = flow {
+        emit(ResponseWrapper.Loading())
+        emit(ResponseWrapper.Succeed(data = ProductByIdPreviewDto(name = "fake-loaded-product-name")))
     }
 }

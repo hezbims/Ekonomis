@@ -6,6 +6,7 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import com.hezapp.ekonomis.R
 
@@ -16,10 +17,12 @@ class EditProductNameDialogRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,
 ) {
-    fun enterName(name: String) {
-        composeRule
+    fun replaceName(name: String) {
+        val textField = composeRule
             .onNodeWithText(context.getString(R.string.product_name_label))
-            .performTextInput(name)
+
+        textField.performTextClearance()
+        textField.performTextInput(name)
     }
 
     fun clickSave() {
@@ -33,6 +36,14 @@ class EditProductNameDialogRobot(
     fun assertErrorMessageDisplayed(errorMessage: String) {
         composeRule.waitUntilExactlyOneExists(
             matcher = hasText(errorMessage),
+            timeoutMillis = 2_500,
+        )
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    fun assertTextFieldContent(expectedContent: String) {
+        composeRule.waitUntilExactlyOneExists(
+            matcher = hasText(expectedContent),
             timeoutMillis = 2_500,
         )
     }

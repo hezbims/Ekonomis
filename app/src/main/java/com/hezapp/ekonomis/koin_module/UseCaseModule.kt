@@ -8,7 +8,9 @@ import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.product.Ins
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.AddNewProfileUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.profile.GetListProfileUseCase
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IGetProductByIdUseCase
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.impl.EditProductNameUseCase
+import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.impl.GetProductByIdUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
@@ -61,4 +63,5 @@ val UseCaseModule = module {
     ) }
 
     factory<IEditProductNameUseCase> { EditProductNameUseCase(repo = get(), reportingService = get()) }
+    factory<IGetProductByIdUseCase> { GetProductByIdUseCase(dao = get()) }
 }

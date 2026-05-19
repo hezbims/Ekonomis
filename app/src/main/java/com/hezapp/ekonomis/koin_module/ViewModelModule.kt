@@ -51,5 +51,6 @@ val ViewModelModule = module {
     viewModel { params -> EditProductNameDialogViewModel(
         productId = params.get(),
         editProductName = get(),
+        getProductById = get(),
     ) }
 }

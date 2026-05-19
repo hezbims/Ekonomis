@@ -9,4 +9,5 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.gms.google.services) apply false
     alias(libs.plugins.firebase.crashlytics) apply false
+    alias(libs.plugins.test.retry.gradle) apply false
 }

@@ -13,6 +13,7 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.gms.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.test.retry.gradle)
     id("kotlin-parcelize")
 }
 
@@ -170,3 +171,12 @@ tasks.withType(KotlinCompile::class).configureEach {
         }
     }
 }
+
+// Jalan terakhir kalau udah buntu ngedebug flaky test (jalan terkahir, dengan retry)
+//tasks.withType<Test>().configureEach {
+//    retry {
+//        maxRetries.set(200)
+//        maxFailures.set(1)
+//        failOnPassedAfterRetry.set(true)
+//    }
+//}

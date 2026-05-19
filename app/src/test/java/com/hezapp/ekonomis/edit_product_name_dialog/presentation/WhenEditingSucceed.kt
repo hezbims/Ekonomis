@@ -14,7 +14,7 @@ class WhenEditingSucceed : _BaseEditProductNameDialogUiTest() {
         }
 
         then {
-            theDialogShouldBeDismissed()
+            onEditedCallbackShouldBeCalled()
         }
     }
 }

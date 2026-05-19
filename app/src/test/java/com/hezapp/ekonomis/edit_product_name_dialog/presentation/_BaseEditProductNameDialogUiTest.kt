@@ -21,6 +21,7 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
     loadDefaultKoinModules = false
 ) {
     private var isDialogClosed = false
+    private var isEditSucceed = false
 
     @Before
     fun setupKoinModules() {
@@ -49,7 +50,7 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
                 EditProductNameDialog(
                     productId = 1,
                     onEdited = {
-                        isDialogClosed = true
+                        isEditSucceed = true
                     },
                     onDismissRequest = {
                         isDialogClosed = true
@@ -76,6 +77,15 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
             timeoutMillis = 2_500L
         ) {
             isDialogClosed
+        }
+    }
+
+    fun onEditedCallbackShouldBeCalled(){
+        composeRule.waitUntil(
+            conditionDescription = "Expected onEditedCallback should be called",
+            timeoutMillis = 2_500L
+        ) {
+            isEditSucceed
         }
     }
 

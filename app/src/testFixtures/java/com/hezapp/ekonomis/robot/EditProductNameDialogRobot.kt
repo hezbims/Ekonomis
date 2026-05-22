@@ -47,4 +47,9 @@ class EditProductNameDialogRobot(
             timeoutMillis = 2_500,
         )
     }
+
+    fun clickCancelButton() {
+        composeRule.onNodeWithText(context.getString(R.string.cancel_label))
+            .performClick()
+    }
 }

@@ -20,7 +20,7 @@ import org.koin.dsl.module
 abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
     loadDefaultKoinModules = false
 ) {
-    private var isDialogClosed = false
+    private var isDialogDismissed = false
     private var isEditSucceed = false
 
     @Before
@@ -44,7 +44,7 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
     }
 
     fun userOpennedEditProductNameDialog() {
-        isDialogClosed = false
+        isDialogDismissed = false
         composeRule.activity.setContent {
             KoinIsolatedContext(koinApp) {
                 EditProductNameDialog(
@@ -53,7 +53,7 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
                         isEditSucceed = true
                     },
                     onDismissRequest = {
-                        isDialogClosed = true
+                        isDialogDismissed = true
                     },
                 )
             }
@@ -65,6 +65,10 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
         uiUtils.editProductNameDialogRobot.clickSave()
     }
 
+    fun userClickCancelButton(){
+        uiUtils.editProductNameDialogRobot.clickCancelButton()
+    }
+
     fun theDialogShouldDisplayAppropriateErrorMessage() {
         uiUtils.editProductNameDialogRobot.assertErrorMessageDisplayed(
             appContext.getString(R.string.name_already_used))
@@ -73,10 +77,10 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
 
     fun theDialogShouldBeDismissed() {
         composeRule.waitUntil(
-            conditionDescription = "Expected dialog to be closed but it wasn't",
+            conditionDescription = "Expected dialog to be dismissed but it wasn't",
             timeoutMillis = 2_500L
         ) {
-            isDialogClosed
+            isDialogDismissed
         }
     }
 

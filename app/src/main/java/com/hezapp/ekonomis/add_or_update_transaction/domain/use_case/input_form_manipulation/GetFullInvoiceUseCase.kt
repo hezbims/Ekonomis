@@ -9,11 +9,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
+interface IGetFullInvoiceUseCase {
+    operator fun invoke(id : Int) : Flow<ResponseWrapper<FullInvoiceDetails, MyBasicError>>
+}
+
 class GetFullInvoiceUseCase(
     private val repo : ITransactionRepository,
     private val reportingService: IErrorReportingService,
-) {
-    operator fun invoke(id : Int) : Flow<ResponseWrapper<FullInvoiceDetails, MyBasicError>> =
+) : IGetFullInvoiceUseCase {
+    override operator fun invoke(id : Int) : Flow<ResponseWrapper<FullInvoiceDetails, MyBasicError>> =
     flow<ResponseWrapper<FullInvoiceDetails, MyBasicError>> {
         val result = repo.getFullInvoiceDetails(id)
         emit(ResponseWrapper.Succeed(result))

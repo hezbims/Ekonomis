@@ -8,11 +8,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
+interface IDeleteInvoiceUseCase {
+    operator fun invoke(invoiceId: Int) : Flow<ResponseWrapper<Any?, MyBasicError>>
+}
+
 class DeleteInvoiceUseCase(
     private val transactionRepo: ITransactionRepository,
     private val reportingService: IErrorReportingService,
-) {
-    operator fun invoke(invoiceId: Int) : Flow<ResponseWrapper<Any? , MyBasicError>> =
+) : IDeleteInvoiceUseCase {
+    override operator fun invoke(invoiceId: Int) : Flow<ResponseWrapper<Any? , MyBasicError>> =
     flow<ResponseWrapper<Any? , MyBasicError>> {
         emit(ResponseWrapper.Loading())
         transactionRepo.delete(invoiceId)

@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceFormModel
 import com.hezapp.ekonomis.add_or_update_transaction.domain.model.InvoiceValidationResult
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.CreateOrUpdateInvoiceUseCase
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.DeleteInvoiceUseCase
-import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetFullInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.GetValidatedPpnFromInputStringUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.ICreateOrUpdateInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.IDeleteInvoiceUseCase
+import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.IGetFullInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.ValidateInvoiceFormSubmission
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.model.InvoiceItemUiModel
@@ -32,9 +32,9 @@ import kotlinx.coroutines.launch
 
 class AddOrUpdateTransactionViewModel(
     invoiceId : Int?,
-    private val createOrUpdateInvoiceUseCase : CreateOrUpdateInvoiceUseCase,
-    private val getFullInvoice : GetFullInvoiceUseCase,
-    private val deleteInvoice : DeleteInvoiceUseCase,
+    private val createOrUpdateInvoiceUseCase : ICreateOrUpdateInvoiceUseCase,
+    private val getFullInvoice : IGetFullInvoiceUseCase,
+    private val deleteInvoice : IDeleteInvoiceUseCase,
 ) : ViewModel() {
     private val validateInvoiceFormSubmission = ValidateInvoiceFormSubmission()
     private val getValidPpnFromInput = GetValidatedPpnFromInputStringUseCase()

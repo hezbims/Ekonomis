@@ -9,11 +9,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
+interface ICreateOrUpdateInvoiceUseCase {
+    operator fun invoke(invoiceForm : InvoiceFormModel) :
+            Flow<ResponseWrapper<Any?, InvoiceValidationResult>>
+}
+
 class CreateOrUpdateInvoiceUseCase(
     private val transactionRepository: ITransactionRepository,
     private val reportingService: IErrorReportingService,
-) {
-    operator fun invoke(invoiceForm : InvoiceFormModel) :
+) : ICreateOrUpdateInvoiceUseCase {
+    override operator fun invoke(invoiceForm : InvoiceFormModel) :
         Flow<ResponseWrapper<Any? , InvoiceValidationResult>> =
     flow<ResponseWrapper<Any? , InvoiceValidationResult>> {
         emit(ResponseWrapper.Loading())

@@ -94,7 +94,7 @@ private fun TransactionHistoryScreen(
                 ) {
                     Icon(
                         Icons.Filled.Add,
-                        contentDescription = context.getString(R.string.add_new_transaction_content_description)
+                        contentDescription = context.getString(R.string.add_new_transaction_title)
                     )
                 }
             }

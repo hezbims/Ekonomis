@@ -41,7 +41,7 @@ class TransactionHistoryRobot(
 
     fun navigateToAddNewTransaction(){
         composeRule.onNodeWithContentDescription(
-            context.getString(R.string.add_new_transaction_content_description)
+            context.getString(R.string.add_new_transaction_title)
         ).performClick()
     }
 

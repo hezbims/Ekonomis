@@ -30,7 +30,7 @@ fun MyFloatingActionButton(
         ) {
             Icon(
                 Icons.Filled.Add,
-                contentDescription = stringResource(R.string.add_new_transaction_content_description)
+                contentDescription = stringResource(R.string.add_new_transaction_title)
             )
         }
     }

@@ -150,7 +150,7 @@ fun AddOrUpdateTransactionScreen(
                 Text(
                     context.getString(
                         if (!state.curFormData.isEditing)
-                            R.string.add_new_transaction_content_description
+                            R.string.add_new_transaction_title
                         else
                             R.string.edit_transaction_title
                     )

@@ -579,10 +579,10 @@ fun ConfirmQuitBackHanlder(
         AlertDialog(
             onDismissRequest = onDismissRequest,
             title = {
-                Text("Yakin ingin kembali?")
+                Text(stringResource(R.string.back_confirmation_label))
             },
             text = {
-                Text("Data form sekarang tidak akan disimpan.")
+                Text(stringResource(R.string.current_form_data_will_not_be_saved_label))
             },
             confirmButton = {
                 TextButton(

@@ -1,26 +1,11 @@
 # Overview
-This docs will explain the folder structure to create the app
-To locate the app, [click this](/app/src/main/java/com/hezapp/ekonomis)
+This document explains the folder structure of the app.  
+To locate the app, [click here](/app/src/main/java/com/hezapp/ekonomis).
 
-See also [test project structure](./test-project-structure.md) to
-create automated test
+See also [test project structure](./test-project-structure.md) for automated tests.
 
-# Structure Overview
-<!--
-Editable tree source (for future editing):
-com.hezapp.ekonomis
-  _testing_only
-  _koin_modules
-  add_or_update_transaction
-    application
-    data
-    presentation
-  core
-  edit_product_name_dialog
-  product_preview
-  product_detail
-  transaction_history
--->
+## Structure Overview
+
 ```
 com.hezapp.ekonomis
 ├── _testing_only
@@ -36,44 +21,28 @@ com.hezapp.ekonomis
 └── transaction_history
 ```
 
-This tree visualization is created using generated using [tree.nathanfriend.com](https://tree.nathanfriend.com/)
+*Tree generated using [tree.nathanfriend.com](https://tree.nathanfriend.com/)*
 
+## Explanation
 
-# Explanation
-This app is not constructed using strict by-feature separation or 
-strict clean architecture. Instead it rely on by-screen separation.
-The folder named without underscore prefix is a screen except `core` folder.
-Each screen can contains three layer, presentation, data (infrastructure), and application. 
-No domain layer is included for simplicity (many business logic follows  transaction script pattern).
+This app is not constructed using strict by-feature separation or strict clean architecture. Instead, it relies on by-screen separation.  
+Folders without an underscore prefix represent a screen, except the `core` folder.  
+Each screen can contain three layers:
 
-The item that can be placed in presentation layer includes :
-- Screen and UI component
-- Styling and theming
-- View model
-- UI data transfer object (DTO)
-- UI validation/parsing/logic
+- **presentation** – Screen and UI components, styling, theming, view models, UI DTOs, UI validation/parsing/logic.
+- **application** – Use cases and their results (DTOs), infrastructure interfaces (e.g., logging, monitoring).
+- **data** – DAOs, Room entities and aggregates, query result DTOs, infrastructure or third‑party implementations.
 
-The item that can be placed in application layer includes
-- Use case and it results (DTO)
-- infrastructure interface such as logging or monitoring
+### Data Access Object Separation
 
-The item that can be placed in data layer includese 
-- [DAO](#data-access-object-separation)
-- Room Entity and Aggregate
-- Query Result DTO
-- infrastructure or third-party implementation
+There are two types of DAO in this app:
 
+- **Persistence DAO** – responsible for persisting one Room entity (table).  
+  Examples: `ProfileDao`, `ProductDao`, `InvoiceDao`.
+- **Read/Query DAO** – grouped by use case for reading data.  
+  Examples: `GetProductPreviewReadDao`, `GetTransactionDetailsReadDao`, `GetTransactionPreviewsDao`.
 
-## Data Access Object Separation
-There will be two types of Data access Object (DAO) in this app :
-- Persistence DAO : to persist a room entity (table). One persistence
-DAO must only responsible for persisting one Room Entity. For example :
-`ProfileDao`, `ProductDao`, `InvoiceDao`, etc
-- Read/Query DAO : for reading data. Read DAO is grouped based on
-use case. for example : 
-`GetProductPreviewReadDao`, `GetTransactionDetailsReadDao`, 
-`GetTransactionPreviewsDao`, etc
+### Other Folders
 
-## Other Folders
-- `_koin_modules` : contains dependency injection
-- `_testing_only` : not used in the app, but used in automated test
+- `_koin_modules` – dependency injection modules.
+- `_testing_only` – not used in the app, but used in automated tests.

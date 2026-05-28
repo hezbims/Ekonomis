@@ -6,6 +6,21 @@ See also [test project structure](./test-project-structure.md) for automated tes
 
 ## Structure Overview
 
+[//]: # (
+Editable Tree for Future Editing
+com.hezapp.ekonomis
+  _testing_only
+  _koin_modules
+  add_or_update_transaction
+    application
+    data
+    presentation
+  core
+  edit_product_name_dialog
+  product_preview
+  product_detail
+  transaction_history
+)
 ```
 com.hezapp.ekonomis
 ├── _testing_only

@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.transaction_history.domain.use_case
+package com.hezapp.ekonomis.transaction_history.application.use_case
 
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
@@ -16,7 +16,7 @@ class GetPreviewTransactionHistoryUseCase(
 ) {
 
     operator fun invoke(filter: PreviewTransactionFilter) :
-    Flow<ResponseWrapper<List<PreviewTransactionHistory>, MyBasicError>> =
+            Flow<ResponseWrapper<List<PreviewTransactionHistory>, MyBasicError>> =
     flow<ResponseWrapper<List<PreviewTransactionHistory>, MyBasicError>> {
         emit(ResponseWrapper.Loading())
         emit(ResponseWrapper.Succeed(repo.getPreviewInvoices(filter)))

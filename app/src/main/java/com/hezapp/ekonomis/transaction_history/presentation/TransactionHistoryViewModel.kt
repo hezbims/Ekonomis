@@ -7,7 +7,7 @@ import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
-import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransactionHistoryUseCase
+import com.hezapp.ekonomis.transaction_history.application.use_case.GetPreviewTransactionHistoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

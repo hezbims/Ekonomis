@@ -19,7 +19,7 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonth
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetTransactionSummaryOfAMonthUseCase
 import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
-import com.hezapp.ekonomis.transaction_history.domain.use_case.GetPreviewTransactionHistoryUseCase
+import com.hezapp.ekonomis.transaction_history.application.use_case.GetPreviewTransactionHistoryUseCase
 import org.koin.dsl.module
 
 val UseCaseModule = module {

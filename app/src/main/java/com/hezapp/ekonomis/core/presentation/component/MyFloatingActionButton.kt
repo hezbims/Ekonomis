@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis
+package com.hezapp.ekonomis.core.presentation.component
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -9,6 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
+import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 
 @Composable

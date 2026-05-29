@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis
+package com.hezapp.ekonomis.core.presentation.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.consumeWindowInsets

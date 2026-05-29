@@ -11,7 +11,7 @@ class FirebaseErrorReportingService : IErrorReportingService {
         additionalMessage: Map<String, Any?>?,
     ) {
         Firebase.crashlytics.recordException(t){
-            additionalMessage?.forEach { k, v ->
+            additionalMessage?.forEach { (k, v) ->
                 when(v){
                     is Int -> key(k, v)
                     is Long -> key(k, v)

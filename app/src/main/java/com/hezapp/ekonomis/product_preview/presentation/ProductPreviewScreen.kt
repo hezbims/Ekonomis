@@ -34,7 +34,7 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.product_preview.presentation.utils.ProductPreviewUiUtils
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

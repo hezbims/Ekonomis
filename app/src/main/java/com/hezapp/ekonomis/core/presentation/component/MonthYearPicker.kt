@@ -25,7 +25,7 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.core.context.GlobalContext
 
 @Composable

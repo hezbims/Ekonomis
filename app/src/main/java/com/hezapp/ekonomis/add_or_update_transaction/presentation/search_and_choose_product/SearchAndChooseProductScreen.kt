@@ -65,7 +65,7 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.utils.goBackSafely
 import com.hezapp.ekonomis.core.presentation.utils.rememberIsKeyboardOpen
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

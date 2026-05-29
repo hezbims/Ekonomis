@@ -54,7 +54,7 @@ import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
 import com.hezapp.ekonomis.core.presentation.utils.getProfileStringId
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

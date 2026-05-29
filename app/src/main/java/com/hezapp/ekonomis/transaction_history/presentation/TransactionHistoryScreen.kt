@@ -33,7 +33,7 @@ import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.transaction_history.presentation.component.TransactionFilterBottomSheet
 import com.hezapp.ekonomis.transaction_history.presentation.component.TransactionHistoryListView
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.core.context.GlobalContext
 import java.util.Calendar
 

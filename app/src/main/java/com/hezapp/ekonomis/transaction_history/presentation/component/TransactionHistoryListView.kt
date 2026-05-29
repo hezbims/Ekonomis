@@ -30,7 +30,7 @@ import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryUiState
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 
 @Composable
 fun TransactionHistoryListView(

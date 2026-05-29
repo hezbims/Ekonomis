@@ -4,7 +4,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.hezapp.ekonomis.MainApplication
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.compose.KoinApplication
 import org.koin.mp.KoinPlatformTools
 

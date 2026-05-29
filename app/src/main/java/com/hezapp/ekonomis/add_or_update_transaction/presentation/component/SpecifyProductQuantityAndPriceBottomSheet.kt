@@ -60,7 +60,7 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.utils.RupiahVi
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 
 @Composable
 fun SpecifyProductQuantityAndPriceBottomSheet_AddNewItem(

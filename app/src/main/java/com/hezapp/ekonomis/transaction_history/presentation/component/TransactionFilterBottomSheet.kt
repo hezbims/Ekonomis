@@ -38,9 +38,9 @@ import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.MonthYearPicker
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionFilterEvent
 import com.hezapp.ekonomis.transaction_history.presentation.rememberTransactionFilterViewModel
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
 import java.util.Calendar
 
 @OptIn(ExperimentalMaterial3Api::class)

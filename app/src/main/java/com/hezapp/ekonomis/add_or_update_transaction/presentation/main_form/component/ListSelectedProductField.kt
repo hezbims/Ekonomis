@@ -47,7 +47,7 @@ import com.hezapp.ekonomis.core.presentation.styling.Elevations
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 
 /**
  * Menampilkan field untuk barang-barang yang udah dipilih dan tombol untuk menambahkan

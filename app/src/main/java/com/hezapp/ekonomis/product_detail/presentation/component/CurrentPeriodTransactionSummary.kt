@@ -28,7 +28,7 @@ import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 
 @Composable
 fun CurrentPeriodTransactionSummary(

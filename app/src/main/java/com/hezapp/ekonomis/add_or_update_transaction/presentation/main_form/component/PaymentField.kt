@@ -43,7 +43,7 @@ import com.hezapp.ekonomis.core.presentation.component.ResizableSwitch
 import com.hezapp.ekonomis.core.presentation.styling.BorderWidths
 import com.hezapp.ekonomis.core.presentation.utils.stringResource
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

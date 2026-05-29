@@ -48,7 +48,7 @@ import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.OutlinedDateField
 import com.hezapp.ekonomis.core.presentation.component.OutlinedDropdownField
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.ui.theme
+package com.hezapp.ekonomis.core.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

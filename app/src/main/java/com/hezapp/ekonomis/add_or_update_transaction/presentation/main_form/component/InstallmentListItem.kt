@@ -23,7 +23,7 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.styling.Elevations
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)

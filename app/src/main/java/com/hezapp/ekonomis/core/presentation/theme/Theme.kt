@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.ui.theme
+package com.hezapp.ekonomis.core.presentation.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

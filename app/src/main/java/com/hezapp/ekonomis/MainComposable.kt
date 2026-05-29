@@ -29,7 +29,7 @@ import com.hezapp.ekonomis.product_preview.presentation.ProductPreviewScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryEvent
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.compose.KoinIsolatedContext
 import org.koin.core.KoinApplication
 import org.koin.core.parameter.parametersOf

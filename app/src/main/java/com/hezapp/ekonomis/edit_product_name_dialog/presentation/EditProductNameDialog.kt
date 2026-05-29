@@ -16,7 +16,7 @@ import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.utils.ObserveEvent
 import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
-import com.hezapp.ekonomis.ui.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 

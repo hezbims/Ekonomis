@@ -28,10 +28,10 @@ import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
-import com.hezapp.ekonomis.core.presentation.utils.toRupiah
-import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 
 @Composable
 fun DetailTransactionCardListItem(
@@ -120,11 +120,12 @@ fun DetailTransactionCardListItem(
                 }
 
                 Column {
-                    for (i in 1..(if (item.ppn == null) 4 else 5))
+                    repeat (if (item.ppn == null) 4 else 5) {
                         Text(
                             "  :    ",
                             style = MaterialTheme.typography.bodySmall,
                         )
+                    }
                 }
 
                 Column {
@@ -134,7 +135,7 @@ fun DetailTransactionCardListItem(
                     )
 
                     Text(
-                        text = item.price.toRupiah(),
+                        text = item.price.toRupiahV2(),
                         style = MaterialTheme.typography.bodySmall,
                     )
 
@@ -151,7 +152,7 @@ fun DetailTransactionCardListItem(
                     }
 
                     Text(
-                        text = item.costOfGoodsSold.toRupiah(),
+                        text = item.costOfGoodsSold.toRupiahV2(),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }

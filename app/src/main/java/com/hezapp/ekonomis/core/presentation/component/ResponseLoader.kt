@@ -78,7 +78,7 @@ fun <T , E : MyBasicError> ResponseLoader(
 fun ResponseLoaderErrorPreview(){
     EkonomisTheme {
         Surface {
-            val response : ResponseWrapper<Object, MyBasicError> = ResponseWrapper.Failed()
+            val response : ResponseWrapper<Any, MyBasicError> = ResponseWrapper.Failed()
             ResponseLoader(
                 response = response,
                 onRetry = {},

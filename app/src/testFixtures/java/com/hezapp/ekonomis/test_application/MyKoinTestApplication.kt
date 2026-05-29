@@ -5,7 +5,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hezapp.ekonomis.MainApplication
-import com.hezapp.ekonomis.koin_module.KoinProvider
+import com.hezapp.ekonomis._koin_module.KoinProvider
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import org.koin.core.context.GlobalContext
@@ -25,7 +25,7 @@ class MyKoinTestApplication : Application(), KoinProvider {
             _koinApp = startKoin {
                 allowOverride(true)
                 androidContext(appContext)
-                modules(MainApplication.Companion.koinModules)
+                modules(MainApplication.koinModules)
             }
             loadTestKoinModules(appContext)
         }

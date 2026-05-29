@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.koin_module
+package com.hezapp.ekonomis._koin_module
 
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.CreateOrUpdateInvoiceUseCase
 import com.hezapp.ekonomis.add_or_update_transaction.domain.use_case.input_form_manipulation.DeleteInvoiceUseCase

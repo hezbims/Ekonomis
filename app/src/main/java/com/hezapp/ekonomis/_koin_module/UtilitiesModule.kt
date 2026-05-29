@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.koin_module
+package com.hezapp.ekonomis._koin_module
 
 import com.hezapp.ekonomis.core.data.utils.FirebaseErrorReportingService
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService

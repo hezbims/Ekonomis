@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.koin_module
+package com.hezapp.ekonomis._koin_module
 
 import com.hezapp.ekonomis.core.data.invoice.repo.InvoiceRepo
 import com.hezapp.ekonomis.core.data.invoice_item.repo.InvoiceItemRepo

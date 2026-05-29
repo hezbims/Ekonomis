@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.koin_module
+package com.hezapp.ekonomis._koin_module
 
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.AddOrUpdateTransactionViewModel
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.search_and_choose_product.SearchAndChooseProductViewModel

@@ -1,13 +1,13 @@
 package com.hezapp.ekonomis
 
 import android.app.Application
-import com.hezapp.ekonomis.koin_module.UtilitiesModule
-import com.hezapp.ekonomis.koin_module.DaoModule
-import com.hezapp.ekonomis.koin_module.DatabaseModule
-import com.hezapp.ekonomis.koin_module.KoinProvider
-import com.hezapp.ekonomis.koin_module.RepositoryModule
-import com.hezapp.ekonomis.koin_module.UseCaseModule
-import com.hezapp.ekonomis.koin_module.ViewModelModule
+import com.hezapp.ekonomis._koin_module.UtilitiesModule
+import com.hezapp.ekonomis._koin_module.DaoModule
+import com.hezapp.ekonomis._koin_module.DatabaseModule
+import com.hezapp.ekonomis._koin_module.KoinProvider
+import com.hezapp.ekonomis._koin_module.RepositoryModule
+import com.hezapp.ekonomis._koin_module.UseCaseModule
+import com.hezapp.ekonomis._koin_module.ViewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin

@@ -41,9 +41,9 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.ResizableSwitch
 import com.hezapp.ekonomis.core.presentation.styling.BorderWidths
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.core.presentation.utils.stringResource
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
-import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +84,7 @@ fun PaymentField(
                     .padding(top = 4.dp)
                     .selectableGroup()
             ) {
-                listOf(PaymentType.CASH, PaymentType.INSTALLMENT).forEachIndexed { index, paymentType ->
+                listOf(PaymentType.CASH, PaymentType.INSTALLMENT).forEachIndexed { _, paymentType ->
                     Row(
                         Modifier.selectable(
                             selected = selectedPaymentType == paymentType,
@@ -259,7 +259,7 @@ private fun PreviewPaymentField_Installment_With_Item(){
                 installmentPaidOff = true,
                 onChangeInstallmentPaidOff = {},
                 onInstallmentItemDeleted = {},
-                onInstallmentItemEdited = { index, it -> },
+                onInstallmentItemEdited = { _, _ -> },
                 onInstallmentItemAdded = {},
                 onSelectPaymentMedia = {},
                 selectedPaymentMedia = PaymentMedia.CASH,
@@ -282,7 +282,7 @@ private fun PreviewPaymentField_Installment_No_Item(){
                 installmentPaidOff = false,
                 onChangeInstallmentPaidOff = {},
                 onInstallmentItemDeleted = {},
-                onInstallmentItemEdited = { index, it -> },
+                onInstallmentItemEdited = { _, _ -> },
                 onInstallmentItemAdded = {},
                 onSelectPaymentMedia = {},
                 selectedPaymentMedia = PaymentMedia.CASH,
@@ -311,7 +311,7 @@ private fun PreviewPaymentField_Cash(){
                 installmentPaidOff = false,
                 onChangeInstallmentPaidOff = {},
                 onInstallmentItemDeleted = {},
-                onInstallmentItemEdited = { index, it -> },
+                onInstallmentItemEdited = { _, _ -> },
                 onInstallmentItemAdded = {},
                 selectedPaymentMedia = PaymentMedia.CASH,
                 onSelectPaymentMedia = {},

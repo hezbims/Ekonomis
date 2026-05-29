@@ -84,15 +84,15 @@ fun InstallmentItemBottomSheetForm(
         onDismissRequest = onDismissRequest,
     ) {
         Column(
-            horizontalAlignment = Alignment.Companion.End,
-            modifier = Modifier.Companion.padding(
+            horizontalAlignment = Alignment.End,
+            modifier = Modifier.padding(
                 start = 24.dp, end = 24.dp, top = 10.dp, bottom = 48.dp
             )
         ) {
             Row(
-                verticalAlignment = Alignment.Companion.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.Companion.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 IconButton(
                     onClick = onDismissRequest,
@@ -113,7 +113,7 @@ fun InstallmentItemBottomSheetForm(
                     style = MaterialTheme.typography.headlineSmall,
                 )
 
-                Spacer(Modifier.Companion.width(36.dp))
+                Spacer(Modifier.width(36.dp))
             }
 
             OutlinedDateField(
@@ -150,7 +150,7 @@ fun InstallmentItemBottomSheetForm(
                     }
                 ),
                 visualTransformation = RupiahVisualTransformation(),
-                modifier = Modifier.Companion.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
             )
 
             OutlinedDropdownField(
@@ -166,7 +166,7 @@ fun InstallmentItemBottomSheetForm(
             )
 
 
-            Spacer(Modifier.Companion.height(12.dp))
+            Spacer(Modifier.height(12.dp))
 
             Row {
                 OutlinedButton(
@@ -175,7 +175,7 @@ fun InstallmentItemBottomSheetForm(
                     Text(stringResource(R.string.cancel_label))
                 }
 
-                Spacer(Modifier.Companion.width(6.dp))
+                Spacer(Modifier.width(6.dp))
 
                 Button(
                     onClick = {
@@ -195,7 +195,7 @@ fun InstallmentItemBottomSheetForm(
 @Preview
 private fun PreviewInstallmentItemBottomSheetForm(){
     EkonomisTheme {
-        Surface(Modifier.Companion.fillMaxSize()) {
+        Surface(Modifier.fillMaxSize()) {
             InstallmentItemBottomSheetForm(
                 visible = true,
                 onDismissRequest = {},

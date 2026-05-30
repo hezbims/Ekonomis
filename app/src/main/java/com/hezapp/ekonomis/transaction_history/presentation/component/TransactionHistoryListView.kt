@@ -20,7 +20,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
-import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
+import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService

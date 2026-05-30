@@ -1,47 +1,61 @@
 package com.hezapp.ekonomis.feature.transaction.transaction_hisory
 
 import androidx.navigation.compose.rememberNavController
-import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
+import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.core.transaction.domain.repo.ITransactionRepository
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
+import com.hezapp.ekonomis.transaction_history.application.use_case.iface.IGetPreviewTransactionHistoryUseCase
 import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
+import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
+import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Test
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
-class TransactionItemDataDisplayUnitTest : BaseEkonomisUiUnitTest() {
+class TransactionItemDataDisplayUnitTest : BaseEkonomisUiUnitTest(loadDefaultKoinModules = false) {
     @Before
     fun prepare(){
-        val mockTransactionRepo = mock<ITransactionRepository> {
-            onBlocking { getPreviewInvoices(any()) } doAnswer {
-                listOf(
-                    PreviewTransactionHistory(
-                        id = 1,
-                        profileName = "Si Lunas",
-                        profileType = ProfileType.SUPPLIER,
-                        date = TestTimeService.get().getCalendar().timeInMillis,
-                        totalPrice = 20_000_000,
-                        isPaidOff = true,
-                    ),
-                    PreviewTransactionHistory(
-                        id = 2,
-                        profileName = "Si Pencicil",
-                        profileType = ProfileType.CUSTOMER,
-                        date = TestTimeService.get().getCalendar().timeInMillis,
-                        totalPrice = 2_000_000,
-                        isPaidOff = false,
-                    ),
+        val mockUseCase = mock<IGetPreviewTransactionHistoryUseCase>()
+        val fakeTransactionData = listOf(
+            PreviewTransactionHistory(
+                id = 1,
+                profileName = "Si Lunas",
+                profileType = ProfileType.SUPPLIER,
+                date = TestTimeService.get().getCalendar().timeInMillis,
+                totalPrice = 20_000_000,
+                isPaidOff = true,
+            ),
+            PreviewTransactionHistory(
+                id = 2,
+                profileName = "Si Pencicil",
+                profileType = ProfileType.CUSTOMER,
+                date = TestTimeService.get().getCalendar().timeInMillis,
+                totalPrice = 2_000_000,
+                isPaidOff = false,
+            ),
+        )
+
+        whenever(mockUseCase.invoke(any()))
+            .thenReturn(
+                flowOf(
+                    ResponseWrapper.Loading(),
+                    ResponseWrapper.Succeed(fakeTransactionData)
                 )
-            }
-        }
+            )
 
         koin.loadModules(modules = listOf(module {
-            single<ITransactionRepository> { mockTransactionRepo }
+            single<IGetPreviewTransactionHistoryUseCase> { mockUseCase }
+            single<ITimeService> { TestTimeService.get() }
+            viewModel { _ ->
+                TransactionHistoryViewModel(getPreviewTransactionHistory = get(), timeService = get())
+            }
         }))
         composeRule.setContent {
             TransactionHistoryScreen(

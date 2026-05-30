@@ -1,9 +1,9 @@
-package com.hezapp.ekonomis.core.domain.invoice.model
+package com.hezapp.ekonomis.transaction_history.data.dto
 
 import androidx.room.ColumnInfo
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 
-data class PreviewTransactionHistory(
+data class PreviewTransactionQueryResult(
     val id : Int,
 
     @ColumnInfo(name = "profile_name")

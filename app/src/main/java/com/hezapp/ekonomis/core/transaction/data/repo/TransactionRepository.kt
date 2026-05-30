@@ -4,20 +4,14 @@ import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
 import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
-import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
-import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.invoice.relationship.FullInvoiceDetails
-import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import com.hezapp.ekonomis.core.transaction.data.mapper.getRoomInvoiceItemEntities
+import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInstallmentEntity
+import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInstallmentItemEntity
 import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInvoiceEntity
 import com.hezapp.ekonomis.core.transaction.domain.entity.TransactionEntity
 import com.hezapp.ekonomis.core.transaction.domain.repo.ITransactionRepository
-import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
-import com.hezapp.ekonomis.core.domain.utils.getNextMonthYear
-import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
-import com.hezapp.ekonomis.core.domain.utils.toCalendar
-import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInstallmentEntity
-import com.hezapp.ekonomis.core.transaction.data.mapper.toRoomInstallmentItemEntity
 
 class TransactionRepository(
     private val invoiceDao: InvoiceDao,
@@ -25,7 +19,6 @@ class TransactionRepository(
     private val installmentDao: InstallmentDao,
     private val installmentItemDao: InstallmentItemDao,
     private val transactionProvider: ITransactionProvider,
-    private val timeService: ITimeService,
 ) : ITransactionRepository {
     override suspend fun saveInvoice(dto: TransactionEntity) {
         transactionProvider.withTransaction {
@@ -59,19 +52,5 @@ class TransactionRepository(
 
     override suspend fun getFullInvoiceDetails(id: Int): FullInvoiceDetails {
         return invoiceDao.getFullInvoiceDetails(id)
-    }
-
-    override suspend fun getPreviewInvoices(filter: PreviewTransactionFilter): List<PreviewTransactionHistory> {
-        val firstDayOfCurrentPeriod = filter.monthYear
-            .toCalendar(timeService)
-            .toBeginningOfMonth(timeService)
-            .timeInMillis
-        val nextMonthYear = firstDayOfCurrentPeriod.getNextMonthYear(timeService)
-        val result = invoiceDao.getPreviewTransactionHistory(
-            firstDayOfMonth = firstDayOfCurrentPeriod,
-            lastDayOfMonth = nextMonthYear,
-            isOnlyNotPaidOff = filter.isOnlyNotPaidOff,
-        )
-        return result
     }
 }

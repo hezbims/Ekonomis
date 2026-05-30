@@ -26,6 +26,7 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
+import com.hezapp.ekonomis.transaction_history.data.dao.GetPreviewTransactionsDao
 
 @Database(
     entities = [
@@ -74,6 +75,8 @@ abstract class EkonomisDatabase : RoomDatabase() {
     abstract val monthlyStockDao: MonthlyStockDao
     abstract val installmentDao: InstallmentDao
     abstract val installmentItemDao: InstallmentItemDao
+
+    abstract val getPreviewTransactionsDao : GetPreviewTransactionsDao
 
     companion object {
         const val DB_NAME = "ekonomis_db"

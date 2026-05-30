@@ -19,7 +19,8 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonth
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetTransactionSummaryOfAMonthUseCase
 import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
-import com.hezapp.ekonomis.transaction_history.application.use_case.GetPreviewTransactionHistoryUseCase
+import com.hezapp.ekonomis.transaction_history.application.use_case.iface.IGetPreviewTransactionHistoryUseCase
+import com.hezapp.ekonomis.transaction_history.application.use_case.impl.GetPreviewTransactionHistoryUseCase
 import org.koin.dsl.module
 
 val UseCaseModule = module {
@@ -29,7 +30,11 @@ val UseCaseModule = module {
     factory { GetAllProductsUseCase(repo = get(), reportingService = get()) }
     factory { InsertNewProductUseCase(repo = get(), reportingService = get())}
 
-    factory { GetPreviewTransactionHistoryUseCase(repo = get(), reportingService = get()) }
+    factory<IGetPreviewTransactionHistoryUseCase> { GetPreviewTransactionHistoryUseCase(
+        dao = get(),
+        reportingService = get(),
+        timeService = get(),
+    ) }
 
     factory<ICreateOrUpdateInvoiceUseCase> { CreateOrUpdateInvoiceUseCase(get(), reportingService = get()) }
     factory<IDeleteInvoiceUseCase> { DeleteInvoiceUseCase(get(), reportingService = get()) }

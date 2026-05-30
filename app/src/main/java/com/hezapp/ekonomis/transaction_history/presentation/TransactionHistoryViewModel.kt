@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
-import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
-import com.hezapp.ekonomis.transaction_history.application.use_case.GetPreviewTransactionHistoryUseCase
+import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
+import com.hezapp.ekonomis.transaction_history.application.use_case.iface.IGetPreviewTransactionHistoryUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class TransactionHistoryViewModel(
-    private val getPreviewTransactionHistory : GetPreviewTransactionHistoryUseCase,
+    private val getPreviewTransactionHistory : IGetPreviewTransactionHistoryUseCase,
     timeService : ITimeService,
 ) : ViewModel() {
 

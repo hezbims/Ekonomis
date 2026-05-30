@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
-import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
+import com.hezapp.ekonomis.product_preview.application.use_case.iface.IGetPreviewProductSummariesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProductPreviewViewModel(
-    private val getPreviewProductSummaries : GetPreviewProductSummariesUseCase
+    private val getPreviewProductSummaries : IGetPreviewProductSummariesUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProductPreviewUiState())

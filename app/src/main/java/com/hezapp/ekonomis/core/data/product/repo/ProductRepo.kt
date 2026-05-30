@@ -2,7 +2,6 @@ package com.hezapp.ekonomis.core.data.product.repo
 
 import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
-import com.hezapp.ekonomis.core.domain.product.model.PreviewProductSummary
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 
 class ProductRepo(
@@ -13,14 +12,6 @@ class ProductRepo(
 
     override suspend fun insertProduct(newProduct: ProductEntity) =
         dao.insertNewProduct(newProduct)
-
-    override suspend fun getPreviewProductSummaries(
-        searchQuery: String,
-    ): List<PreviewProductSummary> {
-        return dao.getPreviewProductSummaries(
-            searchQuery = searchQuery,
-        )
-    }
 
     override suspend fun getProduct(productId: Int): ProductEntity? {
         return dao.getProduct(id = productId)

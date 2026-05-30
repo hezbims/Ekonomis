@@ -1,8 +1,8 @@
 package com.hezapp.ekonomis.core.domain.product.model
 
-import androidx.room.ColumnInfo
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.utils.PriceUtils
+import com.hezapp.ekonomis.product_preview.data.dto.PreviewProductSummaryQueryResult
 import kotlin.math.roundToInt
 
 data class PreviewProductSummary(
@@ -16,7 +16,6 @@ data class PreviewProductSummary(
 
     val ppn : Int?,
 
-    @ColumnInfo(name = "unit_type")
     val unitType: UnitType?,
 ){
     // harga pokok
@@ -31,4 +30,17 @@ data class PreviewProductSummary(
 
             return null
         }
+
+    companion object {
+        fun fromQueryResult(queryResult: PreviewProductSummaryQueryResult) : PreviewProductSummary {
+            return PreviewProductSummary(
+                id = queryResult.id,
+                name = queryResult.name,
+                quantity = queryResult.quantity,
+                price = queryResult.price,
+                ppn = queryResult.ppn,
+                unitType = queryResult.unitType,
+            )
+        }
+    }
 }

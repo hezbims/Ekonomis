@@ -4,7 +4,7 @@ import android.content.Context
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.core.presentation.utils.toRupiah
+import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 
 class ProductPreviewUiUtils {
     companion object {
@@ -18,7 +18,7 @@ class ProductPreviewUiUtils {
                 if (costOfGoodsSold == null || unitType == null)
                     "-"
                 else
-                    "${costOfGoodsSold.toRupiah()}/${context.getString(unitType.getStringId())}"
+                    "${costOfGoodsSold.toRupiahV2()}/${context.getString(unitType.getStringId())}"
             )
         }
     }

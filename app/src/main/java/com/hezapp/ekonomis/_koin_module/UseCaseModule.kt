@@ -18,7 +18,8 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCas
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetTransactionSummaryOfAMonthUseCase
-import com.hezapp.ekonomis.product_preview.domain.use_case.GetPreviewProductSummariesUseCase
+import com.hezapp.ekonomis.product_preview.application.use_case.iface.IGetPreviewProductSummariesUseCase
+import com.hezapp.ekonomis.product_preview.application.use_case.impl.GetPreviewProductSummariesUseCase
 import com.hezapp.ekonomis.transaction_history.application.use_case.iface.IGetPreviewTransactionHistoryUseCase
 import com.hezapp.ekonomis.transaction_history.application.use_case.impl.GetPreviewTransactionHistoryUseCase
 import org.koin.dsl.module
@@ -43,8 +44,8 @@ val UseCaseModule = module {
         reportingService = get(),
     ) }
 
-    factory { GetPreviewProductSummariesUseCase(
-        repo = get(), reportingService = get(),
+    factory<IGetPreviewProductSummariesUseCase> { GetPreviewProductSummariesUseCase(
+        dao = get(), reportingService = get(),
     ) }
 
     factory { GetTransactionSummaryOfAMonthUseCase(

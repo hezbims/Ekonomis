@@ -39,13 +39,15 @@ val ViewModelModule = module {
 
     viewModel { params -> ProductDetailViewModel(
         productId = params.get(),
-        getProductDetail = get()
+        getProductDetail = get(),
+        timeService = get(),
     ) }
 
     viewModel { params -> EditMonthlyStockDialogViewModel(
         getLatestPreviousMonthStock = get(),
         editMonthlyStock = get(),
         params = params.get(),
+        timeService = get(),
     ) }
 
     viewModel { params -> EditProductNameDialogViewModel(

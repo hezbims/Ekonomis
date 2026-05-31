@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
 import com.hezapp.ekonomis.core.domain.utils.toCalendar
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
@@ -23,6 +24,7 @@ class EditMonthlyStockDialogViewModel(
     params: Params,
     private val getLatestPreviousMonthStock: GetLatestPreviousMonthStock,
     private val editMonthlyStock: EditMonthlyStockUseCase,
+    timeService: ITimeService,
 )  : ViewModel() {
     data class Params(
         val quantityPerUnitType : QuantityPerUnitType,
@@ -33,7 +35,7 @@ class EditMonthlyStockDialogViewModel(
 
     private val productId = params.productId
     private val monthlyStockId = params.monthlyStockId
-    private val period = params.period.toCalendar().toBeginningOfMonth().timeInMillis
+    private val period = params.period.toCalendar(timeService).toBeginningOfMonth(timeService).timeInMillis
     private val _state = MutableStateFlow(
         SetMonthlyStockDialogUiState(
             quantityResponse = ResponseWrapper.Succeed(
@@ -67,7 +69,7 @@ class EditMonthlyStockDialogViewModel(
 
             val newQuantity = try {
                 getValidatedQuantity(newValue = newValue)
-            } catch (e : IllegalArgumentException){
+            } catch (_ : IllegalArgumentException){
                 curState.quantityResponse.data.cartonQuantity
             }
             curState.copy(
@@ -87,7 +89,7 @@ class EditMonthlyStockDialogViewModel(
 
             val newQuantity = try {
                 getValidatedQuantity(newValue = newValue)
-            } catch (e : IllegalArgumentException){
+            } catch (_ : IllegalArgumentException){
                 curState.quantityResponse.data.pieceQuantity
             }
 

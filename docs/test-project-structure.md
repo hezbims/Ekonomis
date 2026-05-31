@@ -58,7 +58,7 @@ com.hezapp.ekonomis
 <!-- 
 Editable tree with trailing '/' is off
 com.hezapp.ekonomis/
-  case/
+  test_case/
     screen-A/
       application/
         get_something_use_case/
@@ -76,7 +76,7 @@ com.hezapp.ekonomis/
 -->
 ```
 com.hezapp.ekonomis/
-├── case/
+├── test_case/
 │   ├── screen-A/
 │   │   ├── application/
 │   │   │   └── get_something_use_case/

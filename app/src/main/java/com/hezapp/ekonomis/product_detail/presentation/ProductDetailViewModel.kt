@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
-import com.hezapp.ekonomis.core.domain.utils.calendarProvider
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,17 +19,17 @@ import kotlinx.coroutines.launch
 class ProductDetailViewModel(
     private val productId : Int,
     private val getProductDetail : GetProductDetailUseCase,
-    initialState : ProductDetailUiState = ProductDetailUiState(
-        currentPeriod = calendarProvider.getCalendar().timeInMillis
-    )
+    timeService: ITimeService,
 ) : ViewModel() {
-    private val _state = MutableStateFlow(initialState)
+    private val _state = MutableStateFlow(ProductDetailUiState(
+        currentPeriod = timeService.getCalendar().timeInMillis
+    ))
     val state = _state.onStart {
         loadDetailProduct()
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
-        initialState,
+        _state.value,
     )
 
     fun onEvent(event : ProductDetailEvent){

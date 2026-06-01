@@ -1,37 +1,40 @@
 package com.hezapp.ekonomis.product_detail.domain.use_case
 
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
-import com.hezapp.ekonomis.core.domain.invoice_item.repo.IInvoiceItemRepo
-import com.hezapp.ekonomis.core.domain.monthly_stock.repo.IMonthlyStockRepo
 import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.getNextMonthYear
+import com.hezapp.ekonomis.product_detail.data.dao.GetMonthlyStockByPeriodReadDao
+import com.hezapp.ekonomis.product_detail.data.dao.GetProductTransactionsReadDao
 
 class GetTransactionSummaryOfAMonthUseCase(
-    private val monthlyStockRepo: IMonthlyStockRepo,
-    private val invoiceItemRepo: IInvoiceItemRepo,
+    private val getMonthlyStockByPeriod: GetMonthlyStockByPeriodReadDao,
+    private val getProductTransactions: GetProductTransactionsReadDao,
+    private val timeService: ITimeService,
 ) {
     suspend operator fun invoke(
         startPeriod: Long,
         productId: Int,
     ) : TransactionSummary {
-        val nextMonth = startPeriod.getNextMonthYear()
+        val nextMonth = startPeriod.getNextMonthYear(timeService)
 
-        val outTransactions = invoiceItemRepo.getProductTransactions(
+        val outTransactions = getProductTransactions.execute(
             productId = productId,
-            startPeriod = startPeriod,
-            endPeriod = nextMonth,
-            transactionType = TransactionType.PENJUALAN
+            firstDayOfPeriod = startPeriod,
+            lastDayOfPeriod = nextMonth,
+            transactionTypeId = TransactionType.PENJUALAN.id
         )
 
-        val inTransactions = invoiceItemRepo.getProductTransactions(
+        val inTransactions = getProductTransactions.execute(
             productId = productId,
-            startPeriod = startPeriod,
-            endPeriod = nextMonth,
-            transactionType = TransactionType.PEMBELIAN
+            firstDayOfPeriod = startPeriod,
+            lastDayOfPeriod = nextMonth,
+            transactionTypeId = TransactionType.PEMBELIAN.id
         )
-        val currentMonthStock = monthlyStockRepo.getMonthlyStock(
+        val currentMonthStock = getMonthlyStockByPeriod.execute(
             startMonthPeriod = startPeriod,
             productId = productId,
+            timeService = timeService,
         )
 
         return TransactionSummary(

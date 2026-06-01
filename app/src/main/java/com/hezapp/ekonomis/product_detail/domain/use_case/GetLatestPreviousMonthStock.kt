@@ -4,6 +4,7 @@ import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
 import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
 import com.hezapp.ekonomis.core.domain.utils.toCalendar
@@ -14,6 +15,7 @@ import kotlinx.coroutines.flow.flow
 class GetLatestPreviousMonthStock(
     private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase,
     private val reportingService: IErrorReportingService,
+    private val timeService: ITimeService,
 ) {
     operator  fun invoke(
         currentMonthPeriod: Long,
@@ -23,10 +25,10 @@ class GetLatestPreviousMonthStock(
         emit(ResponseWrapper.Loading())
 
         val previousMonthPeriod = currentMonthPeriod
-            .toCalendar()
-            .toBeginningOfMonth()
+            .toCalendar(timeService)
+            .toBeginningOfMonth(timeService)
             .timeInMillis
-            .getPreviousMonthYear()
+            .getPreviousMonthYear(timeService)
 
         val previousMonthTransactionSummary = getTransactionSummaryOfAMonth(
             startPeriod = previousMonthPeriod,

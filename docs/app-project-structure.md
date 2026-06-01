@@ -72,7 +72,9 @@ Each screen can contain three layers:
 
 There are two types of DAO in this app:
 
-- **Persistence DAO** – responsible for persisting one Room entity (table).  
+- **Persistence DAO** – responsible for persisting one Room entity (table). It can also include one
+  `getEntityById` method.
+
   Examples: `ProfileDao`, `ProductDao`, `InvoiceDao`.
 - **Read/Query DAO** – grouped by use case for reading data.  
   Examples: `GetProductPreviewReadDao`, `GetTransactionDetailsReadDao`, `GetTransactionPreviewsDao`.

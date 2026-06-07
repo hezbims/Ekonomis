@@ -8,6 +8,7 @@ import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
 import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
+import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
 import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
 import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
@@ -38,6 +39,7 @@ class InvoiceSeeder(
     private val installmentDao: InstallmentDao = koin.get()
     private val installmentItemDao: InstallmentItemDao = koin.get()
     private val profileDao : ProfileDao = koin.get()
+    private val productDao : ProductDao = koin.get()
     private val database: EkonomisDatabase = koin.get()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -97,9 +99,12 @@ class InvoiceSeeder(
             )).toInt()
 
             invoiceItems.forEach {
+                productDao.getProduct(it.productId) ?:
+                    throw RuntimeException("Product with id '${it.productId}' not found in DB")
+
                 invoiceItemDao.upsertInvoiceItems(
                     InvoiceItemEntity(
-                        productId = it.product.id,
+                        productId = it.productId,
                         invoiceId = invoiceId,
                         quantity = it.quantity,
                         price = it.price,
@@ -173,9 +178,22 @@ class InvoiceSeeder(
 data class InvoiceItemSeed(
     val quantity: Int,
     val unitType: UnitType,
-    val product: ProductEntity,
+    val productId: Int,
     val price: Int,
-)
+) {
+    @Deprecated(message = "Use primary constructor instead")
+    constructor(
+        quantity: Int,
+        unitType: UnitType,
+        product: ProductEntity,
+        price: Int,
+    ) : this(
+        quantity = quantity,
+        unitType = unitType,
+        productId = product.id,
+        price = price,
+    )
+}
 
 data class InstallmentSeed(
     val isPaidOff: Boolean,

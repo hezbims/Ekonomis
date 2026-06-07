@@ -8,13 +8,23 @@ import com.hezapp.ekonomis.core.data.installment.dao.InstallmentDao
 import com.hezapp.ekonomis.core.data.installment_item.dao.InstallmentItemDao
 import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
-import com.hezapp.ekonomis.core.domain.invoice.entity.*
+import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
+import com.hezapp.ekonomis.core.domain.invoice.entity.Installment
+import com.hezapp.ekonomis.core.domain.invoice.entity.InstallmentItem
+import com.hezapp.ekonomis.core.domain.invoice.entity.InvoiceEntity
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.InvoiceItemEntity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
-import com.hezapp.ekonomis.test_utils.seeder.snapshot.*
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentItemSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceItemSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProductSnapshot
+import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProfileSnapshot
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import java.time.LocalDate
@@ -27,7 +37,38 @@ class InvoiceSeeder(
     private val invoiceItemDao: InvoiceItemDao = koin.get()
     private val installmentDao: InstallmentDao = koin.get()
     private val installmentItemDao: InstallmentItemDao = koin.get()
+    private val profileDao : ProfileDao = koin.get()
     private val database: EkonomisDatabase = koin.get()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun run(
+        profileId: Int,
+        date: LocalDate,
+        invoiceItems: List<InvoiceItemSeed>,
+        ppn: Int?,
+        installmentSeed: InstallmentSeed? = null,
+        paymentMedia: PaymentMedia = PaymentMedia.TRANSFER,
+    ) : InvoiceSnapshot {
+        val profile = profileDao.getProfilesByIds(listOf(profileId)).singleOrNull() ?:
+            throw RuntimeException("No profile with id '${profileId}' found")
+
+        return run(
+            profile = profile,
+            date = date,
+            invoiceItems = invoiceItems,
+            ppn = ppn,
+            installmentSeed = installmentSeed,
+            paymentMedia = paymentMedia,
+        )
+    }
+
+
+    @Deprecated(
+        "Use other run method with profileId instead",
+        replaceWith = ReplaceWith(
+            "run(profileId, date, invoiceItems, ppn, installmentSeed, paymentMedia)"
+        )
+    )
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun run(
         profile: ProfileEntity,

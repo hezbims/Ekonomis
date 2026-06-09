@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.core.domain.utils
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -18,12 +19,17 @@ abstract class ITimeService {
     fun getCalendar() : Calendar = Calendar.getInstance(getTimezone()).apply {
         timeInMillis = getCurrentTimeInMillis()
     }
-    fun getLocalDate(): LocalDate = getCalendar().run {
-        LocalDate.now()
-            .withYear(get(Calendar.YEAR))
-            .withMonth(get(Calendar.MONTH) + 1)
-            .withDayOfMonth(get(Calendar.DAY_OF_MONTH))
-    }
+    fun getLocalDate(): LocalDate =
+        Instant.ofEpochMilli(getCurrentTimeInMillis())
+            .atZone(getZoneId())
+            .toLocalDate()
+
+    fun convertToTimeToEpochMillis(yearMonth: YearMonth) : Long =
+        yearMonth
+            .atDay(1)
+            .atStartOfDay(getZoneId())
+            .toInstant()
+            .toEpochMilli()
 
     private val dayDateMonthYearFormat by lazy {
         SimpleDateFormat("E, dd-MMM-yyyy", getLocale())

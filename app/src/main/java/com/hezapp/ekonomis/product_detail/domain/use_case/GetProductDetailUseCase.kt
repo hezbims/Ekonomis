@@ -6,7 +6,12 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.repo.IMonthlyStockRepo
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
-import com.hezapp.ekonomis.core.domain.utils.*
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
+import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
+import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
+import com.hezapp.ekonomis.core.domain.utils.toCalendar
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -17,6 +22,7 @@ class GetProductDetailUseCase(
     private val transactionProvider : ITransactionProvider,
     private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase,
     private val reportingService: IErrorReportingService,
+    private val timeService: ITimeService,
 ) {
     operator fun invoke(
         productId : Int,
@@ -25,8 +31,8 @@ class GetProductDetailUseCase(
     flow<ResponseWrapper<ProductDetail, MyBasicError>> {
         emit(ResponseWrapper.Loading())
 
-        val startMonthPeriod = monthYearPeriod.toCalendar().toBeginningOfMonth().timeInMillis
-        val prevMonthPeriod = startMonthPeriod.getPreviousMonthYear()
+        val startMonthPeriod = monthYearPeriod.toCalendar(timeService).toBeginningOfMonth(timeService).timeInMillis
+        val prevMonthPeriod = startMonthPeriod.getPreviousMonthYear(timeService)
 
         val productDetail = transactionProvider.withTransaction {
             val currentProduct = productRepo.getProduct(productId = productId)

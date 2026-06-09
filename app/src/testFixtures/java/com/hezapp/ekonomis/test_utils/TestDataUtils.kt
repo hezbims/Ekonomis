@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.test_utils
 import com.hezapp.ekonomis.test_utils.db_assertion.MasterDataDbAssertion
 import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDbAssertion
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceSeeder
+import com.hezapp.ekonomis.test_utils.seeder.MonthlyStockSeeder
 import com.hezapp.ekonomis.test_utils.seeder.ProductSeeder
 import com.hezapp.ekonomis.test_utils.seeder.ProfileSeeder
 import org.koin.core.Koin
@@ -15,6 +16,7 @@ class TestDataUtils(
     override val invoiceSeeder by lazy { InvoiceSeeder(koin) }
     override val productSeeder by lazy { ProductSeeder(koin) }
     override val profileSeeder by lazy { ProfileSeeder(koin) }
+    override val monthlyStockSeeder by lazy { MonthlyStockSeeder(koin) }
     //endregion
 
     //region DB ASSERTION
@@ -27,6 +29,7 @@ interface ITestDataUtils {
     val invoiceSeeder: InvoiceSeeder
     val productSeeder: ProductSeeder
     val profileSeeder: ProfileSeeder
+    val monthlyStockSeeder: MonthlyStockSeeder
     val transactionDbAssertion: TransactionDbAssertion
     val masterDataDbAssertion: MasterDataDbAssertion
 }

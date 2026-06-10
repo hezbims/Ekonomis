@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.edit_product_name_dialog.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IGetProductByIdUseCase
@@ -19,6 +20,7 @@ class EditProductNameDialogViewModel(
     private val productId: Int,
     private val editProductName: IEditProductNameUseCase,
     private val getProductById: IGetProductByIdUseCase,
+    private val reportingService: IErrorReportingService,
 ) : ViewModel() {
 
     private val _oneTimeEvent = Channel<EditProductNameDialogOneTimeEvent>()
@@ -31,7 +33,18 @@ class EditProductNameDialogViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getProductById(productId).collect { response ->
                 when(response){
-                    is ResponseWrapper.Failed -> throw Exception("Product ID is invalid : $productId. ${response.error?.javaClass?.name}")
+                    is ResponseWrapper.Failed -> {
+                        reportingService.logNonFatalError(
+                            Exception("Failed to load product name"),
+                            mapOf(
+                                "error" to response.error?.javaClass?.name,
+                                "productId" to productId,
+                            )
+                        )
+                        _state.update {
+                            it.copy(nameInput = "##Error##")
+                        }
+                    }
                     is ResponseWrapper.Loading -> Unit
                     is ResponseWrapper.Succeed -> _state.update {
                         it.copy(nameInput = response.data.name)

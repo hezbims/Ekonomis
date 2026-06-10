@@ -5,11 +5,14 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainApplication
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
+import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.koinApplication
+import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.koin.test.check.checkModules
 import org.koin.test.mock.MockProvider
@@ -24,10 +27,18 @@ class VerifyKoinGraphTest : KoinTest {
         }
         val koinApp = koinApplication {
             androidContext(ApplicationProvider.getApplicationContext())
-            modules(MainApplication.koinModules)
+            allowOverride(true)
+            modules(
+                MainApplication.koinModules + module {
+                    // override third party
+                    single<IErrorReportingService> { FakeErrorReportingService() }
+                },
+
+            )
         }
         @Suppress("DEPRECATION")
         koinApp.checkModules {
+            // override parameter passed
             withInstance(123)
             withInstance(EditMonthlyStockDialogViewModel.Params(
                 quantityPerUnitType = QuantityPerUnitType(cartonQuantity = 1, pieceQuantity = 1),

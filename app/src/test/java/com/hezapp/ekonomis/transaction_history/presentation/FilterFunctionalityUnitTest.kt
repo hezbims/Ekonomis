@@ -9,7 +9,7 @@ import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.seeder.InstallmentSeed
 import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
-import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -53,7 +53,7 @@ class FilterFunctionalityUnitTest(
     }
 
     @Before
-    fun prepare() = runTest {
+    fun prepare() = runBlocking {
         val prodTimeService = TimeService()
 
         val timeService = object : ITimeService(){

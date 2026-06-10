@@ -31,7 +31,7 @@ class EditProductNameDialogViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             getProductById(productId).collect { response ->
                 when(response){
-                    is ResponseWrapper.Failed -> throw Exception("Product ID is invalid : $productId")
+                    is ResponseWrapper.Failed -> throw Exception("Product ID is invalid : $productId. ${response.error?.javaClass?.name}")
                     is ResponseWrapper.Loading -> Unit
                     is ResponseWrapper.Succeed -> _state.update {
                         it.copy(nameInput = response.data.name)

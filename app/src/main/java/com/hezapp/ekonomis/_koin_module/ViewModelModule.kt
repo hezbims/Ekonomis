@@ -55,5 +55,6 @@ val ViewModelModule = module {
         editProductName = get(),
         getProductById = get(),
         reportingService = get(),
+        dispatcherProvider = get(),
     ) }
 }

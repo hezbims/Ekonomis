@@ -2,12 +2,12 @@ package com.hezapp.ekonomis.edit_product_name_dialog.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IGetProductByIdUseCase
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +21,7 @@ class EditProductNameDialogViewModel(
     private val editProductName: IEditProductNameUseCase,
     private val getProductById: IGetProductByIdUseCase,
     private val reportingService: IErrorReportingService,
+    private val dispatcherProvider: IDispatcherProvider
 ) : ViewModel() {
 
     private val _oneTimeEvent = Channel<EditProductNameDialogOneTimeEvent>()
@@ -30,7 +31,7 @@ class EditProductNameDialogViewModel(
     val state: StateFlow<EditProductNameDialogUiState> = _state.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             getProductById(productId).collect { response ->
                 when(response){
                     is ResponseWrapper.Failed -> {
@@ -63,7 +64,7 @@ class EditProductNameDialogViewModel(
     }
 
     private fun submit() {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(dispatcherProvider.io) {
             editProductName(productId = productId, name = _state.value.nameInput)
                 .collect { response ->
                     if (response is ResponseWrapper.Succeed)

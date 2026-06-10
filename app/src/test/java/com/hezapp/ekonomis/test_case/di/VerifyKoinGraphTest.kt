@@ -3,11 +3,13 @@ package com.hezapp.ekonomis.test_case.di
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainApplication
+import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
+import com.hezapp.ekonomis.test_utils.TestDispatcherProvider
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
@@ -32,6 +34,7 @@ class VerifyKoinGraphTest : KoinTest {
                 MainApplication.koinModules + module {
                     // override third party
                     single<IErrorReportingService> { FakeErrorReportingService() }
+                    single<IDispatcherProvider> { TestDispatcherProvider() }
                 },
 
             )

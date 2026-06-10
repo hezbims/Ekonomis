@@ -2,6 +2,7 @@ package com.hezapp.ekonomis.edit_product_name_dialog.presentation
 
 import androidx.activity.compose.setContent
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.edit_product_name_dialog.application.model.EditProductNameError
@@ -11,6 +12,7 @@ import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.I
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IGetProductByIdUseCase
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
+import com.hezapp.ekonomis.test_utils.TestDispatcherProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.junit.Before
@@ -33,12 +35,14 @@ abstract class _BaseEditProductNameDialogUiTest : BaseEkonomisUiUnitTest(
                     factory<IEditProductNameUseCase> { FakeEditProductNameUseCase() }
                     factory<IGetProductByIdUseCase> { FakeGetProductByIdUseCase() }
                     factory<IErrorReportingService> { FakeErrorReportingService() }
+                    factory<IDispatcherProvider> { TestDispatcherProvider() }
                     viewModel { _ ->
                         EditProductNameDialogViewModel(
                             productId = 1,
                             getProductById = get(),
                             editProductName = get(),
                             reportingService = get(),
+                            dispatcherProvider = get(),
                         )
                     }
                 }

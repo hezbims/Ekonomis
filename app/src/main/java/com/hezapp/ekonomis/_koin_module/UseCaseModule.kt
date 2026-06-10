@@ -65,6 +65,7 @@ val UseCaseModule = module {
         monthlyStockRepo = get(),
         transactionProvider = get(),
         reportingService = get(),
+        timeService = get(),
     ) }
 
     factory { EditMonthlyStockUseCase(

@@ -48,8 +48,7 @@ fun loadTestKoinModules(
         single { testDb.installmentTestDao }
         single { testDb.installmentItemTestDao }
         //endregion
-        single<TestTimeService> {
-            val timeZone = TimeZone.getTimeZone("GMT+8")
+        single<ITimeService> { val timeZone = TimeZone.getTimeZone("GMT+8")
             TestTimeService(
                 currentTimeInMillis = ZonedDateTime.of(
                     LocalDate.of(2020, 2, 15).atStartOfDay(),
@@ -57,9 +56,7 @@ fun loadTestKoinModules(
                 ).toInstant().toEpochMilli(),
                 timeZone = timeZone,
                 locale = Locale.forLanguageTag("id-ID"),
-            )
-        }
-        single<ITimeService> { get<TestTimeService>() }
+            )}
         single<IErrorReportingService> { FakeErrorReportingService() }
     }
     koin.loadModules(listOf(module), allowOverride = true)

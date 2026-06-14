@@ -20,6 +20,7 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentItemSnapshot
 import com.hezapp.ekonomis.test_utils.seeder.snapshot.InstallmentSnapshot
 import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceItemSnapshot
@@ -29,7 +30,6 @@ import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProfileSnapshot
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import java.time.LocalDate
-import java.time.ZoneId
 
 class InvoiceSeeder(
     koin: Koin = GlobalContext.get(),
@@ -41,6 +41,7 @@ class InvoiceSeeder(
     private val profileDao : ProfileDao = koin.get()
     private val productDao : ProductDao = koin.get()
     private val database: EkonomisDatabase = koin.get()
+    private val timeService: ITimeService = koin.get()
 
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun run(
@@ -90,7 +91,7 @@ class InvoiceSeeder(
         return database.withTransaction {
             val invoiceId = invoiceDao.upsertInvoice(InvoiceEntity(
                 date = date.atStartOfDay(
-                    ZoneId.of("UTC")
+                    timeService.getZoneId()
                 ).toInstant().toEpochMilli(),
                 ppn = if (transactionType == TransactionType.PENJUALAN) null else ppn!!,
                 profileId = profile.id,

@@ -40,6 +40,6 @@ class MonthlyStockSeeder(
 
         val insertedEntity = dao.getById(id.toInt())
 
-        MonthlyStockSnapshot.fromRoomEntity(insertedEntity, timeService = timeService)
+        MonthlyStockSnapshot.fromRoomEntity(insertedEntity!!, timeService = timeService)
     }
 }

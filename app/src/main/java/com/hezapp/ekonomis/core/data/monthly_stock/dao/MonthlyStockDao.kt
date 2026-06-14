@@ -11,5 +11,5 @@ interface MonthlyStockDao {
     suspend fun upsert(monthlyStockEntity: MonthlyStockEntity) : Long
 
     @Query("SELECT * FROM monthly_stock WHERE id = :id")
-    suspend fun getById(id: Int) : MonthlyStockEntity
+    suspend fun getById(id: Int) : MonthlyStockEntity?
 }

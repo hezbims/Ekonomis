@@ -21,6 +21,7 @@ gmsGoogleServices = "4.4.3"
 firebaseBom = "34.2.0"
 firebaseCrashlyticsPlugin = "3.0.6"
 testRetryGradlePlugin = "1.6.4"
+hamcrest = "3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,6 +56,7 @@ mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", versio
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref= "firebaseBom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

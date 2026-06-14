@@ -150,11 +150,13 @@ dependencies {
     testImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.koin.test)
+    testImplementation(libs.hamcrest)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.room.testing.android)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.hamcrest)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     testFixturesImplementation(platform(libs.androidx.compose.bom))
@@ -163,6 +165,7 @@ dependencies {
     testFixturesImplementation(libs.androidx.room.runtime)
     testFixturesImplementation(libs.koin.core)
     testFixturesImplementation(libs.koin.android)
+    testFixturesImplementation(libs.hamcrest)
 }
 
 tasks.withType(KotlinCompile::class).configureEach {

@@ -62,14 +62,20 @@ com.hezapp.ekonomis/
     screen-A/
       application/
         get_something_use_case/
-            BaseGetSomethingUseCaseTest
-            WhenUserDoThis
-            WhenUserDoThat
+            BaseGetSomethingUseCaseTest.kt
+            WhenUserDoThis.kt
+            WhenUserDoThat.kt
+      data/
       presentation/
         BaseScreenATest.kt
-        WhenUserDoThis
-        WhenUserDoThat
+        WhenUserDoThis.kt
+        WhenUserDoThat.kt
     screen-B/
+      application/
+        GetItemXUseCaseTest.kt
+        GetItemYUseCaseTest.kt
+      data/
+      presentation
     core/
   utils/
     base_class/
@@ -80,18 +86,30 @@ com.hezapp.ekonomis/
 │   ├── screen-A/
 │   │   ├── application/
 │   │   │   └── get_something_use_case/
-│   │   │       ├── BaseGetSomethingUseCaseTest
-│   │   │       ├── WhenUserDoThis
-│   │   │       └── WhenUserDoThat
+│   │   │       ├── BaseGetSomethingUseCaseTest.kt
+│   │   │       ├── WhenUserDoThis.kt
+│   │   │       └── WhenUserDoThat.kt
+│   │   ├── data/
 │   │   └── presentation/
 │   │       ├── BaseScreenATest.kt
-│   │       ├── WhenUserDoThis
-│   │       └── WhenUserDoThat
+│   │       ├── WhenUserDoThis.kt
+│   │       └── WhenUserDoThat.kt
 │   ├── screen-B/
+│   │   ├── application/
+│   │   │   ├── GetItemXUseCaseTest.kt
+│   │   │   └── GetItemYUseCaseTest.kt
+│   │   ├── data/
+│   │   └── presentation
 │   └── core/
 └── utils/
     └── base_class/
 ```
+
+Explanation:
+
+There are two ways to structure test cases.
+- `screen-A`: one unit is tested using multiple `when` scenarios across separate classes (multiple test cases in separate files).
+- `screen-B`: one unit is tested in a single class (multiple test cases in one file).
 
 # Instrumented Test
 

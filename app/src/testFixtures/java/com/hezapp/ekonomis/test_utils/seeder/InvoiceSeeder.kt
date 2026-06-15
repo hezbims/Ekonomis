@@ -44,6 +44,12 @@ class InvoiceSeeder(
     private val timeService: ITimeService = koin.get()
 
     @RequiresApi(Build.VERSION_CODES.O)
+    @Deprecated(
+        "Use DSL for readability instead",
+        replaceWith = ReplaceWith(
+            "com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn"
+        )
+    )
     suspend fun run(
         profileId: Int,
         date: LocalDate,
@@ -67,9 +73,9 @@ class InvoiceSeeder(
 
 
     @Deprecated(
-        "Use other run method with profileId instead",
+        "Use DSL for readability instead",
         replaceWith = ReplaceWith(
-            "run(profileId, date, invoiceItems, ppn, installmentSeed, paymentMedia)"
+            "com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn"
         )
     )
     @RequiresApi(Build.VERSION_CODES.O)

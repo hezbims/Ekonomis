@@ -32,21 +32,21 @@ class GetProductDetailTest : BaseDataUnitTest() {
 
     @Before
     fun background() = runBlocking {
-        val buyerProfileId = dataUtils.profileSeeder.runV2(
+        val buyerProfileId = profileSeeder.runV2(
             profileName = "buyer-1",
             profileType = ProfileType.CUSTOMER,
         ).id
-        val supplierProfileId = dataUtils.profileSeeder.runV2(
+        val supplierProfileId = profileSeeder.runV2(
             profileName = "supplier-1",
             profileType = ProfileType.SUPPLIER,
         ).id
 
-        currentProduct = dataUtils.productSeeder.runV2(name = "observed-product").id
-        otherProduct = dataUtils.productSeeder.runV2(name = "otherProduct").id
+        currentProduct = productSeeder.runV2(name = "observed-product").id
+        otherProduct = productSeeder.runV2(name = "otherProduct").id
 
         currentMonthYearIs(onCurrentMonth)
 
-        thereIsTransactionOn(onCurrentMonth, koin) {
+        seederDsl.thereIsTransactionOn(onCurrentMonth) {
             `in`(day = 1, ppn = 12, profileId = supplierProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(2), price = 15_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(2), price = 2_000)
@@ -69,14 +69,14 @@ class GetProductDetailTest : BaseDataUnitTest() {
             }
         }
 
-        thereIsTransactionOn(onPreviousMonth, koin) {
+        seederDsl.thereIsTransactionOn(onPreviousMonth) {
             `in`(day = 5, ppn = 12, profileId = supplierProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(200), price = 14_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(200), price = 1_800)
             }
         }
 
-        thereIsTransactionOn(onNextMonth, koin) {
+        seederDsl.thereIsTransactionOn(onNextMonth) {
             out(day = 23, profileId = buyerProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(1), price = 25_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(1), price = 3_500)
@@ -235,7 +235,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
         carton: Int,
         piece: Int
     ){
-        dataUtils.monthlyStockSeeder.run(
+        monthlyStockSeeder.run(
             productId = productId,
             monthYear = yearMonth,
             cartonQuantity = carton,

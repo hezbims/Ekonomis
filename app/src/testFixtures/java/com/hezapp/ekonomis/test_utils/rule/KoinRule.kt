@@ -9,31 +9,25 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
-import org.koin.dsl.koinApplication
 
 class KoinRule(
     private val appContext: Context,
-    private val onKoinApplicationCreated: (KoinApplication) -> Unit,
+    private val koinApp: KoinApplication,
     private val options: KoinOptions,
 ) : TestWatcher() {
-    private lateinit var koinApp : KoinApplication
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun starting(description: Description?) {
-        koinApp = koinApplication {
+        koinApp.apply {
             allowOverride(true)
             androidContext(appContext)
             if (options.loadDefaultKoinModules)
                 modules(MainApplication.koinModules)
-        }.apply {
             if (options.loadDefaultKoinModules)
                 loadTestKoinModules(
                     appContext = appContext,
                     koin = koin,
                     useInMemoryDb = options.useInMemoryDb)
         }
-        onKoinApplicationCreated(koinApp)
-        super.starting(description)
     }
 
     override fun finished(description: Description?) {

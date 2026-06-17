@@ -90,7 +90,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
     }
 
     @Test
-    fun `(Initial Month Stock) - When there is no recorded stock data on this month, but there is recorded stock from previous month, initial stock should use calculation from previous month`() {
+    fun `(Initial Month Stock) - When there is no recorded stock data on this month, but there is recorded stock from previous month, initial stock on current month should be equal to recorded stock + total transactions on previous month`() {
         // GIVEN
         seederDsl.thereIsMonthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5)
 
@@ -103,7 +103,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
     }
 
     @Test
-    fun `(Initial Month Stock) - When there is no recorded stock data on this month, and there is no recorded stock from previous month, initial stock should use calculation from previous month`(){
+    fun `(Initial Month Stock) - When there is no recorded stock data on this month, and there is no recorded stock from previous month, initial stock on current month should be equal to total transactions on previous month`(){
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()
 
@@ -113,7 +113,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
     }
 
     @Test
-    fun `(Initial Month Stock) - When there is recorded stock data on this month, initial stock should use that record`() {
+    fun `(Initial Month Stock) - When there is recorded stock data on this month, initial stock of current month should be equal to that record`() {
         // GIVEN
         seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
         seederDsl.thereIsMonthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5) // obstacle

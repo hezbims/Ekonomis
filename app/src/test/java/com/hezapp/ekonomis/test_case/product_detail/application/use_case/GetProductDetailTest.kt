@@ -3,13 +3,14 @@ package com.hezapp.ekonomis.test_case.product_detail.application.use_case
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
-import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.seeder.dsl.monthly_stock.thereIsMonthlyStock
 import com.hezapp.ekonomis.test_utils.seeder.dsl.product.thereIsProduct
+import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.thereIsCustomerProfile
+import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.thereIsSupplierProfile
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.dto.QuantityData
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn
 import kotlinx.coroutines.flow.last
@@ -33,22 +34,20 @@ class GetProductDetailTest : BaseDataUnitTest() {
     private var otherProduct : Int = 0
 
     @Before
-    fun background() : Unit = runBlocking {
+    fun background() {
         currentMonthYearIs(onCurrentMonth)
 
-        val buyerProfileId = profileSeeder.runV2(
-            profileName = "buyer-1",
-            profileType = ProfileType.CUSTOMER,
-        ).id
-        val supplierProfileId = profileSeeder.runV2(
-            profileName = "supplier-1",
-            profileType = ProfileType.SUPPLIER,
-        ).id
+        seedData()
+    }
 
-        currentProduct = seederDsl.thereIsProduct(name = "observed-product").id
-        otherProduct = seederDsl.thereIsProduct(name = "otherProduct").id
+    fun seedData() : Unit = seederDsl.run {
+        val buyerProfileId = thereIsCustomerProfile(name = "buyer-1").id
+        val supplierProfileId = thereIsSupplierProfile(name = "supplier-1").id
 
-        seederDsl.thereIsTransactionOn(onCurrentMonth) {
+        currentProduct = thereIsProduct(name = "observed-product").id
+        otherProduct = thereIsProduct(name = "otherProduct").id
+
+        thereIsTransactionOn(onCurrentMonth) {
             `in`(day = 1, ppn = 12, profileId = supplierProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(2), price = 15_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(2), price = 2_000)
@@ -71,14 +70,14 @@ class GetProductDetailTest : BaseDataUnitTest() {
             }
         }
 
-        seederDsl.thereIsTransactionOn(onPreviousMonth) {
+        thereIsTransactionOn(onPreviousMonth) {
             `in`(day = 5, ppn = 12, profileId = supplierProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(200), price = 14_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(200), price = 1_800)
             }
         }
 
-        seederDsl.thereIsTransactionOn(onNextMonth) {
+        thereIsTransactionOn(onNextMonth) {
             out(day = 23, profileId = buyerProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(1), price = 25_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(1), price = 3_500)
@@ -86,8 +85,8 @@ class GetProductDetailTest : BaseDataUnitTest() {
         }
 
         // Obstacle
-        seederDsl.thereIsMonthlyStock(onNextMonth, productId = currentProduct,  carton = 10, piece = 15)
-        seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = otherProduct, carton = 21, piece = 23)
+        thereIsMonthlyStock(onNextMonth, productId = currentProduct,  carton = 10, piece = 15)
+        thereIsMonthlyStock(onCurrentMonth, productId = otherProduct, carton = 21, piece = 23)
     }
 
     @Test

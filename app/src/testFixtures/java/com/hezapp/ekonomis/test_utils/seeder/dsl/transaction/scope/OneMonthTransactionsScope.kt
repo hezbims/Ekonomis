@@ -31,7 +31,7 @@ import java.time.YearMonth
 /**
  * Scope to define transactions within a single month.
  *
- * Instances are created by [com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn]. Inside the lambda block,
+ * Instances are created by [com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.transactionOn]. Inside the lambda block,
  * call [out] for a sale transaction or [in] for a purchase transaction.
  */
 @RequiresApi(Build.VERSION_CODES.O)

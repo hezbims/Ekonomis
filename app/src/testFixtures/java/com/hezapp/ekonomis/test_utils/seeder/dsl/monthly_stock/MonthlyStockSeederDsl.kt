@@ -13,7 +13,7 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun SeederDsl.thereIsMonthlyStock(
+fun SeederDsl.monthlyStock(
     on: YearMonth,
     productId: Int,
     carton: Int,

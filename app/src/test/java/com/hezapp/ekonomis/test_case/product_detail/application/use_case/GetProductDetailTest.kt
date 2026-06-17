@@ -7,12 +7,12 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.test_utils.TestTimeService
-import com.hezapp.ekonomis.test_utils.seeder.dsl.monthly_stock.thereIsMonthlyStock
-import com.hezapp.ekonomis.test_utils.seeder.dsl.product.thereIsProduct
-import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.thereIsCustomerProfile
-import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.thereIsSupplierProfile
+import com.hezapp.ekonomis.test_utils.seeder.dsl.monthly_stock.monthlyStock
+import com.hezapp.ekonomis.test_utils.seeder.dsl.product.product
+import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.customerProfile
+import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.supplierProfile
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.dto.QuantityData
-import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn
+import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.transactionOn
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
@@ -41,13 +41,13 @@ class GetProductDetailTest : BaseDataUnitTest() {
     }
 
     fun seedData() : Unit = seederDsl.run {
-        val buyerProfileId = thereIsCustomerProfile(name = "buyer-1").id
-        val supplierProfileId = thereIsSupplierProfile(name = "supplier-1").id
+        val buyerProfileId = customerProfile(name = "buyer-1").id
+        val supplierProfileId = supplierProfile(name = "supplier-1").id
 
-        currentProduct = thereIsProduct(name = "observed-product").id
-        otherProduct = thereIsProduct(name = "otherProduct").id
+        currentProduct = product(name = "observed-product").id
+        otherProduct = product(name = "otherProduct").id
 
-        thereIsTransactionOn(onCurrentMonth) {
+        transactionOn(onCurrentMonth) {
             `in`(day = 1, ppn = 12, profileId = supplierProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(2), price = 15_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(2), price = 2_000)
@@ -70,14 +70,14 @@ class GetProductDetailTest : BaseDataUnitTest() {
             }
         }
 
-        thereIsTransactionOn(onPreviousMonth) {
+        transactionOn(onPreviousMonth) {
             `in`(day = 5, ppn = 12, profileId = supplierProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(200), price = 14_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(200), price = 1_800)
             }
         }
 
-        thereIsTransactionOn(onNextMonth) {
+        transactionOn(onNextMonth) {
             out(day = 23, profileId = buyerProfileId) {
                 withProduct(id = currentProduct, quantity = QuantityData.carton(1), price = 25_000)
                 withProduct(id = currentProduct, quantity = QuantityData.piece(1), price = 3_500)
@@ -85,14 +85,14 @@ class GetProductDetailTest : BaseDataUnitTest() {
         }
 
         // Obstacle
-        thereIsMonthlyStock(onNextMonth, productId = currentProduct,  carton = 10, piece = 15)
-        thereIsMonthlyStock(onCurrentMonth, productId = otherProduct, carton = 21, piece = 23)
+        monthlyStock(onNextMonth, productId = currentProduct,  carton = 10, piece = 15)
+        monthlyStock(onCurrentMonth, productId = otherProduct, carton = 21, piece = 23)
     }
 
     @Test
     fun `(Initial Month Stock) - When there is no recorded stock data on this month, but there is recorded stock from previous month, initial stock on current month should be equal to recorded stock + total transactions on previous month`() {
         // GIVEN
-        seederDsl.thereIsMonthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5)
+        seederDsl.monthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5)
 
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()
@@ -115,8 +115,8 @@ class GetProductDetailTest : BaseDataUnitTest() {
     @Test
     fun `(Initial Month Stock) - When there is recorded stock data on this month, initial stock of current month should be equal to that record`() {
         // GIVEN
-        seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
-        seederDsl.thereIsMonthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5) // obstacle
+        seederDsl.monthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
+        seederDsl.monthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5) // obstacle
 
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()
@@ -129,7 +129,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
     @Test
     fun `(Other Data) - Should capture other data correctly`(){
         // GIVEN
-        seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
+        seederDsl.monthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
 
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()

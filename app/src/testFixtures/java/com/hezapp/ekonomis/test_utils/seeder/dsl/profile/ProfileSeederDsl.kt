@@ -8,13 +8,13 @@ import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProfileSnapshot
 import kotlinx.coroutines.runBlocking
 import org.koin.core.Koin
 
-fun SeederDsl.thereIsSupplierProfile(name: String) : ProfileSnapshot = thereIsProfile(
+fun SeederDsl.supplierProfile(name: String) : ProfileSnapshot = thereIsProfile(
     name = name,
     type = ProfileType.SUPPLIER,
     koin = koin,
 )
 
-fun SeederDsl.thereIsCustomerProfile(name: String) : ProfileSnapshot = thereIsProfile(
+fun SeederDsl.customerProfile(name: String) : ProfileSnapshot = thereIsProfile(
     name = name,
     type = ProfileType.CUSTOMER,
     koin = koin,

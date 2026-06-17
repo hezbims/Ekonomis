@@ -32,7 +32,7 @@ import java.time.YearMonth
  * @return [List] of [InvoiceSnapshot] — one snapshot per transaction
  */
 @RequiresApi(Build.VERSION_CODES.O)
-fun SeederDsl.thereIsTransactionOn(
+fun SeederDsl.transactionOn(
     yearMonth: YearMonth,
     block: suspend OneMonthTransactionsScope.() -> Unit,
 ): List<InvoiceSnapshot> = runBlocking {

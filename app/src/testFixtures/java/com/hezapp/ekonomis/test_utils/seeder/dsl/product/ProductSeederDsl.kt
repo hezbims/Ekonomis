@@ -6,7 +6,7 @@ import com.hezapp.ekonomis.test_utils.seeder.dsl.SeederDsl
 import com.hezapp.ekonomis.test_utils.seeder.snapshot.ProductSnapshot
 import kotlinx.coroutines.runBlocking
 
-fun SeederDsl.thereIsProduct(name: String) : ProductSnapshot = runBlocking {
+fun SeederDsl.product(name: String) : ProductSnapshot = runBlocking {
     val dao = koin.get<ProductTestDao>()
 
     val ids = dao.insertNewProducts(listOf(ProductEntity(name = name)))

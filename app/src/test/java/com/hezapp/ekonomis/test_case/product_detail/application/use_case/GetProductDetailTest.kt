@@ -6,7 +6,6 @@ import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.test_application.BaseDataUnitTest
-import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.seeder.dsl.monthly_stock.monthlyStock
 import com.hezapp.ekonomis.test_utils.seeder.dsl.product.product
 import com.hezapp.ekonomis.test_utils.seeder.dsl.profile.customerProfile
@@ -24,7 +23,6 @@ import org.junit.Before
 import org.junit.Test
 import java.time.Month
 import java.time.YearMonth
-import java.time.ZoneId
 
 class GetProductDetailTest : BaseDataUnitTest() {
     private val onCurrentMonth = YearMonth.of(2020, Month.JANUARY)
@@ -35,7 +33,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
 
     @Before
     fun background() {
-        currentMonthYearIs(onCurrentMonth)
+        configDsl.currentTimeIs(onCurrentMonth)
 
         seedData()
     }
@@ -220,13 +218,6 @@ class GetProductDetailTest : BaseDataUnitTest() {
             "price=$price, ppn=$ppn, profileName=$expectedProfileName",
             matchingTransaction,
             not(nullValue())
-        )
-    }
-
-    fun currentMonthYearIs(yearMonth: YearMonth){
-        (koin.get<ITimeService>() as TestTimeService).setCurrentTime(
-            localDate = yearMonth.atDay(1),
-            zoneId = ZoneId.of("UTC+8")
         )
     }
 

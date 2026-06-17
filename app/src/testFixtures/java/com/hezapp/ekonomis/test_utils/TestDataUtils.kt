@@ -26,8 +26,9 @@ class TestDataUtils(
     override val monthlyStockSeeder by lazy { MonthlyStockSeeder(getKoin()) }
     //endregion
 
-    //region SEEDER DSL
+    //region DSL
     override val seederDsl by lazy { SeederDsl(getKoin()) }
+    override val configDsl by lazy { ConfigDsl(getKoin()) }
     //endregion
 
     //region DB ASSERTION
@@ -44,4 +45,5 @@ interface ITestDataUtils {
     val transactionDbAssertion: TransactionDbAssertion
     val masterDataDbAssertion: MasterDataDbAssertion
     val seederDsl: SeederDsl
+    val configDsl : ConfigDsl
 }

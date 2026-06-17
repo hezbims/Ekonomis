@@ -9,6 +9,7 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCas
 import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.seeder.dsl.monthly_stock.thereIsMonthlyStock
+import com.hezapp.ekonomis.test_utils.seeder.dsl.product.thereIsProduct
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.dto.QuantityData
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn
 import kotlinx.coroutines.flow.last
@@ -33,6 +34,8 @@ class GetProductDetailTest : BaseDataUnitTest() {
 
     @Before
     fun background() : Unit = runBlocking {
+        currentMonthYearIs(onCurrentMonth)
+
         val buyerProfileId = profileSeeder.runV2(
             profileName = "buyer-1",
             profileType = ProfileType.CUSTOMER,
@@ -42,10 +45,8 @@ class GetProductDetailTest : BaseDataUnitTest() {
             profileType = ProfileType.SUPPLIER,
         ).id
 
-        currentProduct = productSeeder.runV2(name = "observed-product").id
-        otherProduct = productSeeder.runV2(name = "otherProduct").id
-
-        currentMonthYearIs(onCurrentMonth)
+        currentProduct = seederDsl.thereIsProduct(name = "observed-product").id
+        otherProduct = seederDsl.thereIsProduct(name = "otherProduct").id
 
         seederDsl.thereIsTransactionOn(onCurrentMonth) {
             `in`(day = 1, ppn = 12, profileId = supplierProfileId) {

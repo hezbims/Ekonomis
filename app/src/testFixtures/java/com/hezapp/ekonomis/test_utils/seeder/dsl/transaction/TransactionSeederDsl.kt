@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.hezapp.ekonomis.test_utils.seeder.dsl.SeederDsl
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.scope.OneMonthTransactionsScope
 import com.hezapp.ekonomis.test_utils.seeder.snapshot.InvoiceSnapshot
+import kotlinx.coroutines.runBlocking
 import java.time.YearMonth
 
 /**
@@ -31,14 +32,14 @@ import java.time.YearMonth
  * @return [List] of [InvoiceSnapshot] — one snapshot per transaction
  */
 @RequiresApi(Build.VERSION_CODES.O)
-suspend fun SeederDsl.thereIsTransactionOn(
+fun SeederDsl.thereIsTransactionOn(
     yearMonth: YearMonth,
     block: suspend OneMonthTransactionsScope.() -> Unit,
-): List<InvoiceSnapshot> {
+): List<InvoiceSnapshot> = runBlocking {
     val scope = OneMonthTransactionsScope(
         yearMonth = yearMonth,
         koin = koin,
     )
     scope.block()
-    return scope.snapshots.toList()
+    scope.snapshots.toList()
 }

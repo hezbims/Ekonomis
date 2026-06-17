@@ -8,6 +8,7 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.test_utils.seeder.dsl.monthly_stock.thereIsMonthlyStock
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.dto.QuantityData
 import com.hezapp.ekonomis.test_utils.seeder.dsl.transaction.thereIsTransactionOn
 import kotlinx.coroutines.flow.last
@@ -31,7 +32,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
     private var otherProduct : Int = 0
 
     @Before
-    fun background() = runBlocking {
+    fun background() : Unit = runBlocking {
         val buyerProfileId = profileSeeder.runV2(
             profileName = "buyer-1",
             profileType = ProfileType.CUSTOMER,
@@ -84,14 +85,14 @@ class GetProductDetailTest : BaseDataUnitTest() {
         }
 
         // Obstacle
-        thereIsStockOf(currentProduct, onNextMonth, carton = 10, piece = 15)
-        thereIsStockOf(otherProduct, onCurrentMonth, carton = 21, piece = 23)
+        seederDsl.thereIsMonthlyStock(onNextMonth, productId = currentProduct,  carton = 10, piece = 15)
+        seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = otherProduct, carton = 21, piece = 23)
     }
 
     @Test
-    fun `(Initial Month Stock) - When there is no recorded stock data on this month, but there is recorded stock from previous month, initial stock should use calculation from previous month`(){
+    fun `(Initial Month Stock) - When there is no recorded stock data on this month, but there is recorded stock from previous month, initial stock should use calculation from previous month`() {
         // GIVEN
-        thereIsStockOf(currentProduct, onPreviousMonth, carton = 9, piece = 5)
+        seederDsl.thereIsMonthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5)
 
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()
@@ -112,10 +113,10 @@ class GetProductDetailTest : BaseDataUnitTest() {
     }
 
     @Test
-    fun `(Initial Month Stock) - When there is recorded stock data on this month, initial stock should use that record`(){
+    fun `(Initial Month Stock) - When there is recorded stock data on this month, initial stock should use that record`() {
         // GIVEN
-        thereIsStockOf(currentProduct, onCurrentMonth, carton = 3033, piece = 4044)
-        thereIsStockOf(currentProduct, onPreviousMonth, carton = 9, piece = 5) // obstacle
+        seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
+        seederDsl.thereIsMonthlyStock(onPreviousMonth, productId = currentProduct, carton = 9, piece = 5) // obstacle
 
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()
@@ -128,7 +129,7 @@ class GetProductDetailTest : BaseDataUnitTest() {
     @Test
     fun `(Other Data) - Should capture other data correctly`(){
         // GIVEN
-        thereIsStockOf(currentProduct, onCurrentMonth, carton = 3033, piece = 4044)
+        seederDsl.thereIsMonthlyStock(onCurrentMonth, productId = currentProduct, carton = 3033, piece = 4044)
 
         // WHEN
         val productDetail = getCurrentProductDetailOnCurrentMonth()
@@ -226,20 +227,6 @@ class GetProductDetailTest : BaseDataUnitTest() {
         (koin.get<ITimeService>() as TestTimeService).setCurrentTime(
             localDate = yearMonth.atDay(1),
             zoneId = ZoneId.of("UTC+8")
-        )
-    }
-
-    fun thereIsStockOf(
-        productId: Int,
-        yearMonth: YearMonth,
-        carton: Int,
-        piece: Int
-    ){
-        monthlyStockSeeder.run(
-            productId = productId,
-            monthYear = yearMonth,
-            cartonQuantity = carton,
-            pieceQuantity = piece,
         )
     }
 

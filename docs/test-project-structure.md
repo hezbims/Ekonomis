@@ -43,6 +43,12 @@ com.hezapp.ekonomis
 *Tree generated using [tree.nathanfriend.com](https://tree.nathanfriend.com/)*
 
 ## Explanation
+
+- **assertion** - Contains two types of assertions :
+  - attribute assertion : assert attribute of a model (room entity in data layer, or application layer DTO, or UI layer DTO)
+  - db assertion : assert if an entity exists or not in DB
+
+  For UI assertions, please use robot instead.
 - **robot** - Page Object Model used to control a screen and assert its state. A robot can include multiple isolated component interactors under the `_interactor` folder.
 - **rule** - JUnit rules used to perform actions before or after tests.
 - **steps** - Reusable business processes or steps that span multiple screens.

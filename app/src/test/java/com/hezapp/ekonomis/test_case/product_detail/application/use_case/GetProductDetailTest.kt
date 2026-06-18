@@ -1,5 +1,7 @@
 package com.hezapp.ekonomis.test_case.product_detail.application.use_case
 
+import com.hezapp.ekonomis.assertion._base.matchAny
+import com.hezapp.ekonomis.assertion.product_detail.application.ExpectedProductTransaction
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
@@ -16,7 +18,6 @@ import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
-import org.hamcrest.CoreMatchers.nullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.hasSize
 import org.junit.Before
@@ -174,21 +175,15 @@ class GetProductDetailTest : BaseDataUnitTest() {
             .toEpochMilli()
         val expectedPpn = null
         val expectedProfileName = "buyer-1"
-        val matchingTransaction = actualTransactions.firstOrNull {
-            it.date == dateEpochMillis &&
-            it.unitType == unitType &&
-            it.quantity == quantity &&
-            it.price == price &&
-            it.ppn == expectedPpn &&
-            it.profileName == expectedProfileName
-        }
-        assertThat(
-            "There is no ProductTransaction found with specified attributes: " +
-            "day=$day, unitType=$unitType, quantity=$quantity, " +
-            "price=$price, ppn=$expectedPpn, profileName=$expectedProfileName",
-            matchingTransaction,
-            not(nullValue())
-        )
+
+        actualTransactions.matchAny(ExpectedProductTransaction(
+            price = price,
+            quantity = quantity,
+            unitType = unitType,
+            date = dateEpochMillis,
+            ppn = expectedPpn,
+            profileName = expectedProfileName
+        ))
     }
 
     private fun assertInTransactionItemsContain(
@@ -204,21 +199,15 @@ class GetProductDetailTest : BaseDataUnitTest() {
             .toInstant()
             .toEpochMilli()
         val expectedProfileName = "supplier-1"
-        val matchingTransaction = actualTransactions.firstOrNull {
-            it.date == dateEpochMillis &&
-            it.unitType == unitType &&
-            it.quantity == quantity &&
-            it.price == price &&
-            it.ppn == ppn &&
-            it.profileName == expectedProfileName
-        }
-        assertThat(
-            "There is no ProductTransaction found with specified attributes: " +
-            "day=$day, unitType=$unitType, quantity=$quantity, " +
-            "price=$price, ppn=$ppn, profileName=$expectedProfileName",
-            matchingTransaction,
-            not(nullValue())
-        )
+
+        actualTransactions.matchAny(ExpectedProductTransaction(
+            price = price,
+            quantity = quantity,
+            unitType = unitType,
+            date = dateEpochMillis,
+            ppn = ppn,
+            profileName = expectedProfileName
+        ))
     }
 
     fun getCurrentProductDetailOnCurrentMonth() : ProductDetail = runBlocking {

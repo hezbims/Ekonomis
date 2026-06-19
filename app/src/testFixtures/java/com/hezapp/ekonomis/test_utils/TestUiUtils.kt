@@ -3,7 +3,7 @@ package com.hezapp.ekonomis.test_utils
 import android.content.Context
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.robot.EditProductNameDialogRobot
-import com.hezapp.ekonomis.robot.ProductDetailRobot
+import com.hezapp.ekonomis.robot.product_detail.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot

@@ -9,10 +9,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
-import com.hezapp.ekonomis.robot.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
-import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot
+import com.hezapp.ekonomis.robot.product_detail.ProductDetailRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
+import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 import com.hezapp.ekonomis.test_utils.TestTimeService
 import com.hezapp.ekonomis.test_utils.db_assertion.MasterDataDbAssertion
@@ -106,7 +106,7 @@ abstract class BaseEkonomisUiTest(
     @Before
     fun reset(){
         GlobalContext.get().get<EkonomisDatabase>().clearAllTables()
-        TestTimeService.Companion.reset()
+        TestTimeService.reset()
         if (immediatelyLaunchMainActivity)
             ActivityScenario.launch(MainActivity::class.java)
     }

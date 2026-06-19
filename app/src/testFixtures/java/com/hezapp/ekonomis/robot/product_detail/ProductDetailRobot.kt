@@ -1,8 +1,14 @@
-package com.hezapp.ekonomis.robot
+package com.hezapp.ekonomis.robot.product_detail
 
 import android.content.Context
-import androidx.compose.ui.test.*
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
@@ -11,7 +17,8 @@ import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
 import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * This is robot for [ProductDetailScreen][com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen]
@@ -28,14 +35,14 @@ class ProductDetailRobot(
 
         composeRule.onNode(
             hasText(inSectionLabel) and
-            hasAnySibling(
-                hasText(getQuantityString(quantity)) and
-                hasTestTag(ProductDetailTestTag.inQuantity)
-            ) and
-            hasAnySibling(
-                hasText(price.toRupiahV2()) and
-                hasTestTag(ProductDetailTestTag.totalInPrice)
-            )
+                    hasAnySibling(
+                        hasText(getQuantityString(quantity)) and
+                                hasTestTag(ProductDetailTestTag.inQuantity)
+                    ) and
+                    hasAnySibling(
+                        hasText(price.toRupiahV2()) and
+                                hasTestTag(ProductDetailTestTag.totalInPrice)
+                    )
         ).assertExists()
     }
 
@@ -47,14 +54,14 @@ class ProductDetailRobot(
 
         composeRule.onNode(
             hasText(outSectionLabel) and
-            hasAnySibling(
-                hasText(getQuantityString(quantity)) and
-                hasTestTag(ProductDetailTestTag.outQuantity)
-            ) and
-            hasAnySibling(
-                hasText(price.toRupiahV2()) and
-                hasTestTag(ProductDetailTestTag.totalOutPrice)
-            )
+                    hasAnySibling(
+                        hasText(getQuantityString(quantity)) and
+                                hasTestTag(ProductDetailTestTag.outQuantity)
+                    ) and
+                    hasAnySibling(
+                        hasText(price.toRupiahV2()) and
+                                hasTestTag(ProductDetailTestTag.totalOutPrice)
+                    )
         ).assertExists()
     }
 
@@ -63,10 +70,10 @@ class ProductDetailRobot(
 
         composeRule.onNode(
             hasText(firstDayOfMonthSectionLabel) and
-            hasAnySibling(
-                hasText(getQuantityString(quantity)) and
-                hasTestTag(ProductDetailTestTag.beginningOfMonthStock)
-            )
+                    hasAnySibling(
+                        hasText(getQuantityString(quantity)) and
+                                hasTestTag(ProductDetailTestTag.beginningOfMonthStock)
+                    )
         ).assertExists()
     }
 
@@ -75,10 +82,10 @@ class ProductDetailRobot(
 
         composeRule.onNode(
             hasText(latestStockSectionLabel) and
-            hasAnySibling(
-                hasText(getQuantityString(quantity)) and
-                hasTestTag(ProductDetailTestTag.latestStock)
-            )
+                    hasAnySibling(
+                        hasText(getQuantityString(quantity)) and
+                                hasTestTag(ProductDetailTestTag.latestStock)
+                    )
         )
     }
 

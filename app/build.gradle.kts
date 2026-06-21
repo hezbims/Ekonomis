@@ -176,6 +176,16 @@ tasks.withType(KotlinCompile::class).configureEach {
     }
 }
 
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.hamcrest") {
+            if (requested.name == "hamcrest-core" || requested.name == "hamcrest-library") {
+                useTarget("org.hamcrest:hamcrest:${libs.versions.hamcrest.get()}")
+            }
+        }
+    }
+}
+
 // Jalan terakhir kalau udah buntu ngedebug flaky test (jalan terkahir, dengan retry)
 //tasks.withType<Test>().configureEach {
 //    retry {

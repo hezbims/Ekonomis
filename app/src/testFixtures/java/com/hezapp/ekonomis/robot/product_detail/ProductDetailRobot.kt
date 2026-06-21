@@ -12,13 +12,12 @@ import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
-import com.hezapp.ekonomis.test_utils.testCalendarProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 /**
  * This is robot for [ProductDetailScreen][com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen]
@@ -26,6 +25,7 @@ import java.util.Locale
 class ProductDetailRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,
+    private val timeService: ITimeService,
 ) {
     fun assertInStock(
         quantity: QuantityPerUnitType,
@@ -93,11 +93,11 @@ class ProductDetailRobot(
         month: Int,
         year: Int,
     ){
-        val calendar = testCalendarProvider.getCalendar().apply {
+        val calendar = timeService.getCalendar().apply {
             set(Calendar.MONTH, month)
             set(Calendar.YEAR, year)
         }
-        val dateFormat = SimpleDateFormat("MMMM yyyy", Locale.US)
+        val dateFormat = SimpleDateFormat("MMMM yyyy", timeService.getLocale())
         composeRule.onNodeWithText(
             dateFormat.format(calendar.time)
         ).assertExists()

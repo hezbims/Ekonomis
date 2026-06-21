@@ -3,11 +3,13 @@ package com.hezapp.ekonomis.test_utils
 import android.content.Context
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.robot.EditProductNameDialogRobot
-import com.hezapp.ekonomis.robot.product_detail.ProductDetailRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
+import com.hezapp.ekonomis.robot.product_detail.ProductDetailRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot
 import com.hezapp.ekonomis.steps.FillTransactionFormSteps
+import org.koin.core.Koin
+import org.koin.core.context.GlobalContext
 
 /**
  * Gabungan dari test utils
@@ -15,12 +17,13 @@ import com.hezapp.ekonomis.steps.FillTransactionFormSteps
 class TestUiUtils(
     composeRule: ComposeTestRule,
     context: Context,
+    koin: Koin = GlobalContext.get(),
 ) : ITestUiUtils {
     //region ROBOT
     override val transactionHistoryRobot by lazy { TransactionHistoryRobot(composeRule, context) }
     override val transactionFormRobot by lazy { TransactionFormRobot(composeRule, context) }
     override val productPreviewRobot by lazy { ProductPreviewRobot(composeRule, context) }
-    override val productDetailRobot by lazy { ProductDetailRobot(composeRule, context) }
+    override val productDetailRobot by lazy { ProductDetailRobot(composeRule, context, timeService = koin.get()) }
     override val editProductNameDialogRobot by lazy { EditProductNameDialogRobot(composeRule, context) }
     //endregion
 

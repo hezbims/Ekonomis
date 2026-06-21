@@ -88,5 +88,6 @@ abstract class BaseEkonomisUiUnitTest private constructor(
     val uiUtils by lazy { TestUiUtils(
         composeRule = composeRule,
         context = appContext,
+        koin = koin,
     ) }
 }

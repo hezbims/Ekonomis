@@ -26,6 +26,7 @@ import org.junit.rules.ExternalResource
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.junit.runner.RunWith
+import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
 import java.util.Locale
 import java.util.TimeZone
@@ -42,6 +43,8 @@ import java.util.TimeZone
 abstract class BaseEkonomisUiTest(
     private val immediatelyLaunchMainActivity : Boolean = false,
 ) {
+    private val koin: Koin = GlobalContext.get()
+
     @get:Rule(order = 1)
     val timeConfigSetup = object : ExternalResource(){
         override fun before() {
@@ -85,7 +88,7 @@ abstract class BaseEkonomisUiTest(
     }
     protected val transactionFormRobot by lazy { TransactionFormRobot(composeRule, context) }
     protected val productPreviewRobot by lazy { ProductPreviewRobot(composeRule, context) }
-    protected val productDetailRobot by lazy { ProductDetailRobot(composeRule, context) }
+    protected val productDetailRobot by lazy { ProductDetailRobot(composeRule, context, timeService = koin.get()) }
     //endregion
 
     //region STEPS
@@ -105,7 +108,7 @@ abstract class BaseEkonomisUiTest(
 
     @Before
     fun reset(){
-        GlobalContext.get().get<EkonomisDatabase>().clearAllTables()
+        koin.get<EkonomisDatabase>().clearAllTables()
         TestTimeService.reset()
         if (immediatelyLaunchMainActivity)
             ActivityScenario.launch(MainActivity::class.java)

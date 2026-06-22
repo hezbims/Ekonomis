@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import com.hezapp.ekonomis.robot.EditProductNameDialogRobot
 import com.hezapp.ekonomis.robot.ProductPreviewRobot
+import com.hezapp.ekonomis.robot.product_detail.EditCurrentMonthlyStockDialogRobot
 import com.hezapp.ekonomis.robot.product_detail.ProductDetailRobot
 import com.hezapp.ekonomis.robot.transaction_form.TransactionFormRobot
 import com.hezapp.ekonomis.robot.transaction_history.TransactionHistoryRobot
@@ -24,6 +25,7 @@ class TestUiUtils(
     override val transactionFormRobot by lazy { TransactionFormRobot(composeRule, context) }
     override val productPreviewRobot by lazy { ProductPreviewRobot(composeRule, context) }
     override val productDetailRobot by lazy { ProductDetailRobot(composeRule, context, timeService = koin.get()) }
+    override val editMonthlyStockDialogRobot by lazy { EditCurrentMonthlyStockDialogRobot(composeRule, context) }
     override val editProductNameDialogRobot by lazy { EditProductNameDialogRobot(composeRule, context) }
     //endregion
 
@@ -38,5 +40,6 @@ interface ITestUiUtils {
     val productPreviewRobot: ProductPreviewRobot
     val productDetailRobot: ProductDetailRobot
     val editProductNameDialogRobot: EditProductNameDialogRobot
+    val editMonthlyStockDialogRobot: EditCurrentMonthlyStockDialogRobot
     val fillTransactionSteps: FillTransactionFormSteps
 }

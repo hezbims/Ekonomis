@@ -26,7 +26,7 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
-import org.koin.core.context.GlobalContext
+import org.koin.compose.koinInject
 
 @Composable
 fun MonthYearPicker(
@@ -35,7 +35,7 @@ fun MonthYearPicker(
     onIncrementMonthYear: () -> Unit,
     modifier: Modifier = Modifier,
     label: String? = stringResource(R.string.period_label),
-    timeService: ITimeService = GlobalContext.get().get(),
+    timeService: ITimeService = koinInject(),
 ){
     Column(
         modifier = modifier,

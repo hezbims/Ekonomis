@@ -10,15 +10,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.getNextMonthYear
 import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
 import com.hezapp.ekonomis.core.presentation.component.MonthYearPicker
+import org.koin.compose.koinInject
 
 @Composable
 fun ChangePeriodDialog(
     initialPeriod: Long,
     onDismissRequest: () -> Unit,
     onConfirmPeriod: (Long) -> Unit,
+    timeService: ITimeService = koinInject(),
 ){
     var currentPeriod by rememberSaveable { mutableLongStateOf(initialPeriod) }
     AlertDialog(
@@ -29,8 +32,8 @@ fun ChangePeriodDialog(
         text = {
             MonthYearPicker(
                 monthYear = currentPeriod,
-                onIncrementMonthYear = { currentPeriod = currentPeriod.getNextMonthYear() },
-                onDecrementMonthYear = { currentPeriod = currentPeriod.getPreviousMonthYear() }
+                onIncrementMonthYear = { currentPeriod = currentPeriod.getNextMonthYear(timeService) },
+                onDecrementMonthYear = { currentPeriod = currentPeriod.getPreviousMonthYear(timeService) }
             )
         },
         dismissButton = {

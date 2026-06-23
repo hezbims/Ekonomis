@@ -35,12 +35,15 @@ import org.koin.core.KoinApplication
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun MainComposable(koinApp: KoinApplication) {
+fun MainComposable(
+    koinApp: KoinApplication,
+    startDestination: Any = MyRoutes.NavGraph.Transaction,
+) {
     val koin = koinApp.koin
     EkonomisTheme {
         val navController = rememberNavController()
 
-        MyKoinNavHost(koinApp, navController){
+        MyKoinNavHost(koinApp, navController, startDestination){
             navigation<MyRoutes.NavGraph.Transaction>(
                 startDestination = MyRoutes.TransactionHistory
             ){
@@ -202,6 +205,7 @@ fun MainComposable(koinApp: KoinApplication) {
 private fun MyKoinNavHost(
     koinApplication: KoinApplication,
     navController: NavHostController,
+    startDestination: Any,
     builder: NavGraphBuilder.() -> Unit
 ){
     KoinIsolatedContext(
@@ -209,7 +213,7 @@ private fun MyKoinNavHost(
     ) {
         NavHost(
             navController,
-            startDestination = MyRoutes.NavGraph.Transaction,
+            startDestination = startDestination,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
             builder = builder,

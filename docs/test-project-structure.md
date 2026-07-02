@@ -8,53 +8,73 @@
 ## Structure
 
 [//]: # (
-Editable  tree
+Editable tree
 com.hezapp.ekonomis
-  robot
-    _dto
-    _interactor
+  app_test_utils
     screen-A
-      _dto
-      _interactor
+      data
+        assert
+          attr
+          db
+        mock
+      application
+        assert
+          attr
+        mock
+      presentation
+        _interactor
+        robot
     screen-B
-    screen-C
   rule
+  seeder
   steps
   test_application
-  seeder
   other
 )
 ```
 com.hezapp.ekonomis
-├── robot
-│   ├── _dto
-│   ├── _interactor
+├── app_test_utils
 │   ├── screen-A
-│   │   ├── _dto
-│   │   └── _interactor
-│   ├── screen-B
-│   └── screen-C
+│   │   ├── data
+│   │   │   ├── assert
+│   │   │   │   ├── attr
+│   │   │   │   └── db
+│   │   │   └── mock
+│   │   ├── application
+│   │   │   ├── assert
+│   │   │   │   └── attr
+│   │   │   └── mock
+│   │   └── presentation
+│   │       ├── _interactor
+│   │       └── robot
+│   └── screen-B
 ├── rule
+├── seeder
 ├── steps
 ├── test_application
-├── seeder
 └── other
 ```
 *Tree generated using [tree.nathanfriend.com](https://tree.nathanfriend.com/)*
 
 ## Explanation
 
-- **assertion** - Contains two types of assertions :
-  - attribute assertion : assert attribute of a model (room entity in data layer, or application layer DTO, or UI layer DTO)
-  - db assertion : assert if an entity exists or not in DB
+Test fixture utilities are organized **by screen** under `app_test_utils`, mirroring the app's three-layer convention. Each screen folder keeps all fixture code co-located.
 
-  For UI assertions, please use robot instead.
-- **robot** - Page Object Model used to control a screen and assert its state. A robot can include multiple isolated component interactors under the `_interactor` folder.
-- **rule** - JUnit rules used to perform actions before or after tests.
-- **steps** - Reusable business processes or steps that span multiple screens.
-- **test_application** - Custom Android `Application` used to start the app with an isolated Koin context.
-- **seeder** - Responsible for seeding test data.
-- **other** - Miscellaneous utilities that are useful across tests.
+- **app_test_utils** — Root container for per-screen test utilities.
+  - **`screen-A` / `screen-B`** — Each screen mirrors the three-layer structure:
+    - `data/assert/attr` — Attribute assertions for data-layer models (Room entities, DTOs).
+    - `data/assert/db` — Database assertions (e.g., check if an entity exists in DB).
+    - `data/mock` — Mock implementations for data-layer dependencies.
+    - `application/assert/attr` — Attribute assertions for application-layer models (use case results, DTOs).
+    - `application/mock` — Mock implementations for application-layer dependencies.
+    - `presentation/_interactor` — Reusable UI component interactors for this screen.
+    - `presentation/robot` — Page Object Model(s) for UI interaction and assertions.
+
+- **rule** — JUnit rules used to perform actions before or after tests.
+- **seeder** — Responsible for seeding test data.
+- **steps** — Reusable business processes or steps that span multiple screens.
+- **test_application** — Custom Android `Application` used to start the app with an isolated Koin context.
+- **other** — Miscellaneous utilities that are useful across tests.
 
 
 # Unit Test

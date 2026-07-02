@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -42,6 +43,7 @@ import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
 import com.hezapp.ekonomis.product_detail.presentation.component.ChangePeriodDialog
 import com.hezapp.ekonomis.product_detail.presentation.component.CurrentPeriodTransactionSummary
 import com.hezapp.ekonomis.product_detail.presentation.component.DetailTransactionCardListItem
+import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
 import org.koin.compose.koinInject
 import java.util.Calendar
 
@@ -154,7 +156,8 @@ private fun ProductDetailScreen(
 
             Text(
                 productDetail.productName,
-                style = MaterialTheme.typography.bodyMedium
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.testTag(ProductDetailTestTag.productName),
             )
 
             Spacer(Modifier.height(16.dp))
@@ -190,8 +193,14 @@ private fun LazyListScope.renderListProductTransaction(
     productTransactions: List<ProductTransaction>,
 ){
     item {
+        val context = LocalContext.current
+
         Text(
-            text = "Rincian Barang ${if (isOutTableTransaction) "Keluar" else "Masuk"}",
+            text =
+                if (isOutTableTransaction)
+                    context.getString(R.string.details_of_outgoing_goods_title)
+                else
+                    context.getString(R.string.details_of_ingoing_goods_title),
             style = MaterialTheme.typography.titleMedium,
         )
 

@@ -123,4 +123,6 @@
     <string name="edit_product_name_title">Edit Nama Barang</string>
     <string name="back_confirmation_label">Yakin ingin kembali?</string>
     <string name="current_form_data_will_not_be_saved_label">Data form sekarang tidak akan disimpan.</string>
+    <string name="details_of_outgoing_goods_title">Rincian Barang Keluar</string>
+    <string name="details_of_ingoing_goods_title">Rincian Barang Masuk</string>
 </resources>

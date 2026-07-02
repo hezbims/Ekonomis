@@ -2,7 +2,9 @@ package com.hezapp.ekonomis.robot.product_detail
 
 import android.content.Context
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -19,11 +21,14 @@ class EditCurrentMonthlyStockDialogRobot(
     private val usePreviousMonthLabel = context.getString(R.string.use_previous_month_calculation)
     private val saveLabel = context.getString(R.string.save_label)
     private val cancelLabel = context.getString(R.string.cancel_label)
+    private val dialogTitleLabel = context.getString(R.string.edit_first_day_of_month_stock)
 
     @OptIn(ExperimentalTestApi::class)
-    fun waitUntilDataLoaded() {
+    fun waitUntilLoaded() {
         composeRule.waitUntilExactlyOneExists(
-            matcher = hasText(saveLabel),
+            matcher = isDialog() 
+                    and hasAnyDescendant(hasText(saveLabel)) 
+                    and hasAnyDescendant(hasText(dialogTitleLabel)),
             timeoutMillis = TestConstant.SMALL_TIMEOUT,
         )
     }
@@ -63,6 +68,8 @@ class EditCurrentMonthlyStockDialogRobot(
             .onNodeWithText(expected.toString())
             .assertExists("Expected piece quantity $expected not found")
     }
+
+    val assertAppear = ::waitUntilLoaded
 
     fun typeCartonQuantity(value: String) {
         composeRule

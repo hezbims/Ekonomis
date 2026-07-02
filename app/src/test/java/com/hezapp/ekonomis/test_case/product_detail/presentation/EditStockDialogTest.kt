@@ -92,7 +92,7 @@ class EditStockDialogTest : BaseEkonomisUiUnitTest(
         userOpenEditStockDialog()
 
         robot.clickUsePreviousMonthCalculation()
-        robot.waitUntilDataLoaded()
+        robot.waitUntilLoaded()
 
         robot.assertCartonQuantity(PREVIOUS_MONTH_CARTON)
         robot.assertPieceQuantity(PREVIOUS_MONTH_PIECE)
@@ -106,7 +106,7 @@ class EditStockDialogTest : BaseEkonomisUiUnitTest(
         userOpenEditStockDialog()
 
         robot.clickUsePreviousMonthCalculation()
-        robot.waitUntilDataLoaded()
+        robot.waitUntilLoaded()
         robot.clickSave()
         assertStockEditedCallbackCalled()
 

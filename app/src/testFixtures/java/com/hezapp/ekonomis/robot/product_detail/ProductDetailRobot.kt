@@ -1,14 +1,20 @@
 package com.hezapp.ekonomis.robot.product_detail
 
 import android.content.Context
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasAnySibling
+import androidx.compose.ui.test.hasProgressBarRangeInfo
+import androidx.compose.ui.test.hasScrollAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
@@ -16,12 +22,14 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
+import com.hezapp.ekonomis.test_utils.TestConstant
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
 /**
  * This is robot for [ProductDetailScreen][com.hezapp.ekonomis.product_detail.presentation.ProductDetailScreen]
  */
+@OptIn(ExperimentalTestApi::class)
 class ProductDetailRobot(
     private val composeRule: ComposeTestRule,
     private val context: Context,
@@ -68,13 +76,22 @@ class ProductDetailRobot(
     fun assertFirstDayOfMonthStock(quantity: QuantityPerUnitType){
         val firstDayOfMonthSectionLabel = "\u2022 ${context.getString(R.string.beginning_of_month_stock_label)}"
 
-        composeRule.onNode(
-            hasText(firstDayOfMonthSectionLabel) and
+        composeRule.waitUntilExactlyOneExists(
+            matcher = hasText(firstDayOfMonthSectionLabel) and
                     hasAnySibling(
                         hasText(getQuantityString(quantity)) and
                                 hasTestTag(ProductDetailTestTag.beginningOfMonthStock)
-                    )
-        ).assertExists()
+                    ),
+            timeoutMillis = TestConstant.SMALL_TIMEOUT,
+        )
+    }
+
+    fun assertTransactionHistoriesEmptyIndicatorAppear(){
+        composeRule.onNode(hasScrollAction())
+            .performScrollToNode(
+                hasText(context.getString(
+                    R.string.transaction_histories_doesnt_exists)))
+
     }
 
     fun assertLatestStock(quantity: QuantityPerUnitType){
@@ -103,6 +120,14 @@ class ProductDetailRobot(
         ).assertExists()
     }
 
+    fun assertProductName(name: String){
+        composeRule.waitUntilExactlyOneExists(
+            timeoutMillis = TestConstant.SMALL_TIMEOUT,
+            matcher = hasTestTag(ProductDetailTestTag.productName)
+                and hasText(name),
+        )
+    }
+
     fun incrementMonth(totalIncrement: Int){
         composeRule
             .onNodeWithContentDescription(context.getString(R.string.change_period_button))
@@ -129,16 +154,52 @@ class ProductDetailRobot(
         composeRule.onNodeWithText(context.getString(R.string.confirm_label)).performClick()
     }
 
-    @OptIn(ExperimentalTestApi::class)
+    fun openChangePeriodDialog(){
+        composeRule
+            .onNodeWithContentDescription(context.getString(R.string.change_period_button))
+            .performClick()
+    }
+
+    fun assertChangePeriodDialogOpened(){
+        composeRule.waitUntilExactlyOneExists(
+            timeoutMillis = TestConstant.SMALL_TIMEOUT,
+            matcher = isDialog() and
+                hasAnyDescendant(
+                    hasText(context.getString(R.string.change_period_label)))
+        )
+    }
+
+    fun assertRetryButtonDisplayed(){
+        composeRule.waitUntilExactlyOneExists(
+            timeoutMillis = TestConstant.SMALL_TIMEOUT,
+            matcher = hasText(context.getString(R.string.retry_label)),
+        )
+    }
+
     fun waitUntilDataLoaded(){
         composeRule.waitUntilExactlyOneExists(
             hasText(context.getString(R.string.transaction_summary))
         )
     }
 
+    fun openEditStockDialog(){
+        composeRule.onNodeWithContentDescription(
+            context.getString(R.string.edit_first_day_of_month_stock)
+        ).performClick()
+    }
+
     private fun getQuantityString(quantity: QuantityPerUnitType) : String {
         val cartonString = context.getString(UnitType.CARTON.getStringId())
         val pieceString = context.getString(UnitType.PIECE.getStringId())
         return "${quantity.cartonQuantity} $cartonString, ${quantity.pieceQuantity} $pieceString"
+    }
+
+    fun assertLoadingIndicatorDisplayed() {
+        composeRule.waitUntilExactlyOneExists(
+            hasProgressBarRangeInfo(ProgressBarRangeInfo.Indeterminate))
+
+        composeRule.onNodeWithText(
+            context.getString(R.string.transaction_summary)
+        ).assertDoesNotExist()
     }
 }

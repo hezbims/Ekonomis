@@ -7,4 +7,5 @@ object ProductDetailTestTag {
     const val totalInPrice = "total_in_price"
     const val outQuantity = "out_quantity"
     const val totalOutPrice = "total_out_price"
+    const val productName = "product_name"
 }

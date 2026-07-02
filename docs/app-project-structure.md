@@ -83,3 +83,6 @@ There are two types of DAO in this app:
 
 - `_koin_modules` – dependency injection modules.
 - `_testing_only` – not used in the app, but used in automated tests.
+
+---
+> **Note:** This document describes the *target* app structure. The current folder structure is still being migrated and may not reflect this layout yet.

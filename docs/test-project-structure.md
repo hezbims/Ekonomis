@@ -138,3 +138,6 @@ com.hezapp.ekonomis/
 └── utils/
     └── base_class/
 ```
+
+---
+> **Note:** This document describes the *target* test structure. The current folder structure is still being migrated and may not reflect this layout yet.

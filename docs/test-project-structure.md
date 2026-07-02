@@ -161,3 +161,5 @@ com.hezapp.ekonomis/
 
 ---
 > **Note:** This document describes the *target* test structure. The current folder structure is still being migrated and may not reflect this layout yet.
+
+See also [app project structure](./app-project-structure.md) for the application source layout.

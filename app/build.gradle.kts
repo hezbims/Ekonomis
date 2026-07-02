@@ -166,6 +166,7 @@ dependencies {
     testFixturesImplementation(libs.koin.core)
     testFixturesImplementation(libs.koin.android)
     testFixturesImplementation(libs.hamcrest)
+    testFixturesImplementation(libs.mockito.kotlin)
 }
 
 tasks.withType(KotlinCompile::class).configureEach {

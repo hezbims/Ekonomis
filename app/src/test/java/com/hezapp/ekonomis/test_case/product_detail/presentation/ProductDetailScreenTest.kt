@@ -2,9 +2,12 @@ package com.hezapp.ekonomis.test_case.product_detail.presentation
 
 import androidx.activity.compose.setContent
 import com.hezapp.ekonomis.MainComposable
+import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturns
+import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturnsError
+import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturnsLoadingOnly
+import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturnsSuccess
+import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubSequentiallyReturns
 import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
-import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
-import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
@@ -22,15 +25,11 @@ import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
 import com.hezapp.ekonomis.test_utils.TestDispatcherProvider
 import com.hezapp.ekonomis.test_utils.TestTimeService
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import org.junit.Before
 import org.junit.Test
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
 import java.time.YearMonth
 
 class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
@@ -144,58 +143,10 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
         }
     }
 
-    private fun stubGetProductDetailReturnsLoadingOnly() {
-        whenever(getProductDetailUseCase.invoke(any(), any<Long>()))
-            .thenReturn(flow { emit(ResponseWrapper.Loading()) })
-    }
-
-    private fun stubGetProductDetailReturnsError() {
-        whenever(getProductDetailUseCase.invoke(any(), any<Long>()))
-            .thenReturn(flow {
-                emit(ResponseWrapper.Loading())
-                emit(ResponseWrapper.Failed())
-            })
-    }
-
-    private fun stubGetProductDetailReturns(data: ProductDetail) {
-        whenever(getProductDetailUseCase.invoke(any(), any<Long>()))
-            .thenReturn(makeDetailFlow(data))
-    }
-
-    private fun stubGetProductDetailSequentially(
-        first: ProductDetail,
-        second: ProductDetail,
-    ) {
-        whenever(getProductDetailUseCase.invoke(any(), any<Long>()))
-            .thenReturn(
-                makeDetailFlow(first),
-                makeDetailFlow(second),
-            )
-    }
-
-    private fun stubEditStockReturnsSuccess() {
-        whenever(editMonthlyStockUseCase.invoke(
-            cartonQuantity = any(),
-            pieceQuantity = any(),
-            monthlyStockEntityId = any(),
-            monthYearPeriod = any<Long>(),
-            productId = any(),
-        )).thenReturn(flow {
-            emit(ResponseWrapper.Loading())
-            emit(ResponseWrapper.Succeed(null))
-        })
-    }
-
-    private fun makeDetailFlow(data: ProductDetail): Flow<ResponseWrapper<ProductDetail, MyBasicError>> =
-        flow {
-            emit(ResponseWrapper.Loading())
-            emit(ResponseWrapper.Succeed(data))
-        }
-
     @Test
     fun `Should show loading indicator when data is loading`() {
         given {
-            stubGetProductDetailReturnsLoadingOnly()
+            getProductDetailUseCase.stubReturnsLoadingOnly()
             userOpenProductDetailScreen()
         }
 
@@ -207,7 +158,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
     @Test
     fun `Should show error state and retry button when use case fails`() {
         given {
-            stubGetProductDetailReturnsError()
+            getProductDetailUseCase.stubReturnsError()
             userOpenProductDetailScreen()
         }
 
@@ -221,7 +172,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
         val productDetail = createProductDetail()
 
         given {
-            stubGetProductDetailReturns(productDetail)
+            getProductDetailUseCase.stubReturns(productDetail)
             userOpenProductDetailScreen()
             robot.waitUntilDataLoaded()
         }
@@ -252,7 +203,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
         )
 
         given {
-            stubGetProductDetailReturns(emptyDetail)
+            getProductDetailUseCase.stubReturns(emptyDetail)
             userOpenProductDetailScreen()
             robot.waitUntilDataLoaded()
         }
@@ -265,7 +216,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
     @Test
     fun `When change period button clicked should show ChangePeriodDialog`() {
         given {
-            stubGetProductDetailReturns(createProductDetail())
+            getProductDetailUseCase.stubReturns(createProductDetail())
             userOpenProductDetailScreen()
             robot.waitUntilDataLoaded()
         }
@@ -286,7 +237,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
         val differentDetail = createProductDetail(name = newProductName)
 
         given {
-            stubGetProductDetailSequentially(first = initialDetail, second = differentDetail)
+            getProductDetailUseCase.stubSequentiallyReturns(first = initialDetail, second = differentDetail)
             userOpenProductDetailScreen()
             robot.waitUntilDataLoaded()
             robot.assertProductName(PRODUCT_NAME)
@@ -304,7 +255,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
     @Test
     fun `When edit stock button clicked should navigate to EditMonthlyStock dialog`() {
         given {
-            stubGetProductDetailReturns(createProductDetail())
+            getProductDetailUseCase.stubReturns(createProductDetail())
             userOpenProductDetailScreen()
             robot.waitUntilDataLoaded()
         }
@@ -324,11 +275,11 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
         val updatedDetail = createProductDetail(stock = UPDATED_STOCK)
 
         given {
-            stubGetProductDetailSequentially(
+            getProductDetailUseCase.stubSequentiallyReturns(
                 first = initialDetail,
                 second = updatedDetail,
             )
-            stubEditStockReturnsSuccess()
+            editMonthlyStockUseCase.stubReturnsSuccess()
             userOpenProductDetailScreen()
             robot.assertFirstDayOfMonthStock(INITIAL_STOCK)
         }

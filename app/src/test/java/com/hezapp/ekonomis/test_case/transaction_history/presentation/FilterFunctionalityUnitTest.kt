@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.transaction_history.presentation
+package com.hezapp.ekonomis.test_case.transaction_history.presentation
 
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
@@ -9,6 +9,7 @@ import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.InstallmentSeed
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.InvoiceItemSeed
+import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test

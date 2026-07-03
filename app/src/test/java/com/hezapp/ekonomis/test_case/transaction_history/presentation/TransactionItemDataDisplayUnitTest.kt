@@ -1,4 +1,4 @@
-package com.hezapp.ekonomis.transaction_history.presentation
+package com.hezapp.ekonomis.test_case.transaction_history.presentation
 
 import androidx.navigation.compose.rememberNavController
 import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
@@ -8,6 +8,8 @@ import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
 import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
 import com.hezapp.ekonomis.transaction_history.application.use_case.iface.IGetPreviewTransactionHistoryUseCase
+import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryScreen
+import com.hezapp.ekonomis.transaction_history.presentation.TransactionHistoryViewModel
 import kotlinx.coroutines.flow.flowOf
 import org.junit.Before
 import org.junit.Test
@@ -52,7 +54,10 @@ class TransactionItemDataDisplayUnitTest : BaseEkonomisUiUnitTest(loadDefaultKoi
             single<IGetPreviewTransactionHistoryUseCase> { mockUseCase }
             single<ITimeService> { TestTimeService.get() }
             viewModel { _ ->
-                TransactionHistoryViewModel(getPreviewTransactionHistory = get(), timeService = get())
+                TransactionHistoryViewModel(
+                    getPreviewTransactionHistory = get(),
+                    timeService = get()
+                )
             }
         }))
         composeRule.setContent {

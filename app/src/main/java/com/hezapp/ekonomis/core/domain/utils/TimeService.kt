@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.core.domain.utils
 
-import org.koin.core.context.GlobalContext
 import java.time.Instant
 import java.util.Locale
 import java.util.TimeZone
@@ -17,8 +16,4 @@ class TimeService : ITimeService() {
     override fun getLocale(): Locale {
         return Locale.forLanguageTag("id-ID")
     }
-}
-
-val calendarProvider : ITimeService by lazy {
-    GlobalContext.get().get()
 }

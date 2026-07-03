@@ -1,9 +1,8 @@
 package com.hezapp.ekonomis.core.domain.utils
 
-import org.koin.core.context.GlobalContext
 import java.util.Calendar
 
-fun Calendar.toBeginningOfMonth(timeService: ITimeService = GlobalContext.get().get()) : Calendar {
+fun Calendar.toBeginningOfMonth(timeService: ITimeService) : Calendar {
     return timeService.getCalendar().apply {
         timeInMillis = this@toBeginningOfMonth.timeInMillis
         set(Calendar.DAY_OF_MONTH, 1)
@@ -14,7 +13,7 @@ fun Calendar.toBeginningOfMonth(timeService: ITimeService = GlobalContext.get().
     }
 }
 
-fun Long.getNextMonthYear(timeService: ITimeService = GlobalContext.get().get()) : Long {
+fun Long.getNextMonthYear(timeService: ITimeService) : Long {
     val currentMonthYearCalendar = toCalendar(timeService)
     val nextMonthYearCalendar = currentMonthYearCalendar.apply {
         add(Calendar.MONTH, 1)
@@ -23,7 +22,7 @@ fun Long.getNextMonthYear(timeService: ITimeService = GlobalContext.get().get())
 
 }
 
-fun Long.getPreviousMonthYear(timeService: ITimeService = GlobalContext.get().get()) : Long {
+fun Long.getPreviousMonthYear(timeService: ITimeService) : Long {
     val currentMonthYearCalendar = toCalendar(timeService)
     val prevMonthYearCalendar = currentMonthYearCalendar.apply {
         add(Calendar.MONTH, -1)
@@ -31,7 +30,7 @@ fun Long.getPreviousMonthYear(timeService: ITimeService = GlobalContext.get().ge
     return prevMonthYearCalendar.timeInMillis
 }
 
-fun Long.toCalendar(timeService: ITimeService = GlobalContext.get().get()) : Calendar {
+fun Long.toCalendar(timeService: ITimeService) : Calendar {
     return timeService.getCalendar().apply {
         timeInMillis = this@toCalendar
     }

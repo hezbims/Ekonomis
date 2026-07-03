@@ -1,6 +1,5 @@
 package com.hezapp.ekonomis.core.domain.utils
 
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.YearMonth
@@ -32,18 +31,18 @@ abstract class ITimeService {
             .toEpochMilli()
 
     private val dayDateMonthYearFormat by lazy {
-        SimpleDateFormat("E, dd-MMM-yyyy", getLocale())
+        DateTimeFormatter.ofPattern("E, dd-MMM-yyyy", getLocale())
     }
     private val dayDateMonthYearFormatV2 by lazy {
         DateTimeFormatter.ofPattern("E, dd-MMM-yyyy", getLocale())
     }
 
     private val monthYearWordLongFormat by lazy {
-        SimpleDateFormat("MMMM yyyy", getLocale())
+        DateTimeFormatter.ofPattern("MMMM yyyy", getLocale())
     }
 
     private val monthYearWordShortFormat by lazy {
-        SimpleDateFormat("MMM yyyy", getLocale())
+        DateTimeFormatter.ofPattern("MMM yyyy", getLocale())
     }
 
     private val yearMonthDateFormat by lazy {
@@ -51,26 +50,25 @@ abstract class ITimeService {
     }
 
     fun toEddMMMyyyy(timeInMillis: Long): String =
-        dayDateMonthYearFormat.format(getCalendar().apply {
-            this.timeInMillis = timeInMillis
-        }.time)
+        dayDateMonthYearFormat.format(getZonedDateTimeFrom(timeInMillis))
 
     fun toEddMMMyyyy(date: LocalDate): String =
         ZonedDateTime.of(date.atStartOfDay(), getZoneId())
             .format(dayDateMonthYearFormatV2)
 
     fun toMMMMyyyy(timeInMillis: Long): String =
-        monthYearWordLongFormat.format(getCalendar().apply {
-            this.timeInMillis = timeInMillis
-        }.time)
+        monthYearWordLongFormat.format(getZonedDateTimeFrom(timeInMillis))
 
     fun toMMMyyyy(timeInMillis: Long) : String =
-        monthYearWordShortFormat.format(getCalendar().apply {
-            this.timeInMillis = timeInMillis
-        }.time)
+        monthYearWordShortFormat.format(getZonedDateTimeFrom(timeInMillis))
 
     fun toYYYYMMdd(timeInMillis: Long) : String =
         Instant.ofEpochMilli(timeInMillis)
             .atZone(getZoneId())
             .format(yearMonthDateFormat)
+
+    fun getZonedDateTimeFrom(timeInMillis: Long) : ZonedDateTime {
+        return Instant.ofEpochMilli(timeInMillis)
+            .atZone(getZoneId())
+    }
 }

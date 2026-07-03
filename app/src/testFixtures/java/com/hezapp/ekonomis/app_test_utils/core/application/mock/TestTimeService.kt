@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.ZoneId
 import java.util.Calendar
@@ -24,6 +25,17 @@ class TestTimeService(
 
         currentTimeInMillis = localDate
             .atStartOfDay(getTimezone().toZoneId())
+            .toInstant()
+            .toEpochMilli()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setCurrentTime(localDateTime: LocalDateTime, zoneId: ZoneId? = null){
+        if (zoneId != null)
+            timeZone = TimeZone.getTimeZone(zoneId)
+
+        currentTimeInMillis = localDateTime
+            .atZone(zoneId)
             .toInstant()
             .toEpochMilli()
     }

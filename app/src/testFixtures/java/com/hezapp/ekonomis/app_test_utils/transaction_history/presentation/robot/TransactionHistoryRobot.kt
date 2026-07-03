@@ -4,23 +4,26 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDialog
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.testCalendarProvider
+import com.hezapp.ekonomis.app_test_utils.core.data.seeder._snapshot.InvoiceSnapshot
+import com.hezapp.ekonomis.app_test_utils.transaction_history.presentation.robot.component.FilterTransactionBottomSheetInteractor
+import com.hezapp.ekonomis.app_test_utils.transaction_history.presentation.robot.component.TransactionPreviewItemInteractor
 import com.hezapp.ekonomis.base_test_utils.robot.component.ComponentInteractor
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
-import com.hezapp.ekonomis.app_test_utils.transaction_history.presentation.robot.component.FilterTransactionBottomSheetInteractor
-import com.hezapp.ekonomis.app_test_utils.transaction_history.presentation.robot.component.TransactionPreviewItemInteractor
-import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
-import com.hezapp.ekonomis.app_test_utils.core.data.seeder._snapshot.InvoiceSnapshot
-import com.hezapp.ekonomis.app_test_utils.core.application.mock.testCalendarProvider
+import com.hezapp.ekonomis.transaction_history.presentation.test_tag.TransactionHistoryScreenTestTag
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -144,6 +147,11 @@ class TransactionHistoryRobot(
         val dateFormat = DateTimeFormatter.ofPattern("E, dd-MMM-yyyy")
         composeRule.onNodeWithText(date.format(dateFormat))
             .assertDoesNotExist()
+    }
+
+    fun assertTopBarPeriod(expectedDisplay: String) {
+        composeRule.onNodeWithTag(TransactionHistoryScreenTestTag.periodTextTopBar)
+            .assertTextEquals(expectedDisplay)
     }
 }
 

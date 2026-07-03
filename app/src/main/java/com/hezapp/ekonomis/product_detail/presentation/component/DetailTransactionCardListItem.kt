@@ -27,11 +27,12 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.core.presentation.utils.toMyDateString
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import org.koin.compose.koinInject
 
 @Composable
 fun DetailTransactionCardListItem(
@@ -39,6 +40,7 @@ fun DetailTransactionCardListItem(
     isOutTransaction: Boolean,
     modifier: Modifier = Modifier,
     expandedInitial: Boolean = false,
+    timeService: ITimeService = koinInject()
 ) {
     var expanded by rememberSaveable { mutableStateOf(expandedInitial) }
     val changeExpanded = { expanded = !expanded }
@@ -55,7 +57,7 @@ fun DetailTransactionCardListItem(
                 .fillMaxWidth()
         ) {
             Text(
-                text = item.date.toMyDateString(),
+                text = timeService.toEddMMMyyyy(item.date),
                 style = MaterialTheme.typography.bodyMedium
             )
 

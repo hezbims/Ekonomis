@@ -13,35 +13,38 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.hezapp.ekonomis.core.presentation.component.MyScaffold
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
-import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.TimeService
 import com.hezapp.ekonomis.core.presentation.component.MyBottomNavBar
+import com.hezapp.ekonomis.core.presentation.component.MyScaffold
 import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
+import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
 import com.hezapp.ekonomis.transaction_history.presentation.component.TransactionFilterBottomSheet
 import com.hezapp.ekonomis.transaction_history.presentation.component.TransactionHistoryListView
-import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
-import org.koin.core.context.GlobalContext
+import com.hezapp.ekonomis.transaction_history.presentation.test_tag.TransactionHistoryScreenTestTag
+import org.koin.compose.koinInject
 import java.util.Calendar
 
 @Composable
 fun TransactionHistoryScreen(
     navController : NavHostController,
     viewModel: TransactionHistoryViewModel,
-    timeService: ITimeService = GlobalContext.get().get(),
+    timeService: ITimeService = koinInject(),
 ){
     TransactionHistoryScreen(
         navController = navController,
@@ -67,7 +70,9 @@ private fun TransactionHistoryScreen(
                     Text(context.getString(R.string.transaction_history_title))
                     Text(
                         timeService.toMMMMyyyy(state.filterState.monthYear),
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier
+                            .testTag(TransactionHistoryScreenTestTag.periodTextTopBar),
                     )
                 }
             },

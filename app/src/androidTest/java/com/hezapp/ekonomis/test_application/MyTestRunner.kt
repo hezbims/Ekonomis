@@ -3,6 +3,7 @@ package com.hezapp.ekonomis.test_application
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
+import com.hezapp.ekonomis.base_test_utils.test_application.MyKoinTestApplication
 
 class MyTestRunner : AndroidJUnitRunner() {
     override fun newApplication(

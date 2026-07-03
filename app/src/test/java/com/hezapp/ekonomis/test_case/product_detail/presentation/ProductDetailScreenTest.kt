@@ -22,9 +22,9 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCas
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.product_detail.presentation.ProductDetailViewModel
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
-import com.hezapp.ekonomis.test_utils.TestDispatcherProvider
-import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import org.junit.Before
 import org.junit.Test
 import org.koin.core.module.dsl.viewModel

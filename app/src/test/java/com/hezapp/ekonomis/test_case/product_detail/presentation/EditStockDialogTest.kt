@@ -12,8 +12,8 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonth
 import com.hezapp.ekonomis.product_detail.presentation.EditCurrentMonthlyStockDialog
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.TestConstant
-import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.base_test_utils.constant.TestConstant
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import kotlinx.coroutines.flow.flow
 import org.junit.Before
 import org.junit.Test

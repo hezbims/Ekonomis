@@ -16,7 +16,7 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.transaction.domain.repo.ITransactionRepository
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import org.junit.Before
 import org.junit.Test
 import org.koin.core.parameter.parametersOf

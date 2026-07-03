@@ -7,12 +7,12 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
-import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
-import com.hezapp.ekonomis.steps.FormProductItem
-import com.hezapp.ekonomis.steps.ModifyPaymentSectionAction
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.dto.PaymentTypeAssertionDto
+import com.hezapp.ekonomis.utils_aggregate.steps.FormProductItem
+import com.hezapp.ekonomis.utils_aggregate.steps.ModifyPaymentSectionAction
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
-import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.TransactionDetailsAssertionDto
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.TransactionDetailsItemAssertionDto
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test

@@ -7,9 +7,10 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.hezapp.ekonomis.MainActivity
-import com.hezapp.ekonomis.test_utils.rule.ComposeTreeLoggerRule
-import com.hezapp.ekonomis.test_utils.rule.GlobalTimeConfigRule
-import com.hezapp.ekonomis.test_utils.rule.TestEnvironmentResetRule
+import com.hezapp.ekonomis.base_test_utils.rule.ComposeTreeLoggerRule
+import com.hezapp.ekonomis.base_test_utils.rule.GlobalTimeConfigRule
+import com.hezapp.ekonomis.base_test_utils.rule.TestEnvironmentResetRule
+import com.hezapp.ekonomis.base_test_utils.test_application.BaseTestDefinition
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith

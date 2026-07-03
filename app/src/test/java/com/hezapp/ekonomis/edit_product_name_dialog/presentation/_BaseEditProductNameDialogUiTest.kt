@@ -11,8 +11,8 @@ import com.hezapp.ekonomis.edit_product_name_dialog.application.model.ProductByI
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IEditProductNameUseCase
 import com.hezapp.ekonomis.edit_product_name_dialog.application.use_case.iface.IGetProductByIdUseCase
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
-import com.hezapp.ekonomis.test_utils.TestDispatcherProvider
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.junit.Before

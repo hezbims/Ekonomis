@@ -3,13 +3,13 @@ package com.hezapp.ekonomis.feature.transaction
 import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.dto.InstallmentItemAssertionDto
-import com.hezapp.ekonomis.dto.PaymentTypeAssertionDto
-import com.hezapp.ekonomis.steps.FormProductItem
-import com.hezapp.ekonomis.steps.ModifyPaymentSectionAction
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.dto.InstallmentItemAssertionDto
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.dto.PaymentTypeAssertionDto
+import com.hezapp.ekonomis.utils_aggregate.steps.FormProductItem
+import com.hezapp.ekonomis.utils_aggregate.steps.ModifyPaymentSectionAction
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
-import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsAssertionDto
-import com.hezapp.ekonomis.test_utils.db_assertion.TransactionDetailsItemAssertionDto
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.TransactionDetailsAssertionDto
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.TransactionDetailsItemAssertionDto
 import org.junit.Test
 import java.time.LocalDate
 

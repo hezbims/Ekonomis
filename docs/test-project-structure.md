@@ -7,52 +7,52 @@
 
 ## Structure
 
-[//]: # (
+<!--
 Editable tree
 com.hezapp.ekonomis
   app_test_utils
     screen-A
       data
-        assert
-          attr
-          db
+        assert_attr
+        assert_db
         mock
       application
-        assert
-          attr
+        assert_attr
         mock
       presentation
-        _interactor
         robot
+          component
     screen-B
-  rule
-  seeder
-  steps
-  test_application
-  other
-)
+  base_test_utils
+    rule
+    seeder
+    steps
+    test_application
+    other
+  utils_aggregate
+-->
 ```
 com.hezapp.ekonomis
 ├── app_test_utils
 │   ├── screen-A
 │   │   ├── data
-│   │   │   ├── assert
-│   │   │   │   ├── attr
-│   │   │   │   └── db
+│   │   │   ├── assert_attr
+│   │   │   ├── assert_db
 │   │   │   └── mock
 │   │   ├── application
-│   │   │   ├── assert
-│   │   │   │   └── attr
+│   │   │   ├── assert_attr
 │   │   │   └── mock
 │   │   └── presentation
-│   │       ├── _interactor
 │   │       └── robot
+│   │           └── component
 │   └── screen-B
-├── rule
-├── seeder
-├── steps
-├── test_application
-└── other
+├── base_test_utils
+│   ├── rule
+│   ├── seeder
+│   ├── steps
+│   ├── test_application
+│   └── other
+└── utils_aggregate
 ```
 *Tree generated using [tree.nathanfriend.com](https://tree.nathanfriend.com/)*
 
@@ -62,19 +62,21 @@ Test fixture utilities are organized **by screen** under `app_test_utils`, mirro
 
 - **app_test_utils** — Root container for per-screen test utilities.
   - **`screen-A` / `screen-B`** — Each screen mirrors the three-layer structure:
-    - `data/assert/attr` — Attribute assertions for data-layer models (Room entities, DTOs).
-    - `data/assert/db` — Database assertions (e.g., check if an entity exists in DB).
+    - `data/assert_attr` — Attribute assertions for data-layer models (Room entities, DTOs).
+    - `data/assert_db` — Database assertions (e.g., check if an entity exists in DB).
     - `data/mock` — Mock implementations for data-layer dependencies.
     - `application/assert/attr` — Attribute assertions for application-layer models (use case results, DTOs).
     - `application/mock` — Mock implementations for application-layer dependencies.
-    - `presentation/_interactor` — Reusable UI component interactors for this screen.
     - `presentation/robot` — Page Object Model(s) for UI interaction and assertions.
-
-- **rule** — JUnit rules used to perform actions before or after tests.
-- **seeder** — Responsible for seeding test data.
-- **steps** — Reusable business processes or steps that span multiple screens.
-- **test_application** — Custom Android `Application` used to start the app with an isolated Koin context.
-- **other** — Miscellaneous utilities that are useful across tests.
+    - `presentation/robot/component` — Reusable UI component interactors for the screen. Can be used inside robot
+- **base_test_utils** — Utilities that are not tied to specific screens. Can be used across all test utilities or inside test case.
+  - `rule` — JUnit rules used to perform actions before or after tests.
+  - `seeder` — Responsible for seeding test data.
+  - `steps` — Reusable business processes or steps that span multiple screens.
+  - `test_application` — Custom Android `Application` used to start the app with an isolated Koin context.
+  - `other` — Miscellaneous utilities that are useful across tests.
+- **utils_aggregate** — Grouping multiple test utilities into a single class or object for easier injectability. 
+Depends on `base_test_utils` and `app_test_utils` 
 
 
 # Unit Test

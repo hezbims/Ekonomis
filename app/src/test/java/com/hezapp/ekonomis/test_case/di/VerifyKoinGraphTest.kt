@@ -8,8 +8,8 @@ import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
-import com.hezapp.ekonomis.test_utils.FakeErrorReportingService
-import com.hezapp.ekonomis.test_utils.TestDispatcherProvider
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext

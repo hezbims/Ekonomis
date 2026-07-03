@@ -5,9 +5,9 @@ import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.comp
 import com.hezapp.ekonomis.add_or_update_transaction.presentation.main_form.dto.InstallmentItemUiDto
 import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
-import com.hezapp.ekonomis.robot.transaction_form._interactor.InstallmentItemFormInteractor
+import com.hezapp.ekonomis.app_test_utils.add_or_update_transaction.presentation.robot.component.InstallmentItemFormInteractor
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.TestTimeService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.Test

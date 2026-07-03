@@ -6,7 +6,7 @@ import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
+import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.InvoiceItemSeed
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test

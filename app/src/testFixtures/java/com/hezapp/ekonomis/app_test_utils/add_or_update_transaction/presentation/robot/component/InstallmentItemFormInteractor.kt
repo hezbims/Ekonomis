@@ -1,0 +1,115 @@
+package com.hezapp.ekonomis.app_test_utils.add_or_update_transaction.presentation.robot.component
+
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.test.*
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.core.domain.invoice.entity.PaymentMedia
+import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.app_test_utils.core.data.assert_db.dto.InstallmentItemAssertionDto
+import com.hezapp.ekonomis.base_test_utils.robot.component.ComponentInteractor
+import com.hezapp.ekonomis.base_test_utils.robot.component.DropdownInteractor
+import com.hezapp.ekonomis.base_test_utils.robot.component.TextFieldInteractor
+import com.hezapp.ekonomis.base_test_utils.other.getString
+import java.time.LocalDate
+
+class InstallmentItemFormInteractor(
+    private val composeRule : ComposeTestRule,
+    private val context : Context,
+) {
+    private val titleMatcher : SemanticsMatcher
+        get() = hasText(
+            context.getString(R.string.edit_installment_title)) or
+                hasText(context.getString(R.string.add_new_installment_title))
+    val cancelButtonmMatcher : SemanticsMatcher
+        get() = hasText(context.getString(R.string.cancel_label))
+    val confirmButtonMatcher : SemanticsMatcher
+        get() = hasText(context.getString(R.string.save_label))
+    private val bottomSheetMatcher =
+        isDialog() and
+        hasAnyDescendant(titleMatcher) and
+        hasAnyDescendant(cancelButtonmMatcher) and
+        hasAnyDescendant(confirmButtonMatcher)
+
+    private val dateField = DateFieldInteractor(
+        matcher = hasText(context.getString(R.string.payment_date)) and hasAnyAncestor(bottomSheetMatcher),
+        composeRule = composeRule,
+        context = context,
+    )
+    private val amountField = TextFieldInteractor(
+        composeRule = composeRule,
+        matcher = hasText(context.getString(R.string.payment_amount)) and hasAnyAncestor(bottomSheetMatcher)
+    )
+    private val paymentMediaField = DropdownInteractor(
+        composeRule = composeRule,
+        matcher = hasText(context.getString(R.string.payment_media_title))
+            and hasAnyAncestor(bottomSheetMatcher)
+    )
+    private val submitButton = ComponentInteractor(
+        composeRule = composeRule,
+        matcher = hasText(context.getString(R.string.save_label)) and hasAnyAncestor(bottomSheetMatcher)
+    )
+    fun assertDateFieldContent(expectedDate: LocalDate){
+        dateField.assertContent(expectedDate)
+    }
+
+    fun assertAmountFieldContent(expectedAmount: String){
+        amountField.assertHasText(expectedAmount)
+    }
+
+    fun assertAmountFieldDoesntHaveError(){
+        amountField.assertDoesntHaveText(context.getString(R.string.payment_amount_cant_be_empty))
+    }
+
+    fun assertAmountFieldHasError(){
+        amountField.assertHasText(context.getString(R.string.payment_amount_cant_be_empty))
+    }
+    fun submit(){
+        submitButton.click()
+    }
+
+    fun inputTextInAmountField(text: String, replaceText: Boolean = false) {
+        amountField.inputText(text, replaceText = replaceText)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun selectDate(date: LocalDate) {
+        dateField.chooseDate(date)
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    fun waitUntilAppear(){
+        composeRule.waitUntilExactlyOneExists(bottomSheetMatcher)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun specifyAndSubmitInput(date: LocalDate, amount: Int, paymentMedia: PaymentMedia) {
+        waitUntilAppear()
+        selectDate(date)
+        inputTextInAmountField(amount.toString(), replaceText = true)
+        selectPaymentMedia(paymentMedia)
+        submit()
+    }
+
+    fun assertInstallmentItem(expectedItem: InstallmentItemAssertionDto){
+        assertDateFieldContent(expectedItem.paymentDate)
+        assertAmountFieldContent(expectedItem.amount.toRupiahV2())
+        assertPaymentMedia(expectedItem.paymentMedia)
+    }
+
+    fun assertPaymentMedia(paymentMedia: PaymentMedia) {
+        waitUntilAppear()
+        paymentMediaField.assertHasText(context.getString(paymentMedia))
+    }
+
+    fun selectPaymentMedia(paymentMedia: PaymentMedia) {
+        waitUntilAppear()
+        paymentMediaField.openAndSelectValue(context.getString(paymentMedia))
+    }
+
+    fun close(){
+        composeRule.onNodeWithText(context.getString(R.string.cancel_label)).performClick()
+    }
+}

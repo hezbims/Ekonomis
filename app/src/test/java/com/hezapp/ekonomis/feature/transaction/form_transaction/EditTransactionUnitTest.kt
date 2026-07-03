@@ -7,9 +7,9 @@ import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
 import com.hezapp.ekonomis.core.domain.product.entity.ProductEntity
 import com.hezapp.ekonomis.core.domain.profile.entity.ProfileType
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.test_utils.seeder.InstallmentItemSeed
-import com.hezapp.ekonomis.test_utils.seeder.InstallmentSeed
-import com.hezapp.ekonomis.test_utils.seeder.InvoiceItemSeed
+import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.InstallmentItemSeed
+import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.InstallmentSeed
+import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.InvoiceItemSeed
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.koin.core.parameter.parametersOf

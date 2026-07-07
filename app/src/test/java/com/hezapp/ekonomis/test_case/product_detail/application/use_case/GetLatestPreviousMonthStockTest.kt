@@ -1,15 +1,15 @@
 package com.hezapp.ekonomis.test_case.product_detail.application.use_case
 
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.core.domain.utils.ITimeService
-import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
-import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.monthly_stock.monthlyStock
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.product.product
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.profile.customerProfile
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.profile.supplierProfile
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.dto.QuantityData
 import com.hezapp.ekonomis.app_test_utils.core.data.seeder.transaction.transactionOn
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
+import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
+import com.hezapp.ekonomis.test_application.BaseDataUnitTest
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
@@ -185,7 +185,7 @@ class GetLatestPreviousMonthStockTest : BaseDataUnitTest() {
         assertThat(result.pieceQuantity, equalTo(0))
     }
 
-    private fun getPreviousMonthStock(): QuantityPerUnitType = runBlocking {
+    private fun getPreviousMonthStock(): ProductQuantityDto = runBlocking {
         val flowResult = sut.invoke(
             currentMonthPeriod = timeService.convertToTimeToEpochMillis(onCurrentMonth),
             productId = primaryObservedProduct,

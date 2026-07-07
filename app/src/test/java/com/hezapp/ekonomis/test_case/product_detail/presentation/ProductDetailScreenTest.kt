@@ -2,6 +2,9 @@ package com.hezapp.ekonomis.test_case.product_detail.presentation
 
 import androidx.activity.compose.setContent
 import com.hezapp.ekonomis.MainComposable
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturns
 import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturnsError
 import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubReturnsLoadingOnly
@@ -9,22 +12,19 @@ import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubRe
 import com.hezapp.ekonomis.app_test_utils.product_detail.application.mock.stubSequentiallyReturns
 import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
-import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
-import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import com.hezapp.ekonomis.product_detail.application.dto.ProductDetail
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
+import com.hezapp.ekonomis.product_detail.application.dto.ProductTransaction
+import com.hezapp.ekonomis.product_detail.application.dto.TransactionSummary
 import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCase
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonthStock
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.product_detail.presentation.ProductDetailViewModel
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
-import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
-import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import org.junit.Before
 import org.junit.Test
 import org.koin.core.module.dsl.viewModel
@@ -39,8 +39,8 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
         const val PRODUCT_ID = 0
         const val MONTHLY_STOCK_ID = 100
         val CURRENT_YEAR_MONTH: YearMonth = YearMonth.of(2020, 1)
-        val INITIAL_STOCK = QuantityPerUnitType(cartonQuantity = 5, pieceQuantity = 10)
-        val UPDATED_STOCK = QuantityPerUnitType(cartonQuantity = 10, pieceQuantity = 20)
+        val INITIAL_STOCK = ProductQuantityDto(cartonQuantity = 5, pieceQuantity = 10)
+        val UPDATED_STOCK = ProductQuantityDto(cartonQuantity = 10, pieceQuantity = 20)
         const val PRODUCT_NAME = "Test Product"
     }
 
@@ -84,7 +84,7 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
 
     private fun createProductDetail(
         name: String = PRODUCT_NAME,
-        stock: QuantityPerUnitType = INITIAL_STOCK,
+        stock: ProductQuantityDto = INITIAL_STOCK,
         inTransactions: List<ProductTransaction> = this@ProductDetailScreenTest.inTransactions,
         outTransactions: List<ProductTransaction> = this@ProductDetailScreenTest.outTransactions,
     ) = ProductDetail(
@@ -182,14 +182,14 @@ class ProductDetailScreenTest : BaseEkonomisUiUnitTest(
             robot.assertPeriod(month = 0, year = 2020)
             robot.assertFirstDayOfMonthStock(INITIAL_STOCK)
             robot.assertLatestStock(
-                QuantityPerUnitType(cartonQuantity = 7, pieceQuantity = 9)
+                ProductQuantityDto(cartonQuantity = 7, pieceQuantity = 9)
             )
             robot.assertInStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 2, pieceQuantity = 0),
+                quantity = ProductQuantityDto(cartonQuantity = 2, pieceQuantity = 0),
                 price = 100_000L,
             )
             robot.assertOutStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 1),
+                quantity = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 1),
                 price = 50_000L,
             )
         }

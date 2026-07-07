@@ -3,13 +3,13 @@ package com.hezapp.ekonomis.test_case.di
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.hezapp.ekonomis.MainApplication
-import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
-import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
-import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
 import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
+import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
+import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
+import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
+import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.android.ext.koin.androidContext
@@ -44,7 +44,7 @@ class VerifyKoinGraphTest : KoinTest {
             // override parameter passed
             withInstance(123)
             withInstance(EditMonthlyStockDialogViewModel.Params(
-                quantityPerUnitType = QuantityPerUnitType(cartonQuantity = 1, pieceQuantity = 1),
+                quantityPerUnitType = ProductQuantityDto(cartonQuantity = 1, pieceQuantity = 1),
                 period = 1L,
                 productId = 1,
                 monthlyStockId = 1,

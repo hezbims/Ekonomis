@@ -2,7 +2,7 @@ package com.hezapp.ekonomis.product_detail.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.product_detail.data.dto.ProductTransactionQueryResult
 
 @Dao
 interface GetProductTransactionsReadDao {
@@ -31,5 +31,5 @@ interface GetProductTransactionsReadDao {
         firstDayOfPeriod: Long,
         lastDayOfPeriod: Long,
         transactionTypeId: Int,
-    ) : List<ProductTransaction>
+    ) : List<ProductTransactionQueryResult>
 }

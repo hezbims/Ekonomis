@@ -16,13 +16,13 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
 import com.hezapp.ekonomis.R
+import com.hezapp.ekonomis.base_test_utils.constant.TestConstant
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
-import com.hezapp.ekonomis.base_test_utils.constant.TestConstant
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -36,7 +36,7 @@ class ProductDetailRobot(
     private val timeService: ITimeService,
 ) {
     fun assertInStock(
-        quantity: QuantityPerUnitType,
+        quantity: ProductQuantityDto,
         price: Long,
     ){
         val inSectionLabel = "\u2022 ${context.getString(R.string.in_product_label)}"
@@ -55,7 +55,7 @@ class ProductDetailRobot(
     }
 
     fun assertOutStock(
-        quantity: QuantityPerUnitType,
+        quantity: ProductQuantityDto,
         price: Long,
     ){
         val outSectionLabel = "\u2022 ${context.getString(R.string.out_product_label)}"
@@ -73,7 +73,7 @@ class ProductDetailRobot(
         ).assertExists()
     }
 
-    fun assertFirstDayOfMonthStock(quantity: QuantityPerUnitType){
+    fun assertFirstDayOfMonthStock(quantity: ProductQuantityDto){
         val firstDayOfMonthSectionLabel = "\u2022 ${context.getString(R.string.beginning_of_month_stock_label)}"
 
         composeRule.waitUntilExactlyOneExists(
@@ -94,7 +94,7 @@ class ProductDetailRobot(
 
     }
 
-    fun assertLatestStock(quantity: QuantityPerUnitType){
+    fun assertLatestStock(quantity: ProductQuantityDto){
         val latestStockSectionLabel = "\u2022 ${context.getString(R.string.latest_stock_label)}"
 
         composeRule.onNode(
@@ -188,7 +188,7 @@ class ProductDetailRobot(
         ).performClick()
     }
 
-    private fun getQuantityString(quantity: QuantityPerUnitType) : String {
+    private fun getQuantityString(quantity: ProductQuantityDto) : String {
         val cartonString = context.getString(UnitType.CARTON.getStringId())
         val pieceString = context.getString(UnitType.PIECE.getStringId())
         return "${quantity.cartonQuantity} $cartonString, ${quantity.pieceQuantity} $pieceString"

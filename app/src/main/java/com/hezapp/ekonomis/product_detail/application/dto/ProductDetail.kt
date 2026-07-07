@@ -1,9 +1,8 @@
-package com.hezapp.ekonomis.core.domain.product.model
+package com.hezapp.ekonomis.product_detail.application.dto
 
-import androidx.room.ColumnInfo
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.PriceUtils
+import com.hezapp.ekonomis.product_detail.data.dto.ProductTransactionQueryResult
 import kotlin.math.roundToInt
 
 data class ProductDetail(
@@ -15,15 +14,15 @@ data class ProductDetail(
         get() = transactionSummary.outProductTransactions
     val inProductTransactions : List<ProductTransaction>
         get() = transactionSummary.inProductTransactions
-    val firstDayOfMonthStock : QuantityPerUnitType
+    val firstDayOfMonthStock : ProductQuantityDto
         get() = transactionSummary.firstDayOfMonthStock!!
     val monthlyStockId : Int
         get() = transactionSummary.monthlyStockId
-    val totalOutUnit : QuantityPerUnitType
+    val totalOutUnit : ProductQuantityDto
         get() = transactionSummary.totalOutUnit
-    val totalInUnit : QuantityPerUnitType
+    val totalInUnit : ProductQuantityDto
         get() = transactionSummary.totalInUnit
-    val latestDayOfMonthStock : QuantityPerUnitType
+    val latestDayOfMonthStock : ProductQuantityDto
         get() = transactionSummary.latestDayOfMonthStock
 
     val totalOutPrice = outProductTransactions.sumOf {
@@ -37,15 +36,15 @@ data class ProductDetail(
 data class TransactionSummary(
     val outProductTransactions : List<ProductTransaction>,
     val inProductTransactions : List<ProductTransaction>,
-    val firstDayOfMonthStock: QuantityPerUnitType?,
+    val firstDayOfMonthStock: ProductQuantityDto?,
     val monthlyStockId: Int,
 ){
-    val totalOutUnit : QuantityPerUnitType = outProductTransactions.getQuantityPerUnit()
+    val totalOutUnit : ProductQuantityDto = outProductTransactions.getQuantityPerUnit()
 
-    val totalInUnit : QuantityPerUnitType = inProductTransactions.getQuantityPerUnit()
+    val totalInUnit : ProductQuantityDto = inProductTransactions.getQuantityPerUnit()
 
-    val latestDayOfMonthStock : QuantityPerUnitType =
-        (firstDayOfMonthStock ?: QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0)) -
+    val latestDayOfMonthStock : ProductQuantityDto =
+        (firstDayOfMonthStock ?: ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 0)) -
         totalOutUnit +
         totalInUnit
 }
@@ -57,14 +56,12 @@ data class ProductTransaction(
 
     val quantity: Int,
 
-    @ColumnInfo("unit_type")
     val unitType: UnitType,
 
     val date: Long,
 
     val ppn: Int?,
 
-    @ColumnInfo("profile_name")
     val profileName : String,
 ){
     val costOfGoodsSold : Int
@@ -73,24 +70,38 @@ data class ProductTransaction(
             quantity = quantity,
             totalPrice = price,
         ).roundToInt()
+
+    companion object {
+        fun fromQueryResult(queryResult: ProductTransactionQueryResult) : ProductTransaction {
+            return ProductTransaction(
+                id = queryResult.id,
+                price = queryResult.price,
+                quantity = queryResult.quantity,
+                unitType = queryResult.unitType,
+                date = queryResult.date,
+                ppn = queryResult.ppn,
+                profileName = queryResult.profileName,
+            )
+        }
+    }
 }
 
-operator fun QuantityPerUnitType.minus(other: QuantityPerUnitType) : QuantityPerUnitType {
-    return QuantityPerUnitType(
+operator fun ProductQuantityDto.minus(other: ProductQuantityDto) : ProductQuantityDto {
+    return ProductQuantityDto(
         cartonQuantity = cartonQuantity - other.cartonQuantity,
         pieceQuantity = pieceQuantity - other.pieceQuantity,
     )
 }
 
-operator fun QuantityPerUnitType.plus(other: QuantityPerUnitType) : QuantityPerUnitType {
-    return QuantityPerUnitType(
+operator fun ProductQuantityDto.plus(other: ProductQuantityDto) : ProductQuantityDto {
+    return ProductQuantityDto(
         cartonQuantity = cartonQuantity + other.cartonQuantity,
         pieceQuantity = pieceQuantity + other.pieceQuantity,
     )
 }
 
-fun List<ProductTransaction>.getQuantityPerUnit() : QuantityPerUnitType {
-    return fold(QuantityPerUnitType(0, 0)){ prevQuantity, productTransaction ->
+fun List<ProductTransaction>.getQuantityPerUnit() : ProductQuantityDto {
+    return fold(ProductQuantityDto(0, 0)){ prevQuantity, productTransaction ->
         when(productTransaction.unitType){
             UnitType.PIECE ->
                 prevQuantity.copy(

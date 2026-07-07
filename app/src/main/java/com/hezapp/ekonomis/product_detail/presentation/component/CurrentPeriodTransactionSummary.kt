@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice.entity.TransactionType
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
-import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
+import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.core.presentation.utils.getStringId
 import com.hezapp.ekonomis.core.presentation.utils.toRupiahV2
+import com.hezapp.ekonomis.product_detail.application.dto.ProductDetail
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
+import com.hezapp.ekonomis.product_detail.application.dto.TransactionSummary
 import com.hezapp.ekonomis.product_detail.presentation.test_tag.ProductDetailTestTag
-import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 
 @Composable
 fun CurrentPeriodTransactionSummary(
@@ -66,7 +66,7 @@ fun CurrentPeriodTransactionSummary(
 
 @Composable
 private fun SummaryPerTransactionType(
-    totalPerUnit: QuantityPerUnitType,
+    totalPerUnit: ProductQuantityDto,
     totalPrice: Long,
     transactionType: TransactionType,
 ){
@@ -129,7 +129,7 @@ private fun SummaryPerTransactionType(
 
 @Composable
 private fun FirstDayOfMonthStock(
-    firstDayOfMonthStock: QuantityPerUnitType,
+    firstDayOfMonthStock: ProductQuantityDto,
     onClickEditMontlyStock: () -> Unit,
 ){
     Row(
@@ -167,7 +167,7 @@ private fun FirstDayOfMonthStock(
 
 @Composable
 private fun CurrentStock(
-    currentStock: QuantityPerUnitType,
+    currentStock: ProductQuantityDto,
 ){
 
     Column(Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
@@ -187,7 +187,7 @@ private fun CurrentStock(
 
 @Composable
 private fun TotalUnitText(
-    totalPerUnit : QuantityPerUnitType,
+    totalPerUnit : ProductQuantityDto,
     modifier : Modifier = Modifier
 ){
     Text(
@@ -210,7 +210,7 @@ private fun PreviewCurrentPeriodTransactionSummary(){
                     transactionSummary = TransactionSummary(
                         outProductTransactions = listOf(),
                         inProductTransactions = listOf(),
-                        firstDayOfMonthStock = QuantityPerUnitType(
+                        firstDayOfMonthStock = ProductQuantityDto(
                             cartonQuantity = 5,
                             pieceQuantity = 7,
                         ),

@@ -4,6 +4,7 @@ import com.hezapp.ekonomis.core.data.invoice.dao.InvoiceDao
 import com.hezapp.ekonomis.core.data.invoice_item.dao.InvoiceItemDao
 import com.hezapp.ekonomis.core.data.product.dao.ProductDao
 import com.hezapp.ekonomis.core.data.profile.dao.ProfileDao
+import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import kotlinx.coroutines.test.runTest
 import org.koin.core.context.GlobalContext
 
@@ -22,7 +23,7 @@ class MySeederUtils {
             GlobalContext.get().get()
         }
 
-        fun seedTigaBulanTransaksi() = runTest {
+        fun seedTigaBulanTransaksi(timeService: ITimeService) = runTest {
             supplierProfiles.forEach {
                 profileDao.insertProfile(it)
             }
@@ -32,9 +33,9 @@ class MySeederUtils {
             products.forEach {
                 productDao.insertNewProduct(it)
             }
-            seedInvoiceTestDatas(curMonthInvoices)
-            seedInvoiceTestDatas(prevMonthInvoices)
-            seedInvoiceTestDatas(nextMonthInvoices)
+            seedInvoiceTestDatas(getCurrentMonthInvoices(timeService))
+            seedInvoiceTestDatas(getPrevMonthInvoices(timeService))
+            seedInvoiceTestDatas(getNextMonthInvoices(timeService))
         }
 
         private suspend fun seedInvoiceTestDatas(

@@ -1,10 +1,12 @@
 package com.hezapp.ekonomis.test_case.product_detail.presentation
 
 import androidx.activity.compose.setContent
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
+import com.hezapp.ekonomis.base_test_utils.constant.TestConstant
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockValidationResult
 import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCase
@@ -12,8 +14,6 @@ import com.hezapp.ekonomis.product_detail.domain.use_case.GetLatestPreviousMonth
 import com.hezapp.ekonomis.product_detail.presentation.EditCurrentMonthlyStockDialog
 import com.hezapp.ekonomis.product_detail.presentation.EditMonthlyStockDialogViewModel
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiUnitTest
-import com.hezapp.ekonomis.base_test_utils.constant.TestConstant
-import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import kotlinx.coroutines.flow.flow
 import org.junit.Before
 import org.junit.Test
@@ -207,7 +207,7 @@ class EditStockDialogTest : BaseEkonomisUiUnitTest(
         )).thenReturn(
             flow {
                 emit(ResponseWrapper.Loading())
-                emit(ResponseWrapper.Succeed(QuantityPerUnitType(carton, piece)))
+                emit(ResponseWrapper.Succeed(ProductQuantityDto(carton, piece)))
             }
         )
     }

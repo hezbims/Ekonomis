@@ -2,7 +2,7 @@ package com.hezapp.ekonomis.app_test_utils.product_detail.application.assert_att
 
 import com.hezapp.ekonomis.base_test_utils.base_assert_attr.AssertionModel
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
+import com.hezapp.ekonomis.product_detail.application.dto.ProductTransaction
 
 data class ExpectedProductTransaction(
     val price: Int,

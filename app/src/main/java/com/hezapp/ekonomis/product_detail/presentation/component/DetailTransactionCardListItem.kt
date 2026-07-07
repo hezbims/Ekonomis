@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.product_detail.application.dto.ProductTransaction
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
 import com.hezapp.ekonomis.core.presentation.utils.getStringId

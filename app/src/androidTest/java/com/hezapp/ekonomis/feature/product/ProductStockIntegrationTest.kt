@@ -3,11 +3,12 @@ package com.hezapp.ekonomis.feature.product
 import androidx.test.core.app.ActivityScenario
 import com.hezapp.ekonomis.MainActivity
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
 import com.hezapp.ekonomis.test_application.BaseEkonomisUiTest
 import com.hezapp.ekonomis.test_utils.MySeederUtils
 import org.junit.Before
 import org.junit.Test
+import org.koin.core.context.GlobalContext
 
 class ProductStockIntegrationTest : BaseEkonomisUiTest() {
     /**
@@ -46,18 +47,18 @@ class ProductStockIntegrationTest : BaseEkonomisUiTest() {
                 month = 1,
             )
             assertInStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 2, pieceQuantity = 5),
+                quantity = ProductQuantityDto(cartonQuantity = 2, pieceQuantity = 5),
                 price = 15000
             )
             assertOutStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 1),
+                quantity = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 1),
                 price = 20000,
             )
             assertFirstDayOfMonthStock(
-                quantity = QuantityPerUnitType(cartonQuantity = -4, pieceQuantity = 50)
+                quantity = ProductQuantityDto(cartonQuantity = -4, pieceQuantity = 50)
             )
             assertLatestStock(
-                quantity = QuantityPerUnitType(cartonQuantity = -2, pieceQuantity = 54)
+                quantity = ProductQuantityDto(cartonQuantity = -2, pieceQuantity = 54)
             )
         }
 
@@ -72,18 +73,18 @@ class ProductStockIntegrationTest : BaseEkonomisUiTest() {
                 year = 2019,
             )
             assertInStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 50),
+                quantity = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 50),
                 price = 250000
             )
             assertOutStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 4, pieceQuantity = 0),
+                quantity = ProductQuantityDto(cartonQuantity = 4, pieceQuantity = 0),
                 price = 50000
             )
             assertFirstDayOfMonthStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0)
+                quantity = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 0)
             )
             assertLatestStock(
-                quantity = QuantityPerUnitType(cartonQuantity = -4, pieceQuantity = 50)
+                quantity = ProductQuantityDto(cartonQuantity = -4, pieceQuantity = 50)
             )
         }
 
@@ -99,25 +100,25 @@ class ProductStockIntegrationTest : BaseEkonomisUiTest() {
                 year = 2020,
             )
             assertInStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0),
+                quantity = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 0),
                 price = 0
             )
             assertOutStock(
-                quantity = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 15),
+                quantity = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 15),
                 price = 12000
             )
             assertFirstDayOfMonthStock(
-                quantity = QuantityPerUnitType(cartonQuantity = -2, pieceQuantity = 54)
+                quantity = ProductQuantityDto(cartonQuantity = -2, pieceQuantity = 54)
             )
             assertLatestStock(
-                quantity = QuantityPerUnitType(cartonQuantity = -2, pieceQuantity = 39)
+                quantity = ProductQuantityDto(cartonQuantity = -2, pieceQuantity = 39)
             )
         }
     }
 
     @Before
     fun before(){
-        MySeederUtils.seedTigaBulanTransaksi()
+        MySeederUtils.seedTigaBulanTransaksi(GlobalContext.get().get())
         ActivityScenario.launch(MainActivity::class.java)
     }
 }

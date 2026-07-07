@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
+import com.hezapp.ekonomis.product_detail.application.dto.ProductDetail
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.product_detail.domain.use_case.GetProductDetailUseCase
 import kotlinx.coroutines.Dispatchers

@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
 import com.hezapp.ekonomis.core.domain.utils.toCalendar
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
 import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockValidationResult
 import com.hezapp.ekonomis.product_detail.domain.use_case.EditMonthlyStockUseCase
@@ -27,7 +27,7 @@ class EditMonthlyStockDialogViewModel(
     timeService: ITimeService,
 )  : ViewModel() {
     data class Params(
-        val quantityPerUnitType : QuantityPerUnitType,
+        val quantityPerUnitType : ProductQuantityDto,
         val period: Long,
         val productId: Int,
         val monthlyStockId: Int,
@@ -178,7 +178,7 @@ data class QuantityField(
     val pieceQuantity: Int?,
 ){
     companion object {
-        fun from(value : QuantityPerUnitType) : QuantityField =
+        fun from(value : ProductQuantityDto) : QuantityField =
             QuantityField(
                 cartonQuantity = value.cartonQuantity,
                 pieceQuantity = value.pieceQuantity,

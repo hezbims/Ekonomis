@@ -28,10 +28,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
-import com.hezapp.ekonomis.core.domain.product.model.ProductDetail
-import com.hezapp.ekonomis.core.domain.product.model.ProductTransaction
-import com.hezapp.ekonomis.core.domain.product.model.TransactionSummary
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.component.MyScaffold
@@ -40,6 +36,10 @@ import com.hezapp.ekonomis.core.presentation.model.MyScaffoldState
 import com.hezapp.ekonomis.core.presentation.preview.PreviewKoin
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
 import com.hezapp.ekonomis.core.presentation.utils.navigateOnce
+import com.hezapp.ekonomis.product_detail.application.dto.ProductDetail
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
+import com.hezapp.ekonomis.product_detail.application.dto.ProductTransaction
+import com.hezapp.ekonomis.product_detail.application.dto.TransactionSummary
 import com.hezapp.ekonomis.product_detail.presentation.component.ChangePeriodDialog
 import com.hezapp.ekonomis.product_detail.presentation.component.CurrentPeriodTransactionSummary
 import com.hezapp.ekonomis.product_detail.presentation.component.DetailTransactionCardListItem
@@ -251,7 +251,7 @@ private fun PreviewProductDetailScreen(){
                 id = 0,
                 productName = "White Heinz Vinegar",
                 TransactionSummary(
-                    firstDayOfMonthStock = QuantityPerUnitType(cartonQuantity = 0, pieceQuantity = 0),
+                    firstDayOfMonthStock = ProductQuantityDto(cartonQuantity = 0, pieceQuantity = 0),
                     inProductTransactions = listOf(
                         ProductTransaction(
                             id = 4,

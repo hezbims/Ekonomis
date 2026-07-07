@@ -30,15 +30,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hezapp.ekonomis.R
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice_item.entity.UnitType
-import com.hezapp.ekonomis.core.domain.monthly_stock.entity.QuantityPerUnitType
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.PreviewTimeService
 import com.hezapp.ekonomis.core.presentation.component.MyErrorText
 import com.hezapp.ekonomis.core.presentation.component.ResponseLoader
 import com.hezapp.ekonomis.core.presentation.routing.MyRoutes
-import com.hezapp.ekonomis.core.presentation.utils.getStringId
-import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
 import com.hezapp.ekonomis.core.presentation.theme.EkonomisTheme
+import com.hezapp.ekonomis.core.presentation.utils.getStringId
+import com.hezapp.ekonomis.product_detail.application.dto.ProductQuantityDto
+import com.hezapp.ekonomis.product_detail.domain.model.EditMonthlyStockFieldError
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 import org.koin.core.parameter.parametersOf
@@ -54,7 +54,7 @@ fun EditCurrentMonthlyStockDialog(
             parametersOf(
                 EditMonthlyStockDialogViewModel.Params(
                     period = args.period,
-                    quantityPerUnitType = QuantityPerUnitType(
+                    quantityPerUnitType = ProductQuantityDto(
                         cartonQuantity = args.cartonQuantity,
                         pieceQuantity = args.pieceQuantity
                     ),

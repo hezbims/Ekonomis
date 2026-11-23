@@ -1,0 +1,1 @@
+Project structure and code conventions can be seen on `docs/` folder.

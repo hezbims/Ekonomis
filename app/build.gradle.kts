@@ -145,6 +145,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.compose.ui.test.junit4)
@@ -165,6 +166,7 @@ dependencies {
     testFixturesImplementation(libs.androidx.room.runtime)
     testFixturesImplementation(libs.koin.core)
     testFixturesImplementation(libs.koin.android)
+    testFixturesImplementation(libs.kotlinx.coroutines.test)
     testFixturesImplementation(libs.hamcrest)
     testFixturesImplementation(libs.mockito.kotlin)
 }

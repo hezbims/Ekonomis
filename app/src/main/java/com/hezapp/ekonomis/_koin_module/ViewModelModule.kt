@@ -21,6 +21,7 @@ val ViewModelModule = module {
     viewModel { SearchAndChooseProductViewModel(
         getAllProducts = get(),
         insertNewProduct = get(),
+        dispatcherProvider = get(),
     ) }
 
     viewModel { TransactionHistoryViewModel(
@@ -35,7 +36,10 @@ val ViewModelModule = module {
         getFullInvoice = get(),
     ) }
 
-    viewModel { ProductPreviewViewModel(getPreviewProductSummaries = get()) }
+    viewModel { ProductPreviewViewModel(
+        getPreviewProductSummaries = get(),
+        dispatcherProvider = get(),
+    ) }
 
     viewModel { params -> ProductDetailViewModel(
         productId = params.get(),

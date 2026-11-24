@@ -130,6 +130,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.analytics)
+    implementation(libs.firebase.perf)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

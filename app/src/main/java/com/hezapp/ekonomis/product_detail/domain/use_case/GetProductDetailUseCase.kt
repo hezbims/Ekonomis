@@ -6,11 +6,13 @@ import com.hezapp.ekonomis.core.domain.monthly_stock.entity.MonthlyStockEntity
 import com.hezapp.ekonomis.core.domain.monthly_stock.repo.IMonthlyStockRepo
 import com.hezapp.ekonomis.core.domain.product.repo.IProductRepo
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.core.domain.utils.IPerformanceReporter
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import com.hezapp.ekonomis.core.domain.utils.ITransactionProvider
 import com.hezapp.ekonomis.core.domain.utils.getPreviousMonthYear
 import com.hezapp.ekonomis.core.domain.utils.toBeginningOfMonth
 import com.hezapp.ekonomis.core.domain.utils.toCalendar
+import com.hezapp.ekonomis.core.domain.utils.traced
 import com.hezapp.ekonomis.product_detail.application.dto.ProductDetail
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -23,6 +25,7 @@ class GetProductDetailUseCase(
     private val getTransactionSummaryOfAMonth: GetTransactionSummaryOfAMonthUseCase,
     private val reportingService: IErrorReportingService,
     private val timeService: ITimeService,
+    private val performanceReporter: IPerformanceReporter,
 ) {
     operator fun invoke(
         productId : Int,
@@ -70,11 +73,20 @@ class GetProductDetailUseCase(
         }
 
         emit(ResponseWrapper.Succeed(productDetail))
-    }.catch { t ->
-        reportingService.logNonFatalError(t, mapOf(
-            "productId" to productId,
-            "monthYearPeriod" to monthYearPeriod,
-        ))
-        emit(ResponseWrapper.Failed())
+    }
+        .traced(
+            reporter = performanceReporter,
+            name = TRACE_NAME,
+        )
+        .catch { t ->
+            reportingService.logNonFatalError(t, mapOf(
+                "productId" to productId,
+                "monthYearPeriod" to monthYearPeriod,
+            ))
+            emit(ResponseWrapper.Failed())
+        }
+
+    companion object {
+        private const val TRACE_NAME = "uc_product_detail"
     }
 }

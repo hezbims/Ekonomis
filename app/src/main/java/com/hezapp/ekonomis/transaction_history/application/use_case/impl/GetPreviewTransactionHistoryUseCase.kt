@@ -4,7 +4,9 @@ import com.hezapp.ekonomis.core.domain.general_model.MyBasicError
 import com.hezapp.ekonomis.core.domain.general_model.ResponseWrapper
 import com.hezapp.ekonomis.core.domain.invoice.model.PreviewTransactionFilter
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.core.domain.utils.IPerformanceReporter
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
+import com.hezapp.ekonomis.core.domain.utils.traced
 import com.hezapp.ekonomis.transaction_history.application.dto.PreviewTransactionHistory
 import com.hezapp.ekonomis.transaction_history.application.use_case.iface.IGetPreviewTransactionHistoryUseCase
 import com.hezapp.ekonomis.transaction_history.data.dao.GetPreviewTransactionsDao
@@ -16,6 +18,7 @@ class GetPreviewTransactionHistoryUseCase(
     private val dao: GetPreviewTransactionsDao,
     private val timeService: ITimeService,
     private val reportingService : IErrorReportingService,
+    private val performanceReporter : IPerformanceReporter,
 ) : IGetPreviewTransactionHistoryUseCase {
 
     override operator fun invoke(filter: PreviewTransactionFilter) :
@@ -32,11 +35,26 @@ class GetPreviewTransactionHistoryUseCase(
         }
 
         emit(ResponseWrapper.Succeed(transactionPreviews))
-    }.catch { t ->
+    }
+    .traced(
+        reporter = performanceReporter,
+        name = TRACE_NAME,
+        attributes = mapOf("only_unpaid" to filter.isOnlyNotPaidOff.toString()),
+        metricOf = { response ->
+            if (response is ResponseWrapper.Succeed)
+                "row_count" to response.data.size.toLong()
+            else null
+        },
+    )
+    .catch { t ->
         reportingService.logNonFatalError(t , mapOf(
             "monthYear" to filter.monthYear,
             "isOnlyNotPaidOff" to filter.isOnlyNotPaidOff,
         ))
         emit(ResponseWrapper.Failed())
+    }
+
+    companion object {
+        private const val TRACE_NAME = "uc_tx_history_preview"
     }
 }

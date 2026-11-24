@@ -35,9 +35,14 @@ val UseCaseModule = module {
         dao = get(),
         reportingService = get(),
         timeService = get(),
+        performanceReporter = get(),
     ) }
 
-    factory<ICreateOrUpdateInvoiceUseCase> { CreateOrUpdateInvoiceUseCase(get(), reportingService = get()) }
+    factory<ICreateOrUpdateInvoiceUseCase> { CreateOrUpdateInvoiceUseCase(
+        get(),
+        reportingService = get(),
+        performanceReporter = get(),
+    ) }
     factory<IDeleteInvoiceUseCase> { DeleteInvoiceUseCase(get(), reportingService = get()) }
     factory<IGetFullInvoiceUseCase> { GetFullInvoiceUseCase(
         repo = get(),
@@ -45,7 +50,7 @@ val UseCaseModule = module {
     ) }
 
     factory<IGetPreviewProductSummariesUseCase> { GetPreviewProductSummariesUseCase(
-        dao = get(), reportingService = get(),
+        dao = get(), reportingService = get(), performanceReporter = get(),
     ) }
 
     factory { GetTransactionSummaryOfAMonthUseCase(
@@ -66,6 +71,7 @@ val UseCaseModule = module {
         transactionProvider = get(),
         reportingService = get(),
         timeService = get(),
+        performanceReporter = get(),
     ) }
 
     factory { EditMonthlyStockUseCase(

@@ -8,11 +8,13 @@ import androidx.room.RoomDatabase.Callback
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hezapp.ekonomis._testing_only.EkonomisTestDatabase
 import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakeErrorReportingService
+import com.hezapp.ekonomis.app_test_utils.core.application.mock.FakePerformanceReporter
 import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestDispatcherProvider
 import com.hezapp.ekonomis.app_test_utils.core.application.mock.TestTimeService
 import com.hezapp.ekonomis.core.application.utils.IDispatcherProvider
 import com.hezapp.ekonomis.core.data.database.EkonomisDatabase
 import com.hezapp.ekonomis.core.domain.utils.IErrorReportingService
+import com.hezapp.ekonomis.core.domain.utils.IPerformanceReporter
 import com.hezapp.ekonomis.core.domain.utils.ITimeService
 import org.koin.core.Koin
 import org.koin.core.context.GlobalContext
@@ -60,6 +62,7 @@ fun loadTestKoinModules(
                 locale = Locale.forLanguageTag("id-ID"),
             )}
         single<IErrorReportingService> { FakeErrorReportingService() }
+        single<IPerformanceReporter> { FakePerformanceReporter() }
         single<IDispatcherProvider> { TestDispatcherProvider() }
     }
     koin.loadModules(listOf(module), allowOverride = true)

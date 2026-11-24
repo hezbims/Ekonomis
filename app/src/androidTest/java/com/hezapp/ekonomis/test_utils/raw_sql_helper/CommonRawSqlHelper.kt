@@ -108,12 +108,40 @@ private fun getForeignKeyTypeString(foreignKeyId : Int) : String {
 }
 
 fun SupportSQLiteDatabase.hasIndex(tableName: String, vararg columns: String): Boolean {
-    val cursor = this.query("PRAGMA index_list($tableName)")
-    val nameIndex = cursor.getColumnIndex("name")
-    while (cursor.moveToNext()) {
-        val currentIndex = cursor.getString(nameIndex)
-        if (currentIndex.equals("index_${columns.joinToString("_")}", ignoreCase = true)) {
-            return true
+    val expectedName = "index_${tableName}_${columns.joinToString("_")}"
+    query("PRAGMA index_list(`$tableName`)").use { indexList ->
+        val nameIndex = indexList.getColumnIndexOrThrow("name")
+        while (indexList.moveToNext()) {
+            if (indexList.getString(nameIndex).equals(expectedName, ignoreCase = true)) {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+
+/**
+ * Memeriksa index berdasarkan kolom yang di-index (dan urutannya), bukan
+ * berdasarkan nama index. Lebih aman dibanding [hasIndex] kalau index diberi
+ * nama custom.
+ */
+fun SupportSQLiteDatabase.hasIndexOn(tableName: String, vararg columns: String): Boolean {
+    query("PRAGMA index_list(`$tableName`)").use { indexList ->
+        val nameIndex = indexList.getColumnIndexOrThrow("name")
+        while (indexList.moveToNext()) {
+            val indexName = indexList.getString(nameIndex)
+            val indexedColumns = buildList {
+                query("PRAGMA index_info(`$indexName`)").use { indexInfo ->
+                    val columnIndex = indexInfo.getColumnIndexOrThrow("name")
+                    while (indexInfo.moveToNext()) {
+                        add(indexInfo.getString(columnIndex))
+                    }
+                }
+            }
+            if (indexedColumns == columns.toList()) {
+                return true
+            }
         }
     }
 

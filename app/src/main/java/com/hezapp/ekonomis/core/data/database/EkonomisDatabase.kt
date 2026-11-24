@@ -41,7 +41,7 @@ import com.hezapp.ekonomis.transaction_history.data.dao.GetPreviewTransactionsDa
         Installment::class,
         InstallmentItem::class,
     ],
-    version = 5,
+    version = 6,
     autoMigrations = [
         AutoMigration(
             from = 1,
@@ -58,6 +58,10 @@ import com.hezapp.ekonomis.transaction_history.data.dao.GetPreviewTransactionsDa
         AutoMigration(
             from = 4,
             to = 5,
+        ),
+        AutoMigration( // menambahkan index (transaction_type, date) dan (date) di tabel invoice
+            from = 5,
+            to = 6,
         )
     ],
     exportSchema = true,

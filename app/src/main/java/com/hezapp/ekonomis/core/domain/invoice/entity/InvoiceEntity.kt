@@ -16,7 +16,17 @@ import com.hezapp.ekonomis.core.domain.profile.entity.ProfileEntity
     ],
     indices = [
         Index("profile_id"),
-    //TODO : tambahkan index untuk date
+        /**
+         * Membantu query yang memfilter `transaction_type` (equality) sekaligus
+         * range `date`, seperti `GetProductTransactionsReadDao` dan
+         * `GetPreviewProductSummariesDao`.
+         */
+        Index(value = ["transaction_type", "date"]),
+        /**
+         * Membantu query range `date` pada transaction history
+         * (`GetPreviewTransactionsDao`).
+         */
+        Index("date"),
     ]
 )
 data class InvoiceEntity(
